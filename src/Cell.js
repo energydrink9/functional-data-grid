@@ -3,16 +3,19 @@
 import React from 'react'
 import BaseColumn from "./BaseColumn"
 
-export default class Cell extends React.Component {
-  props : {
-    column : BaseColumn,
-    element : any,
-    rowIndex : number,
-    width : ?number
-  }
-  state : {
-    hover : boolean
-  }
+type CellProps = {
+  column : BaseColumn,
+  element : any,
+  rowIndex : number,
+  width : ?number
+}
+type CellState = {
+  hover : boolean
+}
+
+export default class Cell extends React.Component<CellProps, CellState> {
+  props : CellProps
+  state : CellState
 
   constructor(props : Object) {
     super(props)

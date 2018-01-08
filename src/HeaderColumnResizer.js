@@ -2,16 +2,19 @@
 
 import React from 'react'
 
-export default class HeaderColumnResizer extends React.Component {
+type HeaderColumnResizerProps = {
+  right : number,
+  onResize : Function
+}
+type HeaderColumnResizerState = {
+  clicked : boolean,
+  hover: boolean
+}
 
-  props: {
-    right : number,
-    onResize : Function
-  };
-  state: {
-    clicked : boolean,
-    hover: boolean
-  }
+export default class HeaderColumnResizer extends React.Component<HeaderColumnResizerProps, HeaderColumnResizerState> {
+
+  props: HeaderColumnResizerProps
+  state: HeaderColumnResizerState
   element : any;
 
   constructor(props : Object) {

@@ -16,26 +16,27 @@ import debounce from 'debounce'
 
 const debounceTimeout = 250
 
-type FunctionalDataGridPropsType = {
+type FunctionalDataGridProps = {
   columns: List<BaseColumn | ColumnGroup>,
   initialFilter : List<Filter>,
   initialSort : List<Sort>,
   groups : List<Group>,
   data : List<any>
-};
+}
+type FunctionalDataGridState = {
+  cachedElements : List<any>,
+  sort : List<Sort>,
+  filter : List<Filter>,
+  columnWidths : Map<string, number>
+}
 
-export default class FunctionalDataGrid extends React.Component {
-  props: FunctionalDataGridPropsType;
-  state : {
-    cachedElements : List<any>,
-    sort : List<Sort>,
-    filter : List<Filter>,
-    columnWidths : Map<string, number>
-  };
+export default class FunctionalDataGrid extends React.Component<FunctionalDataGridProps, FunctionalDataGridState> {
+  props: FunctionalDataGridProps;
+  state : FunctionalDataGridState
   list : ReactVirtualizedList;
   debouncedUpdateElements = debounce((data : List<any>, groups : List<Group>, sort : List<Sort>, filter : List<Filter>) => this.updateElements(data, groups, sort, filter), debounceTimeout);
 
-  constructor(props : FunctionalDataGridPropsType) {
+  constructor(props : FunctionalDataGridProps) {
     super(props)
     this.state = {
       cachedElements : List(),
@@ -49,7 +50,7 @@ export default class FunctionalDataGrid extends React.Component {
     this.updateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
   }
 
-  componentWillUpdate = (newProps: FunctionalDataGridPropsType) => {
+  componentWillUpdate = (newProps: FunctionalDataGridProps) => {
     if (newProps.data !== this.props.data)
       this.debouncedUpdateElements(newProps.data, newProps.groups, this.state.sort, this.state.filter)
   }

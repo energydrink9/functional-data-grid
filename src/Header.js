@@ -7,18 +7,21 @@ import BaseColumn from "./BaseColumn"
 import HeaderColumn from "./HeaderColumn"
 import Sort from "./Sort"
 
-export default class Header extends React.Component {
+type HeaderProps = {
+  columns: List<BaseColumn | ColumnGroup>,
+  scrollLeft: number,
+  onScroll: Function,
+  sort : List<Sort>,
+  onUpdateSort : Function,
+  onUpdateFilter : Function,
+  onColumnResize : Function,
+  columnWidths : Map<string, number>
+}
 
-  props: {
-    columns: List<BaseColumn | ColumnGroup>,
-    scrollLeft: number,
-    onScroll: Function,
-    sort : List<Sort>,
-    onUpdateSort : Function,
-    onUpdateFilter : Function,
-    onColumnResize : Function,
-    columnWidths : Map<string, number>
-  }
+export default class Header extends React.Component<HeaderProps> {
+
+  props: HeaderProps
+  scrollingDiv : any
 
   componentDidMount = () => {
     this.updateScroll()
@@ -29,7 +32,7 @@ export default class Header extends React.Component {
   }
 
   updateScroll = () => {
-    this.refs.scrollingDiv.scrollLeft = this.props.scrollLeft
+    this.scrollingDiv.scrollLeft = this.props.scrollLeft // eslint-disable-line
   }
 
   triggerOnScroll = (event : Object) => {
@@ -44,7 +47,7 @@ export default class Header extends React.Component {
     <div style={{display: 'flex'}}>
       { this.renderColumns(this.props.columns.filter(c => (this.columnIsLocked(c)) || c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null)) }
     </div>
-    <div style={{display: 'flex', overflow: 'overlay'}} ref="scrollingDiv" onScroll={this.triggerOnScroll}>
+    <div style={{display: 'flex', overflow: 'overlay'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
       { this.renderColumns(this.props.columns.filter(c => !(this.columnIsLocked(c)) && !(c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null))) }
     </div>
   </div>

@@ -1,0 +1,14 @@
+{
+ "parser": "babel-eslint",
+  "env": {
+    "browser": true
+  },
+ "extends": [
+  "eslint:recommended",
+  "plugin:react/recommended"
+ ],
+ rules: {
+   "no-unexpected-multiline": 2,
+   "no-unused-vars": 1
+ }
+}

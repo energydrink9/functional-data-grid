@@ -2,15 +2,17 @@
 
 import React from 'react'
 
-export default class TextBoxFilter extends React.Component {
+type TextBoxFilterProps = {
+  onUpdateFilter : Function
+}
+type TextBoxFilterState = {
+  value : string
+}
 
-  props: {
-    onUpdateFilter : Function
-  }
+export default class TextBoxFilter extends React.Component<TextBoxFilterProps, TextBoxFilterState> {
 
-  state: {
-    value : string
-  }
+  props: TextBoxFilterProps
+  state: TextBoxFilterState
 
   constructor(props : Object) {
     super(props)

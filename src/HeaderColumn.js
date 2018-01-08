@@ -4,25 +4,27 @@ import React from 'react'
 import BaseColumn from "./BaseColumn"
 import HeaderColumnResizer from "./HeaderColumnResizer"
 
-export default class HeaderColumn extends React.Component {
+type HeaderColumnProps = {
+  column: BaseColumn,
+  direction: 'asc' | 'desc' | 'none',
+  onUpdateSort : Function,
+  onUpdateFilter : Function,
+  onColumnResize : Function,
+  width: ?number
+}
+type HeaderColumnState = {
+  direction: 'asc' | 'desc' | 'none',
+  hover: boolean
+}
+
+export default class HeaderColumn extends React.Component<HeaderColumnProps, HeaderColumnState> {
 
   static defaultProps = {
     direction: 'none'
   }
 
-  props: {
-    column: BaseColumn,
-    direction: 'asc' | 'desc' | 'none',
-    onUpdateSort : Function,
-    onUpdateFilter : Function,
-    onColumnResize : Function,
-    width: ?number
-  }
-
-  state: {
-    direction: 'asc' | 'desc' | 'none',
-    hover: boolean
-  }
+  props: HeaderColumnProps
+  state: HeaderColumnState
 
   element : any;
 

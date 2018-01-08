@@ -29,7 +29,7 @@ export default class BaseColumn {
   hidden : boolean = false;
   renderer : Function = v => v;
   comparator : Function = (a, b) => a === b ? 0 : a < b ? -1 : 1;
-  filterRenderer : Function = (onUpdateFilter : Function) => <TextBoxFilter onUpdateFilter={onUpdateFilter} />;
+  filterRenderer : Function = (onUpdateFilter : Function) => <TextBoxFilter onUpdateFilter={onUpdateFilter} />;  // eslint-disable-line
   headerRenderer : Function = (column : BaseColumn) => this.title;
   locked : boolean = false;
   width : ?number;

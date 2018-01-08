@@ -8,13 +8,15 @@
     "assign-deep": "^0.4.6",
     "debounce": "^1.0.2",
     "debounce-promise": "^3.0.1",
+    "immutable": "~3.8.2",
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.10",
-    "react": "^15.5.4",
-    "react-datepicker": "^0.48.0",
-    "react-dom": "^15.5.4",
-    "react-select": "^1.0.0-rc.5",
-    "react-virtualized": "^9.7.6"
+    "moment": "~2.20.1",
+    "prop-types": "~15.6.0",
+    "react": "~16.2.0",
+    "react-datepicker": "~0.64.0",
+    "react-dom": "~16.2.0",
+    "react-select": "~1.1.0",
+    "react-virtualized": "~9.14.1"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
@@ -38,11 +40,13 @@
     "eslint-plugin-react": "^7.1.0",
     "file-loader": "^0.8.5",
     "flow": "0.2.3",
-    "flow-bin": "0.48.0",
+    "flow-bin": "0.61.0",
     "flow-status-webpack-plugin": "0.1.7",
-    "flow-typed": "2.1.2",
+    "flow-typed": "2.2.3",
     "graceful-fs": "^4.1.11",
-    "json-loader": "^0.5.4"
+    "json-loader": "^0.5.4",
+    "webpack": "1.15.0",
+    "webpack-dev-server": "1.16.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

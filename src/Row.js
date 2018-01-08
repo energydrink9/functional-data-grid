@@ -5,17 +5,20 @@ import BaseColumn from "./BaseColumn"
 import { List, Map } from 'immutable'
 import Cell from './Cell'
 
-export default class Row extends React.Component {
+type RowProps = {
+  columns : List<BaseColumn>,
+  element : any,
+  style : Object,
+  scrollLeft : number,
+  onScroll : Function,
+  rowIndex : number,
+  columnWidths : Map<string, number>
+}
 
-  props : {
-    columns : List<BaseColumn>,
-    element : any,
-    style : Object,
-    scrollLeft : number,
-    onScroll : Function,
-    rowIndex : number,
-    columnWidths : Map<string, number>
-  };
+export default class Row extends React.Component<RowProps> {
+
+  props : RowProps
+  scrollingDiv : any
 
   componentDidMount = () => {
     this.updateScroll()
@@ -26,7 +29,7 @@ export default class Row extends React.Component {
   }
 
   updateScroll = () => {
-    this.refs.scrollingDiv.scrollLeft = this.props.scrollLeft
+    this.scrollingDiv.scrollLeft = this.props.scrollLeft
   }
 
   getStyles = () => {
@@ -44,7 +47,7 @@ export default class Row extends React.Component {
     <div style={{display: 'flex'}}>
       { this.props.columns.filter(c => ! c.hidden).filter(c => c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} />) }
     </div>
-    <div style={{display: 'flex', overflow: 'hidden'}} ref="scrollingDiv">
+    <div style={{display: 'flex', overflow: 'hidden'}} ref={el => this.scrollingDiv = el}>
     { this.props.columns.filter(c => ! c.hidden).filter(c => ! c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} />) }
     </div>
   </div>

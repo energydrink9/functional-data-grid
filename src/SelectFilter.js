@@ -3,16 +3,18 @@
 import React from 'react'
 import {List} from 'immutable'
 
-export default class SelectFilter extends React.Component {
+type SelectFilterProps = {
+  choices : List<[string, any]>,
+  onUpdateFilter : Function
+}
+type SelectFilterState = {
+  value : ?any
+}
 
-  props: {
-    choices : List<[string, any]>,
-    onUpdateFilter : Function
-  }
+export default class SelectFilter extends React.Component<SelectFilterProps, SelectFilterState> {
 
-  state: {
-    value : ?any
-  }
+  props: SelectFilterProps
+  state: SelectFilterState
 
   constructor(props : Object) {
     super(props)

@@ -2,15 +2,17 @@
 
 import React from 'react'
 
-export default class CheckBoxFilter extends React.Component {
+type CheckBoxFilterProps = {
+  onUpdateFilter : Function
+}
+type CheckBoxFilterState = {
+  value : string
+}
 
-  props: {
-    onUpdateFilter : Function
-  }
+export default class CheckBoxFilter extends React.Component<CheckBoxFilterProps, CheckBoxFilterState> {
 
-  state: {
-    value : string
-  }
+  props: CheckBoxFilterProps
+  state: CheckBoxFilterState
 
   constructor(props : Object) {
     super(props)
