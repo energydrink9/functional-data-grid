@@ -25,6 +25,6 @@ export default class TextBoxFilter extends React.Component<TextBoxFilterProps, T
 
   triggerOnUpdateFilter = (event : Object) => {
     event.persist()
-    this.props.onUpdateFilter((value) => (value == null ? '' : value.toUpperCase()).toString().includes(event.target.value.toUpperCase()))
+    this.props.onUpdateFilter((value) => (value == null ? '' : value.toString()).toUpperCase().includes(event.target.value.toUpperCase()))
   }
 }

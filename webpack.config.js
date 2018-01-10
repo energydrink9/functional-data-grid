@@ -1,36 +1,48 @@
-const path = require('path');
-const url = require('url');
-const autoprefixer = require('autoprefixer');
-const postCssFlexbugsFixes = require('postcss-flexbugs-fixes')
-const webpack = require('webpack');
-const FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
+var path = require('path')
+var url = require('url')
+var webpack = require('webpack')
+var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin')
 
-const distDir = "static";
+const distDir = "dist";
 
 module.exports = {
-  bail: true,
   entry: {
     app: './src/FunctionalDataGrid.js'
   },
+  context: __dirname,
   output: {
-    publicPath: '/app',
-    path: path.join(__dirname, distDir, 'app'),
-    filename: '[name].[chunkhash:8].js',
-    chunkFilename: '[name].[chunkhash:8].chunk.js'
+    library: 'FunctionalDataGrid',
+    libraryTarget: 'umd',
+    path: path.join(__dirname, distDir),
+    filename: 'FunctionalDataGrid.js',
+    pathinfo: true // Add /* filename */ comments to generated require()s in the output.
+  },
+  devtool: 'cheap-module-source-map',
+  devServer: {
+    hot: true,
+    port: 8090,
+    host: '0.0.0.0',
+    historyApiFallback: {
+      index: '/app/index.html'
+    },
+    disableHostCheck: true
   },
   module: {
-    preLoaders: [
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.jsx?$/,
+        loader: 'eslint-loader',
+        exclude: [
+          /node_modules/
+        ]
+      },
       {
         test: /\.jsx?$/,
-        loaders: ['eslint'],
-        exclude: /node_modules/
-      }
-    ],
-    loaders: [
-      {
-		    test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel',
+        loader: 'babel-loader',
+        exclude: [
+          /node_modules/
+        ],
         query: {
           presets: ['babel-preset-es2015', 'babel-preset-react'].map(require.resolve),
           plugins: [
@@ -58,28 +70,12 @@ module.exports = {
       { test: /\.json$/,                    loader: 'json' }
     ]
   },
-  resolveLoader: { fallback: path.join(__dirname, "node_modules") },
+  resolve: { modules: [ "node_modules" ] },
+  cache: true,
   plugins: [
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new FlowStatusWebpackPlugin({
         failOnError: true
     })
-  ],
-  eslint: {
-    failOnWarning: false,
-    failOnError: true
-  },
-  postcss: function() {
-    return [
-      postCssFlexbugsFixes,
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9'
-        ]
-      })
-    ];
-  }
+  ]
 };
