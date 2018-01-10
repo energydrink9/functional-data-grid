@@ -21,7 +21,8 @@ type FunctionalDataGridProps = {
   initialFilter : List<Filter>,
   initialSort : List<Sort>,
   groups : List<Group>,
-  data : List<any>
+  data : List<any>,
+  additionalStyle : Object
 }
 type FunctionalDataGridState = {
   cachedElements : List<any>,
@@ -39,7 +40,8 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
   static defaultProps = {
     initialFilter : List(),
     initialSort : List(),
-    groups : List()
+    groups : List(),
+    additionalStyle : {}
   }
 
   constructor(props : FunctionalDataGridProps) {
@@ -61,30 +63,33 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
       this.debouncedUpdateElements(newProps.data, newProps.groups, this.state.sort, this.state.filter)
   }
 
-  render = () => <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-    <ScrollSync>
-      {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
-        <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-          <Header columns={this.props.columns} columnWidths={this.state.columnWidths} scrollLeft={scrollLeft} onScroll={onScroll} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} />
-          <div style={{flexGrow: 1}}>
-            <AutoSizer>
-              {({height, width}) => (
-                  <ReactVirtualizedList
-                    rowCount={this.getTotalCount()}
-                    height={height}
-                    width={width}
-                    rowHeight={26}
-                    rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
-                    ref={(list) => { this.list = list }}
-                    style={{backgroundColor: '#fff'}}>
-                  </ReactVirtualizedList>
-              )}
-            </AutoSizer>
+  render = () => {
+    let style = {display: 'flex', flexDirection: 'column', height: '100%'}
+    return <div style={{...style, ...this.props.additionalStyle}}>
+      <ScrollSync>
+        {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
+          <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+            <Header columns={this.props.columns} columnWidths={this.state.columnWidths} scrollLeft={scrollLeft} onScroll={onScroll} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} />
+            <div style={{flexGrow: 1}}>
+              <AutoSizer>
+                {({height, width}) => (
+                    <ReactVirtualizedList
+                      rowCount={this.getTotalCount()}
+                      height={height}
+                      width={width}
+                      rowHeight={26}
+                      rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
+                      ref={(list) => { this.list = list }}
+                      style={{backgroundColor: '#fff'}}>
+                    </ReactVirtualizedList>
+                )}
+              </AutoSizer>
+            </div>
           </div>
-        </div>
-      )}
-    </ScrollSync>
-  </div>
+        )}
+      </ScrollSync>
+    </div>
+  }
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
@@ -124,7 +129,8 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
   groupData = (data : List<any>, groups : List<Group>) => groups.isEmpty() ? data :
     this.groupDataByGroup(data, groups.first()).map((e : DataGroup<any>) => new DataGroup(e.key, this.groupData(e.data, groups.shift()), e.aggregate))
 
-  groupDataByGroup = (data : List<any>, group : Group) => data.groupBy(group.groupingFunction).map((g, key) => this.computeAggregates(g, group, key)).toList().sort(group.comparator)
+  groupDataByGroup = (data : List<any>, group : Group) =>
+    data.groupBy(group.groupingFunction).map((g, key) => this.computeAggregates(g, group, key)).toList().sort(group.comparator)
 
   computeAggregates = (data: List<any>, group : Group, key : any) => group.aggregatesCalculator == null ? new DataGroup(key, data) : new DataGroup(key, data, group.aggregatesCalculator(data, key))
 

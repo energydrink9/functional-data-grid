@@ -53,6 +53,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_ENV=production webpack -p --config webpack.config.js",
     "fast-start": "webpack --config webpack.config.js --progress",
+    "watch": "webpack --config webpack.config.js --watch --progress",
     "install-flow-def": "flow-typed install"
   },
   "license": "MIT",

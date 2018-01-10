@@ -11444,6 +11444,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends2 = __webpack_require__(14);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _getPrototypeOf = __webpack_require__(3);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -11517,7 +11521,8 @@ var debounceTimeout = 250;
   initialFilter : List<Filter>,
   initialSort : List<Sort>,
   groups : List<Group>,
-  data : List<any>
+  data : List<any>,
+  additionalStyle : Object
 }*/
 /*:: type FunctionalDataGridState = {
   cachedElements : List<any>,
@@ -11547,9 +11552,10 @@ var FunctionalDataGrid = function (_React$Component) {
     };
 
     _this.render = function () {
+      var style = { display: 'flex', flexDirection: 'column', height: '100%' };
       return _react2.default.createElement(
         'div',
-        { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
+        { style: (0, _extends3.default)({}, style, _this.props.additionalStyle) },
         _react2.default.createElement(
           _reactVirtualized.ScrollSync,
           null,
@@ -11773,7 +11779,8 @@ var FunctionalDataGrid = function (_React$Component) {
 FunctionalDataGrid.defaultProps = {
   initialFilter: (0, _immutable.List)(),
   initialSort: (0, _immutable.List)(),
-  groups: (0, _immutable.List)()
+  groups: (0, _immutable.List)(),
+  additionalStyle: {}
 };
 exports.default = FunctionalDataGrid;
 
