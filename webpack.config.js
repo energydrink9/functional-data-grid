@@ -7,26 +7,16 @@ const distDir = "dist";
 
 module.exports = {
   entry: {
-    app: './src/FunctionalDataGrid.js'
+    app: './index.js'
   },
   context: __dirname,
   output: {
     library: 'FunctionalDataGrid',
     libraryTarget: 'umd',
     path: path.join(__dirname, distDir),
-    filename: 'FunctionalDataGrid.js',
-    pathinfo: true // Add /* filename */ comments to generated require()s in the output.
+    filename: 'FunctionalDataGrid.js'
   },
   devtool: 'cheap-module-source-map',
-  devServer: {
-    hot: true,
-    port: 8090,
-    host: '0.0.0.0',
-    historyApiFallback: {
-      index: '/app/index.html'
-    },
-    disableHostCheck: true
-  },
   module: {
     rules: [
       {
@@ -78,4 +68,4 @@ module.exports = {
         failOnError: true
     })
   ]
-};
+}

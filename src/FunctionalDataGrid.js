@@ -36,6 +36,12 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
   list : ReactVirtualizedList;
   debouncedUpdateElements = debounce((data : List<any>, groups : List<Group>, sort : List<Sort>, filter : List<Filter>) => this.updateElements(data, groups, sort, filter), debounceTimeout);
 
+  static defaultProps = {
+    initialFilter : List(),
+    initialSort : List(),
+    groups : List()
+  }
+
   constructor(props : FunctionalDataGridProps) {
     super(props)
     this.state = {
