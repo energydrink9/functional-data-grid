@@ -104,7 +104,7 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
 
   computeElements = (data : List<any>, groups : List<Group>, sort : List<Sort>, filter : List<Filter>) => this.removeMetaData(this.flatGroups(this.filterGroups(this.groupData(this.sortData(this.enrichData(data), sort), groups), filter)).flatten())
 
-  removeMetaData = (data : List<DataRow<any>>) => data.map(r => r.content)
+  removeMetaData = (data : List<DataRow<any>>) => data.map(r => r instanceof DataRow ? r.content : r)
 
   sortData = (data : List<any>, sort : List<Sort>) => sort.reverse().reduce((data, s) => this.applySort(data, s), data)
 

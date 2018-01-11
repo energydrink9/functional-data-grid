@@ -11616,7 +11616,7 @@ var FunctionalDataGrid = function (_React$Component) {
 
     _this.removeMetaData = function (data /*: List<DataRow<any>>*/) {
       return data.map(function (r) {
-        return r.content;
+        return r instanceof _DataRow2.default ? r.content : r;
       });
     };
 
