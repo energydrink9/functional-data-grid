@@ -5,7 +5,6 @@
   "main": "dist/FunctionalDataGrid.js",
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
   "dependencies": {
-    "assign-deep": "^0.4.6",
     "debounce": "^1.0.2",
     "debounce-promise": "^3.0.1",
     "immutable": "~3.8.2",
@@ -51,9 +50,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=production webpack -p --config webpack.config.js",
-    "fast-start": "webpack --config webpack.config.js --progress",
-    "watch": "webpack --config webpack.config.js --watch --progress",
+    "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.js",
+    "fast-build": "webpack --config webpack.config.js",
+    "start": "webpack --config webpack.config.js --watch",
     "install-flow-def": "flow-typed install"
   },
   "license": "MIT",

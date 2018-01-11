@@ -11,7 +11,7 @@ import Row from './Row'
 import { ScrollSync, AutoSizer, List as ReactVirtualizedList } from 'react-virtualized'
 import Group from "./Group"
 import DataGroup from "./DataGroup"
-import DataRow from "./ElementRow"
+import DataRow from "./DataRow"
 import debounce from 'debounce'
 
 const debounceTimeout = 250
@@ -145,7 +145,7 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
 
   applyFilterToElement = (e : any, filter : Filter) => filter.matcher(this.getColumnById(filter.columnId).valueGetter(e))
 
-  flatGroups = (data : any) => data instanceof List ? data.map(this.flatGroups) : data instanceof DataGroup ? this.flatGroups(this.flatDataGroup(data)) : data
+  flatGroups = (data : any) => List.isList(data) ? data.map(this.flatGroups) : data instanceof DataGroup ? this.flatGroups(this.flatDataGroup(data)) : data
 
   flatDataGroup = (e : DataGroup<any>) : List<any> => {
     let elements = e.data.map(el => el instanceof DataGroup ? el : new DataRow(el, 'element'))

@@ -13,7 +13,6 @@ export default FunctionalDataGrid
 
 export { BaseColumn, ColumnGroup }
 export { Filter, Sort, Group }
-export { HeaderColumnResizer }
 
 let utils = {
   HeaderColumnResizer: HeaderColumnResizer
