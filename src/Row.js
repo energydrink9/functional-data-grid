@@ -47,7 +47,7 @@ export default class Row extends React.Component<RowProps> {
     <div style={{display: 'flex'}}>
       { this.props.columns.filter(c => ! c.hidden).filter(c => c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} />) }
     </div>
-    <div style={{display: 'flex', overflow: 'hidden'}} ref={el => this.scrollingDiv = el}>
+    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
     { this.props.columns.filter(c => ! c.hidden).filter(c => ! c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} />) }
     </div>
   </div>

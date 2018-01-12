@@ -11551,7 +11551,7 @@ var FunctionalDataGrid = function (_React$Component) {
     };
 
     _this.render = function () {
-      var style = { display: 'flex', flexDirection: 'column', height: '100%' };
+      var style = { display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' };
       return _react2.default.createElement(
         'div',
         { style: (0, _extends3.default)({}, style, _this.props.additionalStyle) },
@@ -14354,7 +14354,7 @@ var Row = function (_React$Component) {
         ),
         _react2.default.createElement(
           'div',
-          { style: { display: 'flex', overflow: 'hidden' }, ref: function ref(el) {
+          { style: { display: 'flex', overflow: 'hidden', 'flexGrow': 1 }, ref: function ref(el) {
               return _this.scrollingDiv = el;
             } },
           _this.props.columns.filter(function (c) {

@@ -64,7 +64,7 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
   }
 
   render = () => {
-    let style = {display: 'flex', flexDirection: 'column', height: '100%'}
+    let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box'}
     return <div style={{...style, ...this.props.additionalStyle}}>
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
