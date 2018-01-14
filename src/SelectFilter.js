@@ -23,7 +23,7 @@ export default class SelectFilter extends React.Component<SelectFilterProps, Sel
     }
   }
 
-  render = () => <select style={{width: '100%', padding: '2.5px'}} onChange={this.triggerOnUpdateFilter}>
+  render = () => <select style={{width: '100%', boxSizing: 'border-box', padding: '2.5px'}} onChange={this.triggerOnUpdateFilter}>
     <option key={-1} value={''} />
     { this.props.choices.map((c, index) => <option key={index} value={c[1]}>{ c[0] }</option>) }
   </select>

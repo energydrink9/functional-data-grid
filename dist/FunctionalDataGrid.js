@@ -8026,7 +8026,7 @@ var TextBoxFilter = function (_React$Component) {
     var _this = (0, _possibleConstructorReturn3.default)(this, (TextBoxFilter.__proto__ || (0, _getPrototypeOf2.default)(TextBoxFilter)).call(this, props));
 
     _this.render = function () {
-      return _react2.default.createElement('input', { type: 'text', style: { width: '100%', padding: '2px 5px', backgroundColor: '#eee', border: 'solid 1px #ccc', color: '#000' }, onChange: _this.triggerOnUpdateFilter });
+      return _react2.default.createElement('input', { type: 'text', style: { width: '100%', boxSizing: 'border-box', padding: '2px 5px', backgroundColor: '#eee', border: 'solid 1px #ccc', color: '#000' }, onChange: _this.triggerOnUpdateFilter });
     };
 
     _this.triggerOnUpdateFilter = function (event /*: Object*/) {
@@ -11515,6 +11515,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var debounceTimeout = 250;
 
+var defaultInitialColumnWidth = 100;
+
 /*:: type FunctionalDataGridProps = {
   columns: List<BaseColumn | ColumnGroup>,
   initialFilter : List<Filter>,
@@ -11541,6 +11543,14 @@ var FunctionalDataGrid = function (_React$Component) {
     _this.debouncedUpdateElements = (0, _debounce2.default)(function (data /*: List<any>*/, groups /*: List<Group>*/, sort /*: List<Sort>*/, filter /*: List<Filter>*/) {
       return _this.updateElements(data, groups, sort, filter);
     }, debounceTimeout);
+
+    _this.getInitialColumnWidths = function (columns /*: List<BaseColumn | ColumnGroup>*/) {
+      return columns.groupBy(function (c) {
+        return c.id;
+      }).map(function (v) {
+        return v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth;
+      });
+    };
 
     _this.componentWillMount = function () {
       _this.updateElements(_this.props.data, _this.props.groups, _this.state.sort, _this.state.filter);
@@ -11767,7 +11777,7 @@ var FunctionalDataGrid = function (_React$Component) {
       cachedElements: (0, _immutable.List)(),
       sort: _this.props.initialSort,
       filter: _this.props.initialFilter,
-      columnWidths: (0, _immutable.Map)()
+      columnWidths: _this.getInitialColumnWidths(props.columns)
     };
     return _this;
   }
@@ -14367,7 +14377,7 @@ var Row = function (_React$Component) {
         )
       );
     }, _this.getColumnWidth = function (c /*: BaseColumn*/) {
-      return _this.props.columnWidths.get(c.id) != null ? _this.props.columnWidths.get(c.id) : c.width;
+      return _this.props.columnWidths.get(c.id);
     }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
   }
 
@@ -37325,7 +37335,7 @@ var SelectFilter = function (_React$Component) {
     _this.render = function () {
       return _react2.default.createElement(
         'select',
-        { style: { width: '100%', padding: '2.5px' }, onChange: _this.triggerOnUpdateFilter },
+        { style: { width: '100%', boxSizing: 'border-box', padding: '2.5px' }, onChange: _this.triggerOnUpdateFilter },
         _react2.default.createElement('option', { key: -1, value: '' }),
         _this.props.choices.map(function (c, index) {
           return _react2.default.createElement(

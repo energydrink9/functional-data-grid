@@ -15,6 +15,7 @@ import DataRow from "./DataRow"
 import debounce from 'debounce'
 
 const debounceTimeout = 250
+const defaultInitialColumnWidth = 100
 
 type FunctionalDataGridProps = {
   columns: List<BaseColumn | ColumnGroup>,
@@ -50,9 +51,11 @@ export default class FunctionalDataGrid extends React.Component<FunctionalDataGr
       cachedElements : List(),
       sort : this.props.initialSort,
       filter : this.props.initialFilter,
-      columnWidths : Map()
+      columnWidths : this.getInitialColumnWidths(props.columns)
     }
   }
+
+  getInitialColumnWidths = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
 
   componentWillMount = () => {
     this.updateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)

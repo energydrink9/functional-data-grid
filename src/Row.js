@@ -52,5 +52,5 @@ export default class Row extends React.Component<RowProps> {
     </div>
   </div>
 
-  getColumnWidth = (c : BaseColumn) => this.props.columnWidths.get(c.id) != null ? this.props.columnWidths.get(c.id) : c.width
+  getColumnWidth = (c : BaseColumn) => this.props.columnWidths.get(c.id)
 }

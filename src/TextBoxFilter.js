@@ -21,7 +21,7 @@ export default class TextBoxFilter extends React.Component<TextBoxFilterProps, T
     }
   }
 
-  render = () => <input type="text" style={{width: '100%', padding: '2px 5px', backgroundColor: '#eee', border: 'solid 1px #ccc', color: '#000'}} onChange={this.triggerOnUpdateFilter} />
+  render = () => <input type="text" style={{width: '100%', boxSizing: 'border-box', padding: '2px 5px', backgroundColor: '#eee', border: 'solid 1px #ccc', color: '#000'}} onChange={this.triggerOnUpdateFilter} />
 
   triggerOnUpdateFilter = (event : Object) => {
     event.persist()

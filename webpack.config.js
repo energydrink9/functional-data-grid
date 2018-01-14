@@ -1,7 +1,6 @@
 var path = require('path')
 var url = require('url')
 var webpack = require('webpack')
-var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin')
 
 const distDir = "dist";
 
@@ -63,9 +62,6 @@ module.exports = {
   resolve: { modules: [ "node_modules" ] },
   cache: true,
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new FlowStatusWebpackPlugin({
-        failOnError: true
-    })
+    new webpack.NoEmitOnErrorsPlugin()
   ]
 }
