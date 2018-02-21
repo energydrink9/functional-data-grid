@@ -7,7 +7,7 @@ import Cell from './Cell'
 
 type RowProps = {
   columns : List<BaseColumn>,
-  element : any,
+  element : DataRow<any>,
   style : Object,
   scrollLeft : number,
   onScroll : Function,
@@ -38,7 +38,7 @@ export default class Row extends React.Component<RowProps> {
     style.borderBottom = 'solid 1px #eee'
     style.backgroundColor = '#fff'
     style.lineHeight = '25px'
-    if (this.props.element._isAggregate)
+    if (this.props.element.type === 'aggregate')
       style.backgroundColor = '#ddd'
     return style
   }

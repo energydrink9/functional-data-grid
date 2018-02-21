@@ -5,7 +5,7 @@ import BaseColumn from "./BaseColumn"
 
 type CellProps = {
   column : BaseColumn,
-  element : any,
+  element : DataRow<any>,
   rowIndex : number,
   width : ?number
 }
@@ -35,7 +35,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
   onMouseEnter = () => this.setState({ 'hover': true })
   onMouseLeave = () => this.setState({ 'hover': false })
 
-  renderValue = (c : BaseColumn, e : any) => c.renderer(c.valueGetter(e), e, this.props.rowIndex)
+  renderValue = (c : BaseColumn, e : DataRow<any>) => c.renderer(c.valueGetter(e.content, e.type), e.content, e.type, this.props.rowIndex, e.originalIndex)
 
   getCellStyle = () => {
     let styles : Object = {

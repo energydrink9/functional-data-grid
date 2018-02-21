@@ -2,9 +2,9 @@
 
 export default class Filter {
   columnId : string;
-  matcher : Function;
+  matcher : (any) => boolean;
 
-  constructor(columnId: string, matcher: Function) {
+  constructor(columnId: string, matcher: (any) => boolean) {
     this.columnId = columnId
     this.matcher = matcher
   }
