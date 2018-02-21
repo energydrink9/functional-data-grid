@@ -8,7 +8,6 @@ decls
 flow-typed
 
 [options]
-
 module.system.node.resolve_dirname=node_modules
 module.name_mapper='.*\.\(css\|scss\)$' -> '<PROJECT_ROOT>/interfaces/CssModule.js'
 module.name_mapper='.*\.\(html\|svg\|png\|jpg\|gif\)$' -> '<PROJECT_ROOT>/interfaces/WebpackAsset.js'

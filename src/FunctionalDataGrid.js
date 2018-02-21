@@ -120,11 +120,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
       filter
     ).flatMap(e => e instanceof DataGroup ? e.flatten() : List(e))
 
-  sortData = (data : List<DataRow<T>>, sort : List<Sort>): List<DataRow<T>> => sort.reverse().reduce((data, s) => this.applySort(data, s), data)
+  sortData = (data : List<DataRow<T>>, sort : List<Sort>): List<DataRow<T>> => sort.reverse().reduce((data: List<DataRow<T>>, s: Sort) => this.applySort(data, s), data)
 
   applySort = (data : List<DataRow<T>>, sort : Sort): List<DataRow<T>> => {
     let column = this.getColumnById(sort.columnId)
-    return data.sortBy((e: DataRow) => column.valueGetter(e.content), (a, b) => (sort.direction === 'asc' ? 1 : -1) * column.comparator(a, b))
+    return data.sortBy((e: DataRow<T>) => column.valueGetter(e.content), (a, b) => (sort.direction === 'asc' ? 1 : -1) * column.comparator(a, b))
   }
 
   getColumnById = (columnId : string) => {
