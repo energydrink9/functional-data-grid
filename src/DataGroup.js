@@ -26,7 +26,7 @@ export default class DataGroup<K, T, A> {
   flatten = (): List<DataRow<T>> => this.flatDataGroup(this)
 
   flatDataGroup = <K, T, A> (dataGroup : DataGroup<K, T, A>): List<DataRow<T>> => {
-    let elements = dataGroup.data.flatMap(el => el instanceof DataGroup ? this.flatDataGroup(el) : List(new DataRow(el, 'element')))
+    let elements = dataGroup.data.flatMap(el => el instanceof DataGroup ? this.flatDataGroup(el) : List([el]))
     return dataGroup.aggregate == null ? elements : elements.push(new DataRow(dataGroup.aggregate, 'aggregate', null))
   }
 }

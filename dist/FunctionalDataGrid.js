@@ -11364,6 +11364,7 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /*:: type GroupOptionsType<K, T> = {
+  id: string,
   groupingFunction : (T) => K,
   renderer? : (T) => React.Node,
   comparator? : (groupKey1: K, groupKey2: K) => number,
@@ -11380,6 +11381,7 @@ var Group = function Group /*:: <K, T>*/(options /*: GroupOptionsType<K, T>*/) {
     return a === b ? 0 : (a /*: any*/) < (b /*: any*/) ? -1 : 1;
   };
 
+  this.id = options.id;
   this.groupingFunction = options.groupingFunction;
   if (options.renderer != null) this.renderer = options.renderer;
   if (options.comparator != null) this.comparator = options.comparator;
@@ -11439,9 +11441,9 @@ var _CheckBoxFilter = __webpack_require__(222);
 
 var _CheckBoxFilter2 = _interopRequireDefault(_CheckBoxFilter);
 
-var _AggregateCalculators = __webpack_require__(223);
+var _AggregatesCalculators = __webpack_require__(224);
 
-var _AggregateCalculators2 = _interopRequireDefault(_AggregateCalculators);
+var _AggregatesCalculators2 = _interopRequireDefault(_AggregatesCalculators);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11455,7 +11457,7 @@ exports.Group = _Group2.default;
 
 var utils = {
   HeaderColumnResizer: _HeaderColumnResizer2.default,
-  AggregateCalculators: _AggregateCalculators2.default
+  AggregatesCalculators: _AggregatesCalculators2.default
 };
 var filterRenderers = {
   SelectFilter: _SelectFilter2.default,
@@ -11541,6 +11543,10 @@ var _DataRow = __webpack_require__(41);
 
 var _DataRow2 = _interopRequireDefault(_DataRow);
 
+var _Aggregate = __webpack_require__(225);
+
+var _Aggregate2 = _interopRequireDefault(_Aggregate);
+
 var _debounce = __webpack_require__(220);
 
 var _debounce2 = _interopRequireDefault(_debounce);
@@ -11548,7 +11554,6 @@ var _debounce2 = _interopRequireDefault(_debounce);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var debounceTimeout = 250;
-
 var defaultInitialColumnWidth = 100;
 
 /*:: type FunctionalDataGridProps<T, A> = {
@@ -11701,23 +11706,36 @@ var FunctionalDataGrid = function (_React$Component) {
     };
 
     _this.groupData = function /*:: <K,>*/(data /*: List<DataRow<T>>*/, groups /*: List<Group<any, T>>*/) /*: (List<DataRow<T> | DataGroup<any, any, A>>)*/ {
-      return groups.isEmpty() ? data : _this.groupDataByGroup(data, groups.first()).map(function (e /*: DataGroup<K, T, A>*/) {
-        return new _DataGroup2.default(e.key, _this.groupData(e.data, groups.shift()), e.aggregate);
+      var subGroup /*: List<[string, any]>*/ = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (0, _immutable.List)();
+      return groups.isEmpty() ? data : _this.groupDataByGroup(data, groups.first(), subGroup).map(function (e /*: DataGroup<K, T, A>*/) {
+        return new _DataGroup2.default(e.key, _this.groupData(e.data, groups.shift(), subGroup.push([groups.first().id, e.key])), e.aggregate);
       });
     };
 
-    _this.groupDataByGroup = function /*:: <K,>*/(data /*: (List<DataRow<T>>)*/, group /*: Group<K, T>*/) /*: List<DataGroup<K, DataRow<T>, A>>*/ {
+    _this.groupDataByGroup = function /*:: <K,>*/(data /*: (List<DataRow<T>>)*/, group /*: Group<K, T>*/, subGroup /*: List<[string, any]>*/) /*: List<DataGroup<K, DataRow<T>, A>>*/ {
       return data.groupBy(function (e /*: DataRow<T>*/) {
         return group.groupingFunction(e.content);
       }).map(function (g /*: List<T>*/, key /*: K*/) {
-        return _this.createDataGroup(g, key);
+        return _this.createDataGroup(g, group.id, key, subGroup.push([group.id, key]));
       }).toList().sortBy(function (dg) {
         return dg.key;
       }, group.comparator);
     };
 
-    _this.createDataGroup = function /*:: <K,>*/(data /*: List<T>*/, key /*: K*/) /*: DataGroup<K, T, A>*/ {
-      return _this.props.aggregatesCalculator == null ? new _DataGroup2.default(key, data) : new _DataGroup2.default(key, data, _this.props.aggregatesCalculator(data, key));
+    _this.createDataGroup = function /*:: <K,>*/(data /*: List<T>*/, groupId /*: string*/, key /*: K*/, subGroup /*: List<[string, any]>*/) /*: DataGroup<K, T, Aggregate<any>>*/ {
+      return _this.props.aggregatesCalculator == null ? new _DataGroup2.default(key, data) : new _DataGroup2.default(key, data, _this.createAggregate(key, data, _this.getAggregateKey(subGroup)));
+    };
+
+    _this.createAggregate = function /*:: <K,>*/(groupKey /*: any*/, data /*: List<T>*/, key /*: Object*/) /*: Aggregate<A>*/ {
+      return new _Aggregate2.default(key, _this.props.aggregatesCalculator(data, groupKey));
+    };
+
+    _this.getAggregateKey = function (subGroup /*: List<[string, any]>*/) {
+      var aggregateKey /*: Object*/ = {};
+      subGroup.forEach(function (g /*: [string, any]*/) {
+        return aggregateKey[g[0]] = g[1];
+      });
+      return aggregateKey;
     };
 
     _this.filterGroups = function (data /*: List<DataRow<T> | DataGroup<DataRow<T>>>*/, filters /*: List<Filter>*/) {
@@ -37227,7 +37245,7 @@ var DataGroup = function DataGroup /*:: <K, T, A>*/(key /*: K*/, data /*: List<T
 
   this.flatDataGroup = function /*:: <K, T, A>*/(dataGroup /*: DataGroup<K, T, A>*/) /*: List<DataRow<T>>*/ {
     var elements = dataGroup.data.flatMap(function (el) {
-      return el instanceof DataGroup ? _this.flatDataGroup(el) : (0, _immutable.List)(new _DataRow2.default(el, 'element'));
+      return el instanceof DataGroup ? _this.flatDataGroup(el) : (0, _immutable.List)([el]);
     });
     return dataGroup.aggregate == null ? elements : elements.push(new _DataRow2.default(dataGroup.aggregate, 'aggregate', null));
   };
@@ -37466,7 +37484,8 @@ var CheckBoxFilter = function (_React$Component) {
 exports.default = CheckBoxFilter;
 
 /***/ }),
-/* 223 */
+/* 223 */,
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -37488,17 +37507,47 @@ var AggregatesCalculators = function AggregatesCalculators() {
   (0, _classCallCheck3.default)(this, AggregatesCalculators);
 };
 
-AggregatesCalculators.sumCalculator = function /*:: <T,>*/(elements /*: List<T>*/, valueGetter /*: (T) => number*/) /*: number*/ {
+AggregatesCalculators.count = function /*:: <T,>*/(elements /*: List<T>*/) /*: number*/ {
+  return elements.size;
+};
+
+AggregatesCalculators.sum = function /*:: <T,>*/(elements /*: List<T>*/, valueGetter /*: (T) => number*/) /*: number*/ {
   return elements.reduce(function (accumulator /*: number*/, element /*: T*/) {
     return accumulator + valueGetter(element);
   }, 0);
 };
 
-AggregatesCalculators.averageCalculator = function /*:: <T,>*/(elements /*: List<T>*/, valueGetter /*: (T) => number*/) /*: number*/ {
-  return AggregatesCalculators.sumCalculator(elements, valueGetter) / elements.size;
+AggregatesCalculators.average = function /*:: <T,>*/(elements /*: List<T>*/, valueGetter /*: (T) => number*/) /*: number*/ {
+  return AggregatesCalculators.sum(elements, valueGetter) / elements.size;
 };
 
 exports.default = AggregatesCalculators;
+
+/***/ }),
+/* 225 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _classCallCheck2 = __webpack_require__(1);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Aggregate = function Aggregate /*:: <T>*/(key /*: Object*/, content /*: T*/) {
+  (0, _classCallCheck3.default)(this, Aggregate);
+
+  this.key = key;
+  this.content = content;
+};
+
+exports.default = Aggregate;
 
 /***/ })
 /******/ ]);
