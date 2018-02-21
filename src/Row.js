@@ -4,6 +4,7 @@ import React from 'react'
 import BaseColumn from "./BaseColumn"
 import { List, Map } from 'immutable'
 import Cell from './Cell'
+import DataRow from './DataRow'
 
 type RowProps = {
   columns : List<BaseColumn>,

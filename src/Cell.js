@@ -2,6 +2,7 @@
 
 import React from 'react'
 import BaseColumn from "./BaseColumn"
+import DataRow from './DataRow'
 
 type CellProps = {
   column : BaseColumn,
