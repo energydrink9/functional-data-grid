@@ -11656,9 +11656,11 @@ var FunctionalDataGrid = function (_React$Component) {
     };
 
     _this.computeElements = function (data /*: List<T>*/, groups /*: List<Group<any, T>>*/, sort /*: List<Sort>*/, filter /*: List<Filter>*/) /*: List<DataRow<any>>*/ {
-      return _this.filterGroups(_this.groupData(_this.sortData(_this.enrichData(data), sort), groups), filter).flatMap(function (e) {
-        return e instanceof _DataGroup2.default ? e.flatten() : (0, _immutable.List)(e);
-      });
+      return _this.filterGroups(_this.groupData(_this.sortData(_this.enrichData(data), sort), groups), filter).flatMap(_this.flatGroups);
+    };
+
+    _this.flatGroups = function (e /*: List<DataRow<T> | DataGroup<any, any, A>>*/) {
+      return e instanceof _DataGroup2.default ? e.flatten() : (0, _immutable.List)([e]);
     };
 
     _this.sortData = function (data /*: List<DataRow<T>>*/, sort /*: List<Sort>*/) /*: List<DataRow<T>>*/ {
@@ -37219,7 +37221,7 @@ var DataGroup = function DataGroup /*:: <K, T, A>*/(key /*: K*/, data /*: List<T
     }), _this.aggregate);
   };
 
-  this.flatten = function /*:: <G,>*/() /*: DataGroup<K, G, A>*/ {
+  this.flatten = function () /*: List<DataRow<T>>*/ {
     return _this.flatDataGroup(_this);
   };
 

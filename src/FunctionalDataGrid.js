@@ -118,8 +118,10 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
         groups
       ),
       filter
-    ).flatMap(e => e instanceof DataGroup ? e.flatten() : List(e))
+    ).flatMap(this.flatGroups)
 
+  flatGroups = (e: List<DataRow<T> | DataGroup<any, any, A>>) => e instanceof DataGroup ? e.flatten() : List([e])
+  
   sortData = (data : List<DataRow<T>>, sort : List<Sort>): List<DataRow<T>> => sort.reverse().reduce((data: List<DataRow<T>>, s: Sort) => this.applySort(data, s), data)
 
   applySort = (data : List<DataRow<T>>, sort : Sort): List<DataRow<T>> => {
