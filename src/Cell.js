@@ -36,7 +36,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
   onMouseEnter = () => this.setState({ 'hover': true })
   onMouseLeave = () => this.setState({ 'hover': false })
 
-  renderValue = (c : BaseColumn, e : DataRow<any>) => c.renderer(c.valueGetter(e.content, e.type), e.content, e.type, this.props.rowIndex, e.originalIndex)
+  renderValue = (c : BaseColumn, e : DataRow<any>) => e.type === 'aggregate'
+    ? c.aggregateValueGetter == null ? <span/> : c.renderer(c.aggregateValueGetter(e.content.content, e.content.key), e.content, this.props.rowIndex, e.originalIndex)
+    : c.valueGetter == null ? <span/> : c.renderer(c.valueGetter(e.content), e.content, this.props.rowIndex, e.originalIndex)
 
   getCellStyle = () => {
     let styles : Object = {

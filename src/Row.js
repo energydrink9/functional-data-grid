@@ -44,7 +44,30 @@ export default class Row extends React.Component<RowProps> {
     return style
   }
 
-  render = () => <div style={this.getStyles()}>
+  getCellStyle = () => {
+    return {
+      overflow: 'hidden',
+      flexShrink: 0,
+      padding: '2px 10px',
+      position: 'relative'
+    }
+  }
+
+  render = () => this.props.element.type === 'group-header'
+      ? this.groupHeaderRowRenderer()
+      : this.elementsRowRenderer()
+
+  groupHeaderRowRenderer = () => <div style={this.getStyles()}>
+    <div style={{display: 'flex'}}>
+      <div style={this.getCellStyle()}>
+        { Object.entries(this.props.element.content).map((e, index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
+      </div>
+    </div>
+    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
+    </div>
+  </div>
+
+  elementsRowRenderer = () => <div style={this.getStyles()}>
     <div style={{display: 'flex'}}>
       { this.props.columns.filter(c => ! c.hidden).filter(c => c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} />) }
     </div>

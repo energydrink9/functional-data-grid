@@ -9,9 +9,12 @@ type BaseColumnOptionsType = {
   valueGetter? : ?Function,
   filterable? : ?boolean,
   sortable? : ?boolean,
+  resizable? : ?boolean,
   hidden? : ?boolean,
+  aggregateValueGetter? : ?Function,
   renderer? : ?Function,
-  comparator? : ?Function,
+  aggregateRenderer : Function,
+  comparator? : ?(any, any) => number,
   filterRenderer? : ?Function,
   headerRenderer? : ?Function,
   locked? : ?boolean,
@@ -23,14 +26,17 @@ type BaseColumnOptionsType = {
 export default class BaseColumn {
   id : string;
   title : string = '';
-  valueGetter : Function = e => e;
+  valueGetter : Function;
   filterable : boolean = false;
   sortable : boolean = false;
+  resizable : boolean = true;
   hidden : boolean = false;
   renderer : Function = v => v;
-  comparator : Function = (a, b) => a === b ? 0 : a < b ? -1 : 1;
+  aggregateRenderer : Function;
+  aggregateValueGetter : Function;  // eslint-disable-line
+  comparator : (any, any) => number = (a, b) => a === b ? 0 : a < b ? -1 : 1;
   filterRenderer : Function = (onUpdateFilter : Function) => <TextBoxFilter onUpdateFilter={onUpdateFilter} />;  // eslint-disable-line
-  headerRenderer : Function = (column : BaseColumn) => this.title;
+  headerRenderer : (BaseColumn) => any = (column : BaseColumn) => column.title;
   locked : boolean = false;
   width : ?number;
   headerStyle : Object = {};
@@ -50,8 +56,14 @@ export default class BaseColumn {
       this.hidden = options.hidden
     if (options.renderer != null)
       this.renderer = options.renderer
+    if (options.aggregateRenderer == null)
+      this.aggregateRenderer = this.renderer
+    else
+      this.aggregateRenderer = options.aggregateRenderer
     if (options.comparator != null)
       this.comparator = options.comparator
+    if (options.aggregateValueGetter != null)
+      this.aggregateValueGetter = options.aggregateValueGetter
     if (options.filterRenderer != null)
       this.filterRenderer = options.filterRenderer
     if (options.headerRenderer != null)

@@ -23,10 +23,16 @@ export default class DataGroup<K, T, A> {
       this.aggregate
     )
 
-  flatten = (): List<DataRow<T>> => this.flatDataGroup(this)
+  flatten = (buildHeader: boolean): List<DataRow<T>> => this.flatDataGroup(this, buildHeader)
 
-  flatDataGroup = <K, T, A> (dataGroup : DataGroup<K, T, A>): List<DataRow<T>> => {
-    let elements = dataGroup.data.flatMap(el => el instanceof DataGroup ? this.flatDataGroup(el) : List([el]))
-    return dataGroup.aggregate == null ? elements : elements.push(new DataRow(dataGroup.aggregate, 'aggregate', null))
+  flatDataGroup = <K, T, A> (dataGroup : DataGroup<K, T, A>, buildHeader: boolean): List<DataRow<any>> => {
+    let elements = dataGroup.data.flatMap(el => el instanceof DataGroup ? this.flatDataGroup(el, buildHeader) : List([el]))
+    return this.appendAggregate(this.prependHeader(dataGroup.key, elements, buildHeader), dataGroup.aggregate)
   }
+
+  prependHeader = <K, T> (key : K, elements: List<DataRow<T>>, buildHeader: boolean) => {
+    return buildHeader ? elements.unshift(new DataRow(key, 'group-header', null)) : elements;
+  }
+
+  appendAggregate = <T, A> (elements: List<DataRow<T | A>>, aggregate: ?A) => aggregate == null ? elements : elements.push(new DataRow(aggregate, 'aggregate', null))
 }
