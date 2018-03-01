@@ -26,7 +26,8 @@ type FunctionalDataGridProps<T, A> = {
   data : List<T>,
   additionalStyle : Object,
   aggregatesCalculator: (List<T>, any) => A,
-  showGroupHeaders: boolean
+  showGroupHeaders: boolean,
+  onColumnResize: (Object) => void
 }
 type FunctionalDataGridState<T> = {
   cachedElements : List<DataRow<T>>,
@@ -48,7 +49,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     groups : List(),
     additionalStyle : {},
     aggregatesCalculator: (l: A) => null,
-    showGroupHeaders: true
+    showGroupHeaders: true,
+    onColumnResize: (e: Object) => {}
   }
 
   constructor(props : FunctionalDataGridProps<T, A>) {
@@ -233,5 +235,6 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     this.setState({
       columnWidths: this.state.columnWidths.set(columnId, width)
     })
+    this.props.onColumnResize({id: columnId, width: width})
   }
 }
