@@ -14,7 +14,7 @@ Functional Data Grid is written in ES2016 and in functional programming style.
 You can install the library with NPM:
 
 ```bash
-npm install –save functional-data-grid
+npm install –-save functional-data-grid
 ```
 
 or with YARN:
