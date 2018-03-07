@@ -25,7 +25,7 @@ type FunctionalDataGridProps<T, A> = {
   groups : List<Group<any, T>>,
   data : List<T>,
   additionalStyle : Object,
-  aggregatesCalculator: (List<T>, any) => A,
+  aggregatesCalculator: ?((List<T>, any) => A),
   showGroupHeaders: boolean,
   onColumnResize: (Object) => void
 }
@@ -48,7 +48,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     initialSort : List(),
     groups : List(),
     additionalStyle : {},
-    aggregatesCalculator: (l: A) => null,
+    aggregatesCalculator: null,
     showGroupHeaders: true,
     onColumnResize: (e: Object) => {}
   }
@@ -156,7 +156,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     data.groupBy((e: DataRow<T>) => group.groupingFunction(e.content))
         .map((g: List<T>, key: K) => this.createDataGroup(g, group.id, key, subGroup.push([group.title, key])))
         .toList()
-        .sortBy(dg => dg.key, group.comparator)
+        .sort((dg1, dg2) => group.comparator(dg1.key, dg2.key, dg1.aggregate, dg2.aggregate))
 
   createDataGroup = <K,> (data: List<T>, groupId: string, key : K, subGroup: List<[string, any]>): DataGroup<any, T, Aggregate<any>> => this.props.aggregatesCalculator == null
     ? new DataGroup(this.getGroupKey(subGroup), data)

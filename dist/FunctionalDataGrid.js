@@ -11565,8 +11565,9 @@ var defaultInitialColumnWidth = 100;
   groups : List<Group<any, T>>,
   data : List<T>,
   additionalStyle : Object,
-  aggregatesCalculator: (List<T>, any) => A,
-  showGroupHeaders: boolean
+  aggregatesCalculator: ?((List<T>, any) => A),
+  showGroupHeaders: boolean,
+  onColumnResize: (Object) => void
 }*/
 /*:: type FunctionalDataGridState<T> = {
   cachedElements : List<DataRow<T>>,
@@ -11720,9 +11721,9 @@ var FunctionalDataGrid = function (_React$Component) {
         return group.groupingFunction(e.content);
       }).map(function (g /*: List<T>*/, key /*: K*/) {
         return _this.createDataGroup(g, group.id, key, subGroup.push([group.title, key]));
-      }).toList().sortBy(function (dg) {
-        return dg.key;
-      }, group.comparator);
+      }).toList().sort(function (dg1, dg2) {
+        return group.comparator(dg1.key, dg2.key, dg1.aggregate, dg2.aggregate);
+      });
     };
 
     _this.createDataGroup = function /*:: <K,>*/(data /*: List<T>*/, groupId /*: string*/, key /*: K*/, subGroup /*: List<[string, any]>*/) /*: DataGroup<any, T, Aggregate<any>>*/ {
@@ -11822,6 +11823,7 @@ var FunctionalDataGrid = function (_React$Component) {
       _this.setState({
         columnWidths: _this.state.columnWidths.set(columnId, width)
       });
+      _this.props.onColumnResize({ id: columnId, width: width });
     };
 
     _this.state = {
@@ -11841,10 +11843,9 @@ FunctionalDataGrid.defaultProps = {
   initialSort: (0, _immutable.List)(),
   groups: (0, _immutable.List)(),
   additionalStyle: {},
-  aggregatesCalculator: function aggregatesCalculator(l /*: A*/) {
-    return null;
-  },
-  showGroupHeaders: true
+  aggregatesCalculator: null,
+  showGroupHeaders: true,
+  onColumnResize: function onColumnResize(e /*: Object*/) {}
 };
 exports.default = FunctionalDataGrid;
 

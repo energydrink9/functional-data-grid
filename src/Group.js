@@ -15,7 +15,7 @@ export default class Group<K, T> {
   title: string
   groupingFunction : (T) => K
   renderer : (T) => React.Node = v => v
-  comparator : (groupKey1: K, groupKey2: K) => number = (a: K, b: K) => a === b ? 0 : (a: any) < (b: any) ? -1 : 1
+  comparator : (groupKey1: K, groupKey2: K, aggregate1: ?any, aggregate2: ?any) => number = (a: K, b: K) => a === b ? 0 : (a: any) < (b: any) ? -1 : 1
 
   constructor(options : GroupOptionsType<K, T>) {
     this.id = options.id
