@@ -37,7 +37,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
   onMouseLeave = () => this.setState({ 'hover': false })
 
   renderValue = (c : BaseColumn, e : DataRow<any>) => e.type === 'aggregate'
-    ? c.aggregateValueGetter == null ? <span/> : c.renderer(c.aggregateValueGetter(e.content.content, e.content.key), e.content, this.props.rowIndex, e.originalIndex)
+    ? c.aggregateValueGetter == null ? <span/> : c.aggregateRenderer(c.aggregateValueGetter(e.content.content, e.content.key), e.content, this.props.rowIndex, e.originalIndex)
     : c.valueGetter == null ? <span/> : c.renderer(c.valueGetter(e.content), e.content, this.props.rowIndex, e.originalIndex)
 
   getCellStyle = () => {
