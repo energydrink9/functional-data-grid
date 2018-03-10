@@ -13,7 +13,7 @@ type BaseColumnOptionsType = {
   hidden? : ?boolean,
   aggregateValueGetter? : ?Function,
   renderer? : ?Function,
-  aggregateRenderer : Function,
+  aggregateRenderer? : ?Function,
   comparator? : ?(any, any) => number,
   filterRenderer? : ?Function,
   headerRenderer? : ?Function,
