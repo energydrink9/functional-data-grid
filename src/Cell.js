@@ -65,7 +65,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       zIndex: 1,
-      alignSelf: 'center'
+      alignSelf: 'center',
+      width: '100%'
     }
 
     return styles
