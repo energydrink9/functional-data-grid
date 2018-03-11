@@ -17,6 +17,7 @@ import debounce from 'debounce'
 
 const debounceTimeout = 250
 const defaultInitialColumnWidth = 100
+const defaultRowHeight = 26
 
 type FunctionalDataGridProps<T, A> = {
   columns: List<BaseColumn | ColumnGroup>,
@@ -27,6 +28,7 @@ type FunctionalDataGridProps<T, A> = {
   additionalStyle : Object,
   aggregatesCalculator: ?((List<T>, any) => A),
   showGroupHeaders: boolean,
+  rowHeight: number,
   onColumnResize: (Object) => void
 }
 type FunctionalDataGridState<T> = {
@@ -50,6 +52,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     additionalStyle : {},
     aggregatesCalculator: null,
     showGroupHeaders: true,
+    rowHeight: defaultRowHeight,
     onColumnResize: (e: Object) => {}
   }
 
@@ -88,7 +91,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
                       rowCount={this.getTotalCount()}
                       height={height}
                       width={width}
-                      rowHeight={26}
+                      rowHeight={this.props.rowHeight}
                       rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
                       ref={(list) => { this.list = list }}
                       style={{backgroundColor: '#fff'}}>

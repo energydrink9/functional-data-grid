@@ -45,7 +45,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
       overflow: 'hidden',
       flexShrink: 0,
       padding: '2px 10px',
-      position: 'relative'
+      position: 'relative',
+      display: 'flex'
     }
 
     if (this.state.hover) {
@@ -63,7 +64,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
       backgroundColor: 'inherit',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      zIndex: 1
+      zIndex: 1,
+      alignSelf: 'center'
     }
 
     return styles
