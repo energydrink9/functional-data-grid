@@ -50,7 +50,7 @@ export default class Header extends React.Component<HeaderProps> {
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter(c => (this.columnIsLocked(c)) || c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null)) }
       </div>
-      <div style={{display: 'flex', overflow: 'overlay'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
+      <div style={{display: 'flex', overflow: 'visible'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
         { this.renderColumns(this.props.columns.filter(c => !(this.columnIsLocked(c)) && !(c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null))) }
       </div>
     </div>

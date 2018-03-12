@@ -8,6 +8,7 @@ import HeaderColumnResizer from './src/HeaderColumnResizer'
 import SelectFilter from './src/SelectFilter'
 import TextBoxFilter from './src/TextBoxFilter'
 import CheckBoxFilter from './src/CheckBoxFilter'
+import DatePickerFilter from './src/DatePickerFilter'
 import AggregatesCalculators from './src/AggregatesCalculators'
 
 export default FunctionalDataGrid
@@ -22,7 +23,8 @@ let utils = {
 let filterRenderers = {
   SelectFilter: SelectFilter,
   TextBoxFilter: TextBoxFilter,
-  CheckBoxFilter: CheckBoxFilter
+  CheckBoxFilter: CheckBoxFilter,
+  DatePickerFilter: DatePickerFilter
 }
 
 export { utils }
