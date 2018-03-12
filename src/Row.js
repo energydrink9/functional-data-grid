@@ -64,7 +64,7 @@ export default class Row extends React.Component<RowProps> {
   groupHeaderRowRenderer = () => <div style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
     <div style={{display: 'flex'}}>
       <div style={this.getCellStyle()}>
-        { Object.entries(this.props.element.content).map((e, index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
+        { Object.entries(this.props.element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
       </div>
     </div>
     <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>

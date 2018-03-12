@@ -174,7 +174,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     ? new DataGroup(this.getGroupKey(subGroup), data)
     : new DataGroup(this.getGroupKey(subGroup), data, this.createAggregate(this.getGroupKey(subGroup), data.map(e => e.content)))
 
-  createAggregate = <K,> (groupKey: any, data: List<T>) : Aggregate<A> => new Aggregate(groupKey, this.props.aggregatesCalculator(data, groupKey))
+  createAggregate = <K,> (groupKey: any, data: List<T>) : Aggregate<A> => {
+    if (this.props.aggregatesCalculator == null)
+      throw new Error('Aggregates calculator not specified.')
+    return new Aggregate(groupKey, this.props.aggregatesCalculator(data, groupKey))
+  }
 
   getGroupKey = (subGroup: List<[string, any]>) => {
     let groupKey: Object = {}
