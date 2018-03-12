@@ -15,7 +15,8 @@ type HeaderProps = {
   onUpdateSort : Function,
   onUpdateFilter : Function,
   onColumnResize : Function,
-  columnWidths : Map<string, number>
+  columnWidths : Map<string, number>,
+  style: Object
 }
 
 export default class Header extends React.Component<HeaderProps> {
@@ -43,14 +44,17 @@ export default class Header extends React.Component<HeaderProps> {
       this.props.onScroll(scrollEvent)
   }
 
-  render = () => <div style={{ display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd' }}>
-    <div style={{display: 'flex'}}>
-      { this.renderColumns(this.props.columns.filter(c => (this.columnIsLocked(c)) || c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null)) }
+  render = () => {
+    let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd' }
+    return <div style={{...style, ...this.props.style}}>
+      <div style={{display: 'flex'}}>
+        { this.renderColumns(this.props.columns.filter(c => (this.columnIsLocked(c)) || c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null)) }
+      </div>
+      <div style={{display: 'flex', overflow: 'overlay'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
+        { this.renderColumns(this.props.columns.filter(c => !(this.columnIsLocked(c)) && !(c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null))) }
+      </div>
     </div>
-    <div style={{display: 'flex', overflow: 'overlay'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
-      { this.renderColumns(this.props.columns.filter(c => !(this.columnIsLocked(c)) && !(c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null))) }
-    </div>
-  </div>
+  }
 
   columnIsLocked = (c : BaseColumn | ColumnGroup) => c instanceof BaseColumn && c.locked
 

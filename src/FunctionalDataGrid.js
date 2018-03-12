@@ -19,13 +19,22 @@ const debounceTimeout = 250
 const defaultInitialColumnWidth = 100
 const defaultRowHeight = 26
 
+type FunctionalDataGridStyle = {
+  grid?: Object,
+  header?: Object,
+  group?: Object,
+  aggregate?: Object,
+  row?: Object,
+  cell?: Object
+}
+
 type FunctionalDataGridProps<T, A> = {
   columns: List<BaseColumn | ColumnGroup>,
   initialFilter : List<Filter>,
   initialSort : List<Sort>,
   groups : List<Group<any, T>>,
   data : List<T>,
-  additionalStyle : Object,
+  style : FunctionalDataGridStyle,
   aggregatesCalculator: ?((List<T>, any) => A),
   showGroupHeaders: boolean,
   rowHeight: number,
@@ -49,7 +58,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     initialFilter : List(),
     initialSort : List(),
     groups : List(),
-    additionalStyle : {},
+    style : {},
     aggregatesCalculator: null,
     showGroupHeaders: true,
     rowHeight: defaultRowHeight,
@@ -78,12 +87,12 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
   }
 
   render = () => {
-    let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box'}
-    return <div style={{...style, ...this.props.additionalStyle}}>
+    let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', border: 'solid 1px #ccc'}
+    return <div style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
           <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Header columns={this.props.columns} columnWidths={this.state.columnWidths} scrollLeft={scrollLeft} onScroll={onScroll} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} />
+            <Header columns={this.props.columns} columnWidths={this.state.columnWidths} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} />
             <div style={{flexGrow: 1}}>
               <AutoSizer>
                 {({height, width}) => (
@@ -107,7 +116,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
-    return <Row key={param.index} style={param.style} columns={this.flatColumns(this.props.columns)} columnWidths={this.state.columnWidths} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} />
+    return <Row key={param.index} style={param.style} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} rowStyle={this.props.style.row != null ? this.props.style.row : {}} columns={this.flatColumns(this.props.columns)} columnWidths={this.state.columnWidths} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} />
   }
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {

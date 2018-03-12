@@ -8,7 +8,8 @@ type CellProps = {
   column : BaseColumn,
   element : DataRow<any>,
   rowIndex : number,
-  width : ?number
+  width : ?number,
+  style: Object
 }
 type CellState = {
   hover : boolean
@@ -26,7 +27,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
   }
 
   render = () => {
-    return <div style={Object.assign(this.getCellStyle(), this.props.column.style)} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+    return <div style={{...this.getCellStyle(), ...this.props.column.style, ...this.props.style}} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
       <div style={this.getContentStyle()}>
         { this.renderValue(this.props.column, this.props.element) }
       </div>
