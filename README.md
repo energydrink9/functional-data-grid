@@ -29,7 +29,7 @@ yarn add functional-data-grid
 To use Functional Data Grid, you have to import the library and its base types you intend to use, for example:
 
 ```javascript
-import FunctionalDataGrid, { BaseColumn, Group } from ‘functional-data-grid’
+import FunctionalDataGrid, { BaseColumn, Group } from 'functional-data-grid'
 ```
 
 then you can use it inside your component. For example:
