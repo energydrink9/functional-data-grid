@@ -6,7 +6,7 @@ const distDir = "dist";
 
 module.exports = {
   entry: {
-    app: './index.js'
+    app: './src/index.js'
   },
   context: __dirname,
   output: {

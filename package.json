@@ -45,17 +45,22 @@
     "json-loader": "0.5.7",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.10",
+    "rimraf": "^2.6.2",
     "style-loader": "^0.20.3",
     "webpack": "3.10.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "npm run build",
-    "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.js",
+    "clean": "rimraf dist",
+    "build": "npm run clean && cross-env NODE_ENV=production webpack -p --config webpack.config.js",
     "fast-build": "webpack --config webpack.config.js",
     "start": "webpack --config webpack.config.js --watch",
     "install-flow-def": "flow-typed install"
   },
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
