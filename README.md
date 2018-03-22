@@ -87,6 +87,7 @@ The FunctionalDataGrid component accepts the following props:
 |style|optional|{}|Allows to specify additional styles for the grid: accepts an object with the properties grid, row, cell, header, group, aggregate|
 |rowHeight|optional|26|The height of the rows|
 |showGroupHeaders|optional|true|Set to false to hide the headers for groups|
+|includeFilteredElementsInAggregates|optional|false|It allows to calculate the aggregates based on all the elements, also the filtered ones|
 |onColumnResize|optional| |Allows to specify an event handler for column resizing|
 
 
