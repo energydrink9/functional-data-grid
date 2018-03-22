@@ -38,6 +38,7 @@ type FunctionalDataGridProps<T, A> = {
   aggregatesCalculator: ?((List<T>, any) => A),
   showGroupHeaders: boolean,
   rowHeight: number,
+  includeFilteredElementsInAggregates: boolean,
   onColumnResize: (Object) => void
 }
 type FunctionalDataGridState<T> = {
@@ -62,6 +63,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     aggregatesCalculator: null,
     showGroupHeaders: true,
     rowHeight: defaultRowHeight,
+    includeFilteredElementsInAggregates: false,
     onColumnResize: (e: Object) => {}
   }
 
@@ -129,15 +131,22 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     this.filterGroups(
       this.groupData(
         this.sortData(
-          this.enrichData(data),
+          this.filterData(
+            this.enrichData(data),
+            filter,
+            groups
+          ),
           sort
         ),
         groups
       ),
-      filter
+      filter,
+      groups
     ).flatMap(this.flatGroups)
 
-  flatGroups = (e: List<DataRow<T> | DataGroup<any, any, A>>) => e instanceof DataGroup ? e.flatten(this.props.showGroupHeaders) : List([e])
+  flatGroups = (e: List<DataRow<T> | DataGroup<any, any, A>>) => e instanceof DataGroup
+          ? e.flatten(this.props.showGroupHeaders)
+          : List([e])
 
   sortData = (data : List<DataRow<T>>, sort : List<Sort>): List<DataRow<T>> => sort.reverse().reduce((data: List<DataRow<T>>, s: Sort) => this.applySort(data, s), data)
 
@@ -159,10 +168,10 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   getElements = () => this.state.cachedElements
 
-  groupData = <K,> (data : List<DataRow<T>>, groups : List<Group<any, T>>, subGroup: List<[string, any]> = List()): (List<DataRow<T> | DataGroup<any, any, A>>) => groups.isEmpty()
+  groupData = <K,> (data : List<DataRow<T>>, groups : List<Group<any, T>>, currentSubGroup: List<[string, any]> = List()): (List<DataRow<T> | DataGroup<any, any, A>>) => groups.isEmpty()
     ? data
-    : this.groupDataByGroup(data, groups.first(), subGroup)
-          .map((e : DataGroup<K, T, A>) => new DataGroup(e.key, this.groupData(e.data, groups.shift(), subGroup.push([groups.first().title, ((e.key): any)[groups.first().title]])), e.aggregate))
+    : this.groupDataByGroup(data, groups.first(), currentSubGroup)
+          .map((e : DataGroup<K, T, A>) => new DataGroup(e.key, this.groupData(e.data, groups.shift(), currentSubGroup.push([groups.first().title, ((e.key): any)[groups.first().title]])), e.aggregate))
 
   groupDataByGroup = <K,> (data : (List<DataRow<T>>), group : Group<K, T>, subGroup: List<[string, any]>) : List<DataGroup<K, DataRow<T>, A>> =>
     data.groupBy((e: DataRow<T>) => group.groupingFunction(e.content))
@@ -170,9 +179,9 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
         .toList()
         .sort((dg1, dg2) => group.comparator(dg1.key, dg2.key, dg1.aggregate, dg2.aggregate))
 
-  createDataGroup = <K,> (data: List<T>, groupId: string, key : K, subGroup: List<[string, any]>): DataGroup<any, T, Aggregate<any>> => this.props.aggregatesCalculator == null
-    ? new DataGroup(this.getGroupKey(subGroup), data)
-    : new DataGroup(this.getGroupKey(subGroup), data, this.createAggregate(this.getGroupKey(subGroup), data.map(e => e.content)))
+  createDataGroup = <K,> (data: List<T>, groupId: string, key : K, subGroup: List<[string, any]>): DataGroup<any, T, Aggregate<any>> => this.props.aggregatesCalculator != null
+    ? new DataGroup(this.getGroupKey(subGroup), data, this.createAggregate(this.getGroupKey(subGroup), data.map(e => e.content)))
+    : new DataGroup(this.getGroupKey(subGroup), data)
 
   createAggregate = <K,> (groupKey: any, data: List<T>) : Aggregate<A> => {
     if (this.props.aggregatesCalculator == null)
@@ -186,14 +195,22 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     return groupKey
   }
 
-  filterGroups = (data : List<DataRow<T> | DataGroup<DataRow<T>>>, filters : List<Filter>) => data
-    .filter(e => e instanceof DataGroup || this.applyFiltersToElement(e, filters))    // filter list
+  filterElementsBeforeGrouping = () => this.props.groups.isEmpty() || ! this.props.includeFilteredElementsInAggregates
+
+  filterData = (data : List<DataRow<T>>, filters : List<Filter>, groups: List<Group<>>) => this.filterElementsBeforeGrouping() ? data.filter(e => this.applyFiltersToElement(e, filters)) : data
+
+  filterGroups = (data : List<DataRow<T> | DataGroup<DataRow<T>>>, filters : List<Filter>, groups: List<Group<>>) => this.filterElementsBeforeGrouping() ? data : data
     .map(e => e instanceof DataGroup ? this.filterDataGroup(e, filters) : e)          // filter data group
     .filter(e => !(e instanceof DataGroup) || e.data.size > 0)                        // remove empty data groups
 
-  filterDataGroup = <K, G> (dataGroup : DataGroup<K, G, A>, filters : List<Filter>) => {
-    return dataGroup.filter((e: any) => this.applyFiltersToElement(e, filters))
-  }
+  filterDataGroup = <K, G> (dataGroup : DataGroup<K, G, A>, filters : List<Filter>) : DataGroup<K, T, A> =>
+    new DataGroup(
+      dataGroup.key,
+      dataGroup.data.filter(e => e instanceof DataGroup || this.applyFiltersToElement(e, filters))
+               .map(e => e instanceof DataGroup ? this.filterDataGroup(e, filters) : e)
+               .filter(e => !(e instanceof DataGroup) || e.data.size > 0),
+      dataGroup.aggregate
+    )
 
   applyFiltersToElement = <T,> (e: DataRow<T>, filters : List<Filter>): boolean => filters.reduce((a: boolean, f: Filter) => a && this.applyFilterToElement(e, f), true)
 

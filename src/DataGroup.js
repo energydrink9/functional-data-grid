@@ -14,15 +14,6 @@ export default class DataGroup<K, T, A> {
     this.aggregate = aggregate
   }
 
-  filter = <G,> (filterFunction : G => boolean) : DataGroup<K, T, A> =>
-    new DataGroup(
-      this.key,
-      this.data.filter(e => e instanceof DataGroup || filterFunction(e))
-               .map(e => e instanceof DataGroup ? e.filter(filterFunction) : e)
-               .filter(e => !(e instanceof DataGroup) || e.data.size > 0),
-      this.aggregate
-    )
-
   flatten = (buildHeader: boolean): List<DataRow<T>> => this.flatDataGroup(this, buildHeader)
 
   flatDataGroup = <K, T, A> (dataGroup : DataGroup<K, T, A>, buildHeader: boolean): List<DataRow<any>> => {
