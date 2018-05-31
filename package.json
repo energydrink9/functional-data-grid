@@ -1,6 +1,6 @@
 {
   "name": "functional-data-grid",
-  "version": "1.1.10",
+  "version": "1.1.12",
   "description": "Functional Data Grid",
   "main": "dist/FunctionalDataGrid.js",
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
@@ -10,9 +10,9 @@
     "immutable": "~3.8.2",
     "lodash": "^4.17.4",
     "moment": "~2.20.1",
-    "react-virtualized": "^9.18.5",
     "react-datepicker": "1.2.2",
-    "react-select": "~1.1.0"
+    "react-select": "~1.1.0",
+    "react-virtualized": "^9.18.5"
   },
   "peerDependencies": {
     "react": "^15.3.0 || ^16.0.0",

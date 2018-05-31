@@ -25,7 +25,7 @@ type FunctionalDataGridStyle = {
   group?: Object,
   aggregate?: Object,
   row?: Object,
-  cell?: Object
+  cell?: Object,
 }
 
 type FunctionalDataGridProps<T, A> = {
@@ -37,7 +37,7 @@ type FunctionalDataGridProps<T, A> = {
   style : FunctionalDataGridStyle,
   aggregatesCalculator: ?((List<T>, any) => A),
   showGroupHeaders: boolean,
-  rowHeight: number,
+  rowHeight: number | ((T) => number),
   includeFilteredElementsInAggregates: boolean,
   onColumnResize: (Object) => void
 }
@@ -88,6 +88,16 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
       this.debouncedUpdateElements(newProps.data, newProps.groups, this.state.sort, this.state.filter)
   }
 
+  getRowHeight = () => {
+    let rowHeight = this.props.rowHeight
+    return rowHeight instanceof Function
+    ? (args: Object) => {
+      let element = this.getElement(args.index)
+      return rowHeight(element.content, element.originalIndex, element.type)
+    }
+    : rowHeight
+  }
+
   render = () => {
     let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', border: 'solid 1px #ccc'}
     return <div style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
@@ -102,7 +112,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
                       rowCount={this.getTotalCount()}
                       height={height}
                       width={width}
-                      rowHeight={this.props.rowHeight}
+                      rowHeight={this.getRowHeight()}
                       rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
                       ref={(list) => { this.list = list }}
                       style={{backgroundColor: '#fff'}}>

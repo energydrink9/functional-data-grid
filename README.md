@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/functional-data-grid.svg)](https://badge.fury.io/js/functional-data-grid)
 
 This is a library made with React and React-Virtualized for creating rich data grids with filtering, sorting, grouping and aggregates computation.
-It supports virtualization, and so it can handle very large amounts of data. It features also locked columns, custom renderers, multi-column headers and columns resize.
+It supports virtualization, and so it can handle very large amounts of data. It features also locked columns, custom renderers, multi-column headers, columns resize and variable rows height.
 Filtering, sorting, grouping and aggregates computation are done client-side.
 
 Functional Data Grid is written in functional programming style with ES2016 and Flow.
@@ -87,7 +87,7 @@ The FunctionalDataGrid component accepts the following props:
 |groups|optional|No grouping|An array of Group to specify grouping of the elements|
 |aggregatesCalculator|optional|No aggregates|A function to compute the aggregates from an array of elements|
 |style|optional|{}|Allows to specify additional styles for the grid: accepts an object with the properties grid, row, cell, header, group, aggregate|
-|rowHeight|optional|26|The height of the rows|
+|rowHeight|optional|26|The height of the rows or a function that accepts an element and returns its row height|
 |showGroupHeaders|optional|true|Set to false to hide the headers for groups|
 |includeFilteredElementsInAggregates|optional|false|It allows to calculate the aggregates based on all the elements, also the filtered ones|
 |onColumnResize|optional| |Allows to specify an event handler for column resizing|
