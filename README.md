@@ -44,12 +44,14 @@ let columns = List([
   new BaseColumn({
     id : 'name',
     title: 'Name',
-    width: 120
+    width: 120,
+    valueGetter: e => e.name
   },
   new BaseColumn({
     id : 'surname',
     title: 'Surname',
-    width: 120
+    width: 120,
+    valueGetter: e => e.surname
   })
 ])
 
