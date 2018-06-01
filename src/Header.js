@@ -46,17 +46,21 @@ export default class Header extends React.Component<HeaderProps> {
 
   render = () => {
     let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd' }
+
+    let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
+
     return <div style={{...style, ...this.props.style}}>
       <div style={{display: 'flex'}}>
-        { this.renderColumns(this.props.columns.filter(c => (this.columnIsLocked(c)) || c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null)) }
+        { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex)) }
       </div>
-      <div style={{display: 'flex', overflow: 'visible'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
-        { this.renderColumns(this.props.columns.filter(c => !(this.columnIsLocked(c)) && !(c instanceof ColumnGroup && c.columns.find(c => this.columnIsLocked(c)) != null))) }
+      <div style={{display: 'flex', overflow: 'overlay'}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
+        { this.renderColumns(this.props.columns.filter(c => ! c.locked)) }
+      </div>
+      <div style={{display: 'flex'}}>
+        { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
       </div>
     </div>
   }
-
-  columnIsLocked = (c : BaseColumn | ColumnGroup) => c instanceof BaseColumn && c.locked
 
   renderColumns = (columns : List<BaseColumn | ColumnGroup>) => columns
     .map((c, index) => c instanceof ColumnGroup ? this.renderColumnGroup(c, index) : (!c.hidden && this.renderColumn(c)))

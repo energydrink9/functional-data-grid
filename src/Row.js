@@ -57,9 +57,14 @@ export default class Row extends React.Component<RowProps> {
     }
   }
 
-  render = () => this.props.element.type === 'group-header'
+  render = () => {
+
+    let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
+
+    return this.props.element.type === 'group-header'
       ? this.groupHeaderRowRenderer()
-      : this.elementsRowRenderer()
+      : this.elementsRowRenderer(firstUnlockedColumnIndex)
+  }
 
   groupHeaderRowRenderer = () => <div style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
     <div style={{display: 'flex'}}>
@@ -69,14 +74,19 @@ export default class Row extends React.Component<RowProps> {
     </div>
     <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
     </div>
+    <div style={{display: 'flex'}}>
+    </div>
   </div>
 
-  elementsRowRenderer = () => <div style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
+  elementsRowRenderer = (firstUnlockedColumnIndex: number) => <div style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
     <div style={{display: 'flex'}}>
-      { this.props.columns.filter(c => ! c.hidden).filter(c => c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+      { this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => ! c.hidden).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
     <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
       { this.props.columns.filter(c => ! c.hidden).filter(c => ! c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+    </div>
+    <div style={{display: 'flex'}}>
+      { this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => ! c.hidden).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
   </div>
 
