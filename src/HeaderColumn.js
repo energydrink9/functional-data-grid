@@ -39,7 +39,7 @@ export default class HeaderColumn extends React.Component<HeaderColumnProps, Hea
   render = () => {
     let right = this.element == null ? 0 : this.element.getBoundingClientRect().right
     return <div ref={(el => this.element = el)} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} key={this.props.column.id} style={Object.assign(this.getCellStyle(this.props.column), this.props.column.headerStyle)}>
-      <HeaderColumnResizer right={right} onResize={this.onColumnResize} />
+      { this.props.column.resizable && <HeaderColumnResizer right={right} onResize={this.onColumnResize} /> }
       <div onClick={this.toggleSortDirection} style={{textOverflow: 'ellipsis', overflow: 'hidden',whiteSpace: 'nowrap'}}>
         { this.props.column.headerRenderer(this.props.column) }
         <span> { this.state.direction === 'asc' ? '▲' : this.state.direction === 'desc' ? '▼' : '' }</span>
