@@ -133,8 +133,9 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
     this.setState({ cachedElements: this.computeElements(data, groups, sort, filter) })
-    if (this.list != null)
-      this.list.forceUpdateGrid()
+    if (this.list != null) {
+      this.list.recomputeRowHeights()
+    }
   }
 
   computeElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) : List<DataRow<any>> =>
