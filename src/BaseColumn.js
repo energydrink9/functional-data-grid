@@ -52,6 +52,8 @@ export default class BaseColumn {
       this.filterable = options.filterable
     if (options.sortable != null)
       this.sortable = options.sortable
+    if (options.resizable != null)
+      this.resizable = options.resizable
     if (options.hidden != null)
       this.hidden = options.hidden
     if (options.renderer != null)
