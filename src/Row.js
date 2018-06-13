@@ -37,6 +37,15 @@ export default class Row extends React.Component<RowProps> {
     this.scrollingDiv.scrollLeft = this.props.scrollLeft
   }
 
+  triggerOnScroll = (event : Object) => {
+
+    let scrollEvent = {
+      scrollLeft: event.target.scrollLeft
+    }
+    if (this.props.onScroll != null)
+      this.props.onScroll(scrollEvent)
+  }
+
   getStyles = () => {
     let style : Object = Object.assign({}, this.props.style)
     style.display = 'flex'
@@ -82,7 +91,7 @@ export default class Row extends React.Component<RowProps> {
     <div style={{display: 'flex'}}>
       { this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => ! c.hidden).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
-    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
+    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
       { this.props.columns.filter(c => ! c.hidden).filter(c => ! c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
     <div style={{display: 'flex'}}>
