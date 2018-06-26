@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 
@@ -34,6 +35,15 @@ export default class DatePickerFilter extends React.Component<DatePickerFilterPr
   props: DatePickerFilterProps
   state: DatePickerFilterState
 
+  container = ({children} : any) => {
+    const el = document.body
+  
+    return ReactDOM.createPortal(
+      children,
+      el
+    )
+  }
+  
   constructor(props : Object) {
     super(props)
     this.state = {
@@ -41,7 +51,9 @@ export default class DatePickerFilter extends React.Component<DatePickerFilterPr
     }
   }
 
-  render = () => <DatePicker selected={this.state.value} isClearable={true} customInput={<CustomInput />} onChange={this.triggerOnUpdateFilter} {...this.props}></DatePicker>
+  render = () => <DatePicker selected={this.state.value} isClearable={true} customInput={<CustomInput />} onChange={this.triggerOnUpdateFilter} {...this.props}
+  popperContainer={this.container}
+  ></DatePicker>
 
   triggerOnUpdateFilter = (value : moment) => {
     this.setState({
