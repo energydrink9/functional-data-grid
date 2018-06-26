@@ -1,6 +1,6 @@
 {
   "name": "functional-data-grid",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "Functional Data Grid",
   "main": "dist/FunctionalDataGrid.js",
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
