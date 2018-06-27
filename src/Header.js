@@ -64,7 +64,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   render = () => {
-    let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd' }
+    let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative' }
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
 
@@ -78,20 +78,20 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
       </div>
-      { this.props.enableColumnsVisibilityMenu && <div>{ this.renderColumnsVisibilityMenu() }</div> }
+      { this.props.enableColumnsVisibilityMenu && <div style={{ position: 'absolute', right: 0 }}>{ this.renderColumnsVisibilityMenu() }</div> }
     </div>
   }
 
   renderColumnsVisibilityMenu = () => <Manager>
     <Reference>
       {({ ref }) => (
-        <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleColumnsVisibilityMenu}>&#x22ee;</div>
+        <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none', fontSize: '16px' }} onClick={this.toggleColumnsVisibilityMenu}>&#x22ee;</div>
       )}
     </Reference>
     { this.state.showColumnsVisibilityMenu && ReactDOM.createPortal(
       <Popper placement={'bottom-end'}>
         {({ placement, ref, style }) => (
-          <div ref={ref} style={style} data-placement={placement}>
+          <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
             <ColumnsVisibilityMenu columns={this.props.columns} columnsVisibility={this.props.columnsVisibility} onColumnVisibilityChange={this.props.onColumnVisibilityChange} />,
           </div>
         )}
