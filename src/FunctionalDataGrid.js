@@ -39,13 +39,15 @@ type FunctionalDataGridProps<T, A> = {
   showGroupHeaders: boolean,
   rowHeight: number | ((T) => number),
   includeFilteredElementsInAggregates: boolean,
-  onColumnResize: (Object) => void
+  onColumnResize: (Object) => void,
+  enableColumnsVisibilityMenu: boolean
 }
 type FunctionalDataGridState<T> = {
   cachedElements : List<DataRow<T>>,
   sort : List<Sort>,
   filter : List<Filter>,
-  columnWidths : Map<string, number>
+  columnsWidth : Map<string, number>,
+  columnsVisibility: Map<string, boolean>
 }
 
 export default class FunctionalDataGrid<T, A: void> extends React.Component<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
@@ -64,7 +66,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     showGroupHeaders: true,
     rowHeight: defaultRowHeight,
     includeFilteredElementsInAggregates: false,
-    onColumnResize: (e: Object) => {}
+    onColumnResize: (e: Object) => {},
+    enableColumnsVisibilityMenu: false
   }
 
   constructor(props : FunctionalDataGridProps<T, A>) {
@@ -73,11 +76,20 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
       cachedElements : List(),
       sort : this.props.initialSort,
       filter : this.props.initialFilter,
-      columnWidths : this.getInitialColumnWidths(props.columns)
+      columnsWidth : this.getInitialColumnsWidth(props.columns),
+      columnsVisibility: this.getInitialColumnsVisibility(props.columns)
     }
   }
 
-  getInitialColumnWidths = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
+  getInitialColumnsWidth = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
+
+  getInitialColumnsVisibility = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).hidden != null ? ! v.get(0).hidden : true)
+
+  updateColumnVisibility = (columnId: string, columnVisibility: boolean) => {
+    this.setState({
+      columnsVisibility: this.state.columnsVisibility.set(columnId, columnVisibility)
+    })
+  }
 
   componentWillMount = () => {
     this.updateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
@@ -104,7 +116,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
           <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Header columns={this.props.columns} columnWidths={this.state.columnWidths} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} />
+            <Header columns={this.props.columns} columnsVisibility={this.state.columnsVisibility} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} enableColumnsVisibilityMenu={this.props.enableColumnsVisibilityMenu} onColumnVisibilityChange={this.updateColumnVisibility} />
             <div style={{flexGrow: 1}}>
               <AutoSizer>
                 {({height, width}) => (
@@ -128,7 +140,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
-    return <Row key={param.index} style={param.style} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} rowStyle={this.props.style.row != null ? this.props.style.row : {}} columns={this.flatColumns(this.props.columns)} columnWidths={this.state.columnWidths} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} />
+    return <Row key={param.index} style={param.style} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} rowStyle={this.props.style.row != null ? this.props.style.row : {}} columns={this.flatColumns(this.props.columns)} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} />
   }
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
@@ -280,7 +292,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   resizeColumn = (columnId : string, width : number) => {
     this.setState({
-      columnWidths: this.state.columnWidths.set(columnId, width)
+      columnsWidth: this.state.columnsWidth.set(columnId, width)
     })
     this.props.onColumnResize({id: columnId, width: width})
   }
