@@ -11,7 +11,8 @@ type DatePickerFilterProps = {
   onUpdateFilter : Function,
 }
 type DatePickerFilterState = {
-  value : ?moment
+  value : ?moment,
+  operator: string
 }
 
 const style = {
@@ -47,20 +48,45 @@ export default class DatePickerFilter extends React.Component<DatePickerFilterPr
   constructor(props : Object) {
     super(props)
     this.state = {
-      value : null
+      value : null,
+      operator: 'eq'
     }
   }
 
-  render = () => <DatePicker selected={this.state.value} isClearable={true} customInput={<CustomInput />} onChange={this.triggerOnUpdateFilter} {...this.props}
-  popperContainer={this.container}
-  ></DatePicker>
+  updateOperator = (e: Object) => {
+    let operator = e.target.value
+    this.setState({
+      operator: operator
+    }, () => this.updateFilter())
+  }
+
+  render = () => <div style={{ display: 'flex', textAlign: 'center' }}>
+    <select value={this.state.operator} onChange={this.updateOperator} style={{ marginRight: '4px' }}>
+      <option value="le">&le;</option>
+      <option value="eq">=</option>
+      <option value="ge">&ge;</option>
+    </select>
+    <DatePicker selected={this.state.value} isClearable={true} customInput={<CustomInput />} onChange={this.triggerOnUpdateFilter}
+      showYearDropdown
+      dropdownMode="select"  
+      popperContainer={this.container}
+      {...this.props}
+    ></DatePicker>
+  </div>
 
   triggerOnUpdateFilter = (value : moment) => {
     this.setState({
       value: value
-    })
+    }, () => this.updateFilter())
+  }
+
+  updateFilter = () => {
+    let value = this.state.value
     this.props.onUpdateFilter((val: moment) => {
-      return value == null || (value.isSame(val, 'day'))
+      return value == null
+        || (this.state.operator === 'le' && value.isSameOrAfter(val, 'day'))
+        || (this.state.operator === 'eq' && value.isSame(val, 'day'))
+        || (this.state.operator === 'ge' && value.isSameOrBefore(val, 'day'))
     })
   }
 }
