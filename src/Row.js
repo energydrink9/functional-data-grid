@@ -18,7 +18,8 @@ type RowProps = {
   onScroll : Function,
   rowIndex : number,
   columnsWidth : Map<string, number>,
-  columnsVisibility: Map<string, boolean>
+  columnsVisibility: Map<string, boolean>,
+  enableColumnsVisibilityMenu: boolean
 }
 
 export default class Row extends React.Component<RowProps> {
@@ -54,7 +55,7 @@ export default class Row extends React.Component<RowProps> {
     style.backgroundColor = '#fff'
     style.lineHeight = '25px'
     if (this.props.element.type === 'aggregate')
-      style.backgroundColor = '#ddd'
+      style.backgroundColor = '#eee'
     return style
   }
 
@@ -98,6 +99,7 @@ export default class Row extends React.Component<RowProps> {
     <div style={{display: 'flex'}}>
       { this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
+    {  this.props.enableColumnsVisibilityMenu && <div style={{ width: '26px' }}></div> }
   </div>
 
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)

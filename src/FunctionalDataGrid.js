@@ -14,6 +14,7 @@ import DataGroup from "./DataGroup"
 import DataRow from './DataRow'
 import Aggregate from './Aggregate'
 import debounce from 'debounce'
+import Footer from './Footer'
 
 const debounceTimeout = 250
 const defaultInitialColumnWidth = 100
@@ -22,6 +23,7 @@ const defaultRowHeight = 26
 type FunctionalDataGridStyle = {
   grid?: Object,
   header?: Object,
+  footer?: Object,
   group?: Object,
   aggregate?: Object,
   row?: Object,
@@ -40,7 +42,8 @@ type FunctionalDataGridProps<T, A> = {
   rowHeight: number | ((T) => number),
   includeFilteredElementsInAggregates: boolean,
   onColumnResize: (Object) => void,
-  enableColumnsVisibilityMenu: boolean
+  enableColumnsVisibilityMenu: boolean,
+  showFooter: boolean
 }
 type FunctionalDataGridState<T> = {
   cachedElements : List<DataRow<T>>,
@@ -67,7 +70,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     rowHeight: defaultRowHeight,
     includeFilteredElementsInAggregates: false,
     onColumnResize: (e: Object) => {},
-    enableColumnsVisibilityMenu: false
+    enableColumnsVisibilityMenu: false,
+    showFooter: true
   }
 
   constructor(props : FunctionalDataGridProps<T, A>) {
@@ -127,11 +131,12 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
                       rowHeight={this.getRowHeight()}
                       rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
                       ref={(list) => { this.list = list }}
-                      style={{backgroundColor: '#fff'}}>
+                      style={{backgroundColor: '#fff', outline: 'none'}}>
                     </ReactVirtualizedList>
                 )}
               </AutoSizer>
             </div>
+              { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().size} /> }
           </div>
         )}
       </ScrollSync>
@@ -140,7 +145,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
-    return <Row key={param.index} style={param.style} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} rowStyle={this.props.style.row != null ? this.props.style.row : {}} columns={this.flatColumns(this.props.columns)} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} />
+    return <Row key={param.index} style={param.style} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} rowStyle={this.props.style.row != null ? this.props.style.row : {}} columns={this.flatColumns(this.props.columns)} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsVisibilityMenu={this.props.enableColumnsVisibilityMenu} />
   }
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {

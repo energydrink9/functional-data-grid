@@ -64,7 +64,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   render = () => {
-    let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative' }
+    let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative', borderBottom: 'solid 1px #ccc' }
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
 
@@ -78,7 +78,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
       </div>
-      { this.props.enableColumnsVisibilityMenu && <div style={{ position: 'absolute', right: 0 }}>{ this.renderColumnsVisibilityMenu() }</div> }
+      { this.props.enableColumnsVisibilityMenu && <div style={{ width: '26px' }}>{ this.renderColumnsVisibilityMenu() }</div> }
     </div>
   }
 

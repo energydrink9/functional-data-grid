@@ -91,6 +91,7 @@ The FunctionalDataGrid component accepts the following props:
 |showGroupHeaders|optional|true|Set to false to hide the headers for groups|
 |includeFilteredElementsInAggregates|optional|false|It allows to calculate the aggregates based on all the elements, also the filtered ones|
 |onColumnResize|optional| |Allows to specify an event handler for column resizing|
+|showFooter|optional|true|Shows the footer of the grid with the elements count|
 |enableColumnsVisibilityMenu|optional|false|Allows the user to show and hide columns|
 
 # Columns definition
