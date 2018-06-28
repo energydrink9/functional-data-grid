@@ -136,7 +136,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
                 )}
               </AutoSizer>
             </div>
-              { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().size} /> }
+              { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().filter(r => r.type === 'element').size} /> }
           </div>
         )}
       </ScrollSync>
