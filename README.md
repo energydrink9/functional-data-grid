@@ -6,7 +6,7 @@ This is a library made with React and React-Virtualized for creating rich data g
 It supports virtualization, and so it can handle very large amounts of data. It features also locked columns, custom renderers, multi-column headers, columns resize, hide / show columns and variable rows height.
 Filtering, sorting, grouping and aggregates computation are done client-side.
 
-Functional Data Grid is written in functional programming style with ES2016 and Flow.
+Functional Data Grid is written in functional programming style with ES2016 and Flow. It's really fast and is being used in production with tens of thousands of elements.
 
 
 # Installation
