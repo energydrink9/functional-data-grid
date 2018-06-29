@@ -22,10 +22,23 @@ type RowProps = {
   enableColumnsVisibilityMenu: boolean
 }
 
-export default class Row extends React.Component<RowProps> {
+type RowState = {
+  hover: boolean
+}
 
-  props : RowProps
+export default class Row extends React.Component<RowProps, RowState> {
+
+  props: RowProps
+  state: RowState
   scrollingDiv : any
+
+  constructor(props: RowProps) {
+    super(props)
+
+    this.state = {
+      hover: false
+    }
+  }
 
   componentDidMount = () => {
     this.updateScroll()
@@ -77,7 +90,7 @@ export default class Row extends React.Component<RowProps> {
       : this.elementsRowRenderer(firstUnlockedColumnIndex)
   }
 
-  groupHeaderRowRenderer = () => <div style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
+  groupHeaderRowRenderer = () => <div onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
     <div style={{display: 'flex'}}>
       <div style={this.getCellStyle()}>
         { Object.entries(this.props.element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
@@ -89,15 +102,15 @@ export default class Row extends React.Component<RowProps> {
     </div>
   </div>
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number) => <div style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
+  elementsRowRenderer = (firstUnlockedColumnIndex: number) => <div onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
     <div style={{display: 'flex'}}>
-      { this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+      { this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
     <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
-      { this.props.columns.filter(c => this.isColumnVisible(c.id)).filter(c => ! c.locked).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+      { this.props.columns.filter(c => this.isColumnVisible(c.id)).filter(c => ! c.locked).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
     <div style={{display: 'flex'}}>
-      { this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+      { this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>
     {  this.props.enableColumnsVisibilityMenu && <div style={{ width: '26px' }}></div> }
   </div>
@@ -105,4 +118,16 @@ export default class Row extends React.Component<RowProps> {
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
 
   isColumnVisible = (columnId: string) => this.props.columnsVisibility.get(columnId)
+
+  onMouseOver = () => {
+    this.setState({
+      hover: true
+    })
+  }
+
+  onMouseOut = () => {
+    this.setState({
+      hover: false
+    })
+  }
 }

@@ -9,7 +9,8 @@ type CellProps = {
   element : DataRow<any>,
   rowIndex : number,
   width : ?number,
-  style: Object
+  style: Object,
+  rowHover: boolean
 }
 type CellState = {
   hover : boolean
@@ -22,7 +23,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
   constructor(props : Object) {
     super(props)
     this.state = {
-      hover : false
+      rowHover : false
     }
   }
 
@@ -38,8 +39,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
   onMouseLeave = () => this.setState({ 'hover': false })
 
   renderValue = (c : BaseColumn, e : DataRow<any>) => e.type === 'aggregate'
-    ? c.aggregateValueGetter == null ? <span/> : c.aggregateRenderer(c.aggregateValueGetter(e.content.content, e.content.key), e.content, this.props.rowIndex, e.originalIndex)
-    : c.valueGetter == null ? <span/> : c.renderer(c.valueGetter(e.content), e.content, this.props.rowIndex, e.originalIndex)
+    ? c.aggregateValueGetter == null ? <span/> : c.aggregateRenderer(c.aggregateValueGetter(e.content.content, e.content.key), e.content, this.props.rowIndex, e.originalIndex, this.props.rowHover)
+    : c.valueGetter == null ? <span/> : c.renderer(c.valueGetter(e.content), e.content, this.props.rowIndex, e.originalIndex, this.props.rowHover)
 
   getCellStyle = () => {
     let styles : Object = {
