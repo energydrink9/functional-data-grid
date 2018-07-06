@@ -90,7 +90,7 @@ export default class Row extends React.Component<RowProps, RowState> {
       : this.elementsRowRenderer(firstUnlockedColumnIndex)
   }
 
-  groupHeaderRowRenderer = () => <div onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
+  groupHeaderRowRenderer = () => <div className="functional-data-grid__row functional-data-grid__row--group-header" onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
     <div style={{display: 'flex'}}>
       <div style={this.getCellStyle()}>
         { Object.entries(this.props.element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
@@ -102,7 +102,7 @@ export default class Row extends React.Component<RowProps, RowState> {
     </div>
   </div>
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number) => <div onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
+  elementsRowRenderer = (firstUnlockedColumnIndex: number) => <div className={'functional-data-grid__row ' + this.props.element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element'} onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
     <div style={{display: 'flex'}}>
       { this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
     </div>

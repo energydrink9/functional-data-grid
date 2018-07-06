@@ -68,7 +68,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
 
-    return <div style={{...style, ...this.props.style}}>
+    return <div className='functional-data-grid__header' style={{...style, ...this.props.style}}>
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex)) }
       </div>

@@ -28,8 +28,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
   }
 
   render = () => {
-    return <div style={{...this.getCellStyle(), ...this.props.column.style, ...this.props.style}} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-      <div style={this.getContentStyle()}>
+    return <div className="functional-data-grid__cell" style={{...this.getCellStyle(), ...this.props.column.style, ...this.props.style}} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+      <div className="functional-data-grid__cell-content" style={this.getContentStyle()}>
         { this.renderValue(this.props.column, this.props.element) }
       </div>
     </div>
