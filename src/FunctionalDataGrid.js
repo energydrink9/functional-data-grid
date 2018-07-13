@@ -43,7 +43,9 @@ type FunctionalDataGridProps<T, A> = {
   includeFilteredElementsInAggregates: boolean,
   onColumnResize: (Object) => void,
   enableColumnsVisibilityMenu: boolean,
-  showFooter: boolean
+  showFooter: boolean,
+  className: 'string',
+  overscanRowCount: number
 }
 type FunctionalDataGridState<T> = {
   cachedElements : List<DataRow<T>>,
@@ -71,7 +73,9 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     includeFilteredElementsInAggregates: false,
     onColumnResize: (e: Object) => {},
     enableColumnsVisibilityMenu: false,
-    showFooter: true
+    showFooter: true,
+    className: '',
+    overscanRowCount: 10
   }
 
   constructor(props : FunctionalDataGridProps<T, A>) {
@@ -116,7 +120,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   render = () => {
     let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', border: 'solid 1px #ccc'}
-    return <div className='functional-data-grid' style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
+    return <div className={`functional-data-grid ${this.props.className}`} style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
           <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
@@ -131,7 +135,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
                       rowHeight={this.getRowHeight()}
                       rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
                       ref={(list) => { this.list = list }}
-                      style={{backgroundColor: '#fff', outline: 'none'}}>
+                      style={{backgroundColor: '#fff', outline: 'none'}}
+                      overscanRowCount={this.props.overscanRowCount} >
                     </ReactVirtualizedList>
                 )}
               </AutoSizer>

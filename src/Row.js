@@ -96,7 +96,7 @@ export default class Row extends React.Component<RowProps, RowState> {
         { Object.entries(this.props.element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
       </div>
     </div>
-    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
+    <div style={{display: 'flex', overflowX: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
     </div>
     <div style={{display: 'flex'}}>
     </div>

@@ -93,6 +93,8 @@ The FunctionalDataGrid component accepts the following props:
 |onColumnResize|optional| |Allows to specify an event handler for column resizing|
 |showFooter|optional|true|Shows the footer of the grid with the elements count|
 |enableColumnsVisibilityMenu|optional|false|Allows the user to show and hide columns|
+|overscanRowCount|optional|10|Number of rows to render above/below the visible bounds of the grid|
+|className|optional|''|Css classes to apply to the component|
 
 # Columns definition
 

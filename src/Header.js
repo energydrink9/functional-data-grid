@@ -88,7 +88,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
         <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none', fontSize: '16px' }} onClick={this.toggleColumnsVisibilityMenu}>&#x22ee;</div>
       )}
     </Reference>
-    { this.state.showColumnsVisibilityMenu && ReactDOM.createPortal(
+    { this.state.showColumnsVisibilityMenu && document.body != null && ReactDOM.createPortal(
       <Popper placement={'bottom-end'}>
         {({ placement, ref, style }) => (
           <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
