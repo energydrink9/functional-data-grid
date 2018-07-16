@@ -72,7 +72,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex)) }
       </div>
-      <div style={{display: 'flex', overflow: 'overlay', flexGrow: 1}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
+      <div style={{display: 'flex', overflow: 'hidden', flexGrow: 1}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
         { this.renderColumns(this.props.columns.filter(c => ! c.locked)) }
       </div>
       <div style={{display: 'flex'}}>

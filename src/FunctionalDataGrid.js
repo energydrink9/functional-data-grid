@@ -15,6 +15,7 @@ import DataRow from './DataRow'
 import Aggregate from './Aggregate'
 import debounce from 'debounce'
 import Footer from './Footer'
+import HorizontalScrollbar from './HorizontalScrollbar'
 
 const debounceTimeout = 250
 const defaultInitialColumnWidth = 100
@@ -141,7 +142,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
                 )}
               </AutoSizer>
             </div>
-              { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().filter(r => r.type === 'element').size} /> }
+            <HorizontalScrollbar enableColumnsVisibilityMenu={this.props.enableColumnsVisibilityMenu} columnsVisibility={this.state.columnsVisibility} columns={this.props.columns} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} />
+            { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().filter(r => r.type === 'element').size} /> }
           </div>
         )}
       </ScrollSync>
