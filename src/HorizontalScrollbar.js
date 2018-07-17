@@ -12,7 +12,6 @@ type HorizontalScrollbarProps = {
   onScroll: Function,
   columnsWidth : Map<string, number>,
   columnsVisibility: Map<string, boolean>,
-  style: Object,
   enableColumnsVisibilityMenu: boolean
 }
 

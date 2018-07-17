@@ -5,12 +5,12 @@ import BaseColumn from "./BaseColumn"
 import { List, Map } from 'immutable'
 import Cell from './Cell'
 import DataRow from './DataRow'
+const columnsOptionsWidth = 26
 
 type RowProps = {
   columns : List<BaseColumn>,
   element : DataRow<any>,
   style : Object,
-  rowStyle: Object,
   aggregateStyle: Object,
   groupStyle: Object,
   cellStyle: Object,
@@ -61,58 +61,62 @@ export default class Row extends React.Component<RowProps, RowState> {
       this.props.onScroll(scrollEvent)
   }
 
-  getStyles = () => {
-    let style : Object = Object.assign({}, this.props.style)
-    style.display = 'flex'
-    style.borderBottom = 'solid 1px #eee'
-    style.backgroundColor = '#fff'
-    style.lineHeight = '25px'
-    if (this.props.element.type === 'aggregate')
-      style.backgroundColor = '#eee'
-    return style
-  }
-
-  getCellStyle = () => {
-    return {
-      overflow: 'hidden',
-      flexShrink: 0,
-      padding: '2px 10px',
-      position: 'relative'
-    }
-  }
-
   render = () => {
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
 
+    let rowStyle = this.getRowStyle(this.props.element.type, this.props.style, this.props.groupStyle, this.props.aggregateStyle)
+
     return this.props.element.type === 'group-header'
-      ? this.groupHeaderRowRenderer()
-      : this.elementsRowRenderer(firstUnlockedColumnIndex)
+      ? this.groupHeaderRowRenderer(rowStyle, this.props.element, this.onMouseOver, this.onMouseOut, this.setScrollingDiv)
+      : this.elementsRowRenderer(firstUnlockedColumnIndex,this.props.rowIndex, this.props.element, this.props.columns, this.triggerOnScroll, this.props.enableColumnsVisibilityMenu, this.setScrollingDiv, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.isColumnVisible)
   }
 
-  groupHeaderRowRenderer = () => <div className="functional-data-grid__row functional-data-grid__row--group-header" onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...this.props.groupStyle}}>
+  getRowStyle = (type: string, style: Object, groupStyle: Object, aggregateStyle: Object) => {
+
+    return { ...{
+        display: 'flex',
+        borderBottom: 'solid 1px #eee',
+        lineHeight: '25px'
+      },
+      ...style,
+      ...(type === 'group-header' ? groupStyle : {}),
+      ...(type === 'aggregate' ? { backgroundColor: '#fff', ...aggregateStyle } : {})
+    }
+  }
+
+  setScrollingDiv = (el: any) => {
+    this.scrollingDiv = el
+  }
+
+  groupHeaderRowRenderer = (style: Object, element: DataRow<any>, onMouseOver: Function, onMouseOut: Function, onScrollingDivSet: Function) => <div className="functional-data-grid__row functional-data-grid__row--group-header" onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
     <div style={{display: 'flex'}}>
-      <div style={this.getCellStyle()}>
-        { Object.entries(this.props.element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
+      <div style={{
+          overflow: 'hidden',
+          flexShrink: 0,
+          padding: '2px 10px',
+          position: 'relative'
+        }}>
+        { Object.entries(element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}><span>{ e[0] }</span>: <b>{ e[1] }</b></div>) }
       </div>
     </div>
-    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el}>
+    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet}>
     </div>
     <div style={{display: 'flex'}}>
     </div>
   </div>
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number) => <div data-index={this.props.rowIndex} data-original-index={this.props.element.originalIndex} className={'functional-data-grid__row ' + (this.props.element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={this.onMouseOver} onMouseLeave={this.onMouseOut} style={{...this.getStyles(), ...this.props.rowStyle, ...(this.props.element.type === 'aggregate' ? this.props.aggregateStyle : {})}}>
+  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<BaseColumn>, onScroll: Function, enableColumnsVisibilityMenu: boolean, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function) => <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
     <div style={{display: 'flex'}}>
-      { this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+      { columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={this.getColumnWidth(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
     </div>
-    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={el => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
-      { this.props.columns.filter(c => this.isColumnVisible(c.id)).filter(c => ! c.locked).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet} onScroll={onScroll}>
+      { columns.filter(c => isColumnVisible(c.id)).filter(c => ! c.locked).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={this.getColumnWidth(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
     </div>
     <div style={{display: 'flex'}}>
-      { this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => this.isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={this.state.hover} column={c} width={this.getColumnWidth(c)} element={this.props.element} rowIndex={this.props.rowIndex} style={this.props.cellStyle} />) }
+      { columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={this.getColumnWidth(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
     </div>
-    {  this.props.enableColumnsVisibilityMenu && <div style={{ width: '26px' }}></div> }
+    {  enableColumnsVisibilityMenu && <div style={{ width: `${columnsOptionsWidth}px` }}></div> }
   </div>
 
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
