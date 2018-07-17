@@ -14,7 +14,7 @@ export default class Group<K, T> {
   id: string
   title: string
   groupingFunction : (T) => K
-  renderer : (T, Group) => any = (v, g) => <span><span>{ g.title }</span>: <b>{ v }</b></span> // eslint-disable-line
+  renderer : (T, Group<any, any>) => any = (v: any, g) => <span>{ g.title }: <b>{ v }</b></span> // eslint-disable-line
   comparator : (groupKey1: K, groupKey2: K, aggregate1: ?any, aggregate2: ?any) => number = (a: K, b: K) => a === b ? 0 : (a: any) < (b: any) ? -1 : 1
 
   constructor(options : GroupOptionsType<K, T>) {

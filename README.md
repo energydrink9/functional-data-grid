@@ -132,7 +132,7 @@ Group constructor accepts an object with the following keys:
 |id|required| |A unique id for the column|
 |title|optional|empty|The title shown on the group header|
 |groupingFunction|required| |A function that compute the takes an element and compute the corresponding key|
-|renderer|optional|v => v|The title shown on the group header|
+|renderer|optional|(v, g) => <span>{ g.title }: <b>{ v }</b></span>|The title shown on the group header|
 |comparator|optional|(a: K, b: K) => a === b ? 0 : (a: any) < (b: any) ? -1 : 1|The comparator used to sort the groups|
 
 

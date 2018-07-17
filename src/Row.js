@@ -71,19 +71,21 @@ export default class Row extends React.Component<RowProps, RowState> {
 
     return this.props.element.type === 'group-header'
       ? this.groupHeaderRowRenderer(rowStyle, this.props.element, this.props.groups, this.onMouseOver, this.onMouseOut, this.setScrollingDiv)
-      : this.elementsRowRenderer(firstUnlockedColumnIndex,this.props.rowIndex, this.props.element, this.props.columns, this.triggerOnScroll, this.props.enableColumnsVisibilityMenu, this.setScrollingDiv, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.isColumnVisible, this.getColumnWidth)
+      : this.elementsRowRenderer(firstUnlockedColumnIndex, this.props.rowIndex, this.props.element, this.props.columns, this.triggerOnScroll, this.setScrollingDiv, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.isColumnVisible, this.getColumnWidth)
   }
 
   getRowStyle = (type: string, style: Object, groupStyle: Object, aggregateStyle: Object) => {
 
-    return { ...{
+    return {
+      ...{
         display: 'flex',
         borderBottom: 'solid 1px #eee',
-        lineHeight: '25px'
+        lineHeight: '25px',
+        backgroundColor: '#fff'
       },
       ...style,
       ...(type === 'group-header' ? groupStyle : {}),
-      ...(type === 'aggregate' ? { backgroundColor: '#fff', ...aggregateStyle } : {})
+      ...(type === 'aggregate' ? { backgroundColor: '#eee', ...aggregateStyle } : {})
     }
   }
 
@@ -91,7 +93,7 @@ export default class Row extends React.Component<RowProps, RowState> {
     this.scrollingDiv = el
   }
 
-  groupHeaderRowRenderer = (style: Object, element: DataRow<any>, groups: List<Group>, onMouseOver: Function, onMouseOut: Function, onScrollingDivSet: Function) => 
+  groupHeaderRowRenderer = (style: Object, element: DataRow<any>, groups: List<Group<any, any>>, onMouseOver: Function, onMouseOut: Function, onScrollingDivSet: Function) => 
     <div className="functional-data-grid__row functional-data-grid__row--group-header" onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
       <div style={{display: 'flex'}}>
         <div style={{
@@ -111,9 +113,9 @@ export default class Row extends React.Component<RowProps, RowState> {
       </div>
     </div>
 
-  renderGroup = (group: Group, v: any) => group.renderer(v, group)
+  renderGroup = (group: Group<any, any>, v: any) => group.renderer(v, group)
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<BaseColumn>, onScroll: Function, enableColumnsVisibilityMenu: boolean, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) => <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
+  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<BaseColumn>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) => <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
     <div style={{display: 'flex'}}>
       { columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
     </div>
@@ -123,7 +125,7 @@ export default class Row extends React.Component<RowProps, RowState> {
     <div style={{display: 'flex'}}>
       { columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
     </div>
-    {  enableColumnsVisibilityMenu && <div style={{ width: `${columnsOptionsWidth}px` }}></div> }
+
   </div>
 
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
