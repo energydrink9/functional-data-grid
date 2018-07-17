@@ -154,7 +154,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
     let element = this.getElement(param.index)
     let rowStyle = this.props.style.row != null ? this.props.style.row : {}
     let computedStyle = {...param.style, ...rowStyle}
-    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} columns={this.flatColumns(this.props.columns)} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsVisibilityMenu={this.props.enableColumnsVisibilityMenu} />
+    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} groups={this.props.groups} columns={this.flatColumns(this.props.columns)} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsVisibilityMenu={this.props.enableColumnsVisibilityMenu} />
   }
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
@@ -210,11 +210,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
   groupData = <K,> (data : List<DataRow<T>>, groups : List<Group<any, T>>, currentSubGroup: List<[string, any]> = List()): (List<DataRow<T> | DataGroup<any, any, A>>) => groups.isEmpty()
     ? data
     : this.groupDataByGroup(data, groups.first(), currentSubGroup)
-          .map((e : DataGroup<K, T, A>) => new DataGroup(e.key, this.groupData(e.data, groups.shift(), currentSubGroup.push([groups.first().title, ((e.key): any)[groups.first().title]])), e.aggregate))
+          .map((e : DataGroup<K, T, A>) => new DataGroup(e.key, this.groupData(e.data, groups.shift(), currentSubGroup.push([groups.first().id, ((e.key): any)[groups.first().id]])), e.aggregate))
 
   groupDataByGroup = <K,> (data : (List<DataRow<T>>), group : Group<K, T>, subGroup: List<[string, any]>) : List<DataGroup<K, DataRow<T>, A>> =>
     data.groupBy((e: DataRow<T>) => group.groupingFunction(e.content))
-        .map((g: List<T>, key: K) => this.createDataGroup(g, group.id, key, subGroup.push([group.title, key])))
+        .map((g: List<T>, key: K) => this.createDataGroup(g, group.id, key, subGroup.push([group.id, key])))
         .toList()
         .sort((dg1, dg2) => group.comparator(dg1.key, dg2.key, dg1.aggregate, dg2.aggregate))
 
