@@ -14,11 +14,12 @@ type ColumnsVisibilityMenuPropsType = {
 export default class ColumnsVisibilityMenu extends React.Component<ColumnsVisibilityMenuPropsType> {
   
   props: ColumnsVisibilityMenuPropsType
+  
   static defaultProps = {
     onColumnVisibilityChange: () => {}
   }
 
-  render = () => <div style={{ padding: '5px', backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px' }}>
+  render = () => <div style={{ padding: '5px', backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px', maxHeight: '500px', overflow: 'auto' }}>
     { this.props.columnsVisibility.entrySeq().map(e => this.renderColumnVisibility(e[0], e[1])) }
   </div>
 

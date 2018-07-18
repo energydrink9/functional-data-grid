@@ -44,7 +44,7 @@ export default class HeaderColumn extends React.Component<HeaderColumnProps, Hea
         { this.props.column.headerRenderer(this.props.column) }
         <span> { this.state.direction === 'asc' ? '▲' : this.state.direction === 'desc' ? '▼' : '' }</span>
       </div>
-      { this.props.column.filterable && <div style={{ textAlign: 'center' }}>{ this.props.column.filterRenderer(this.triggerOnUpdateFilter) }</div> }
+      { this.props.column.filterable && <div style={{ textAlign: 'center', marginTop: '2px' }}>{ this.props.column.filterRenderer(this.triggerOnUpdateFilter) }</div> }
     </div>
   }
 
@@ -70,7 +70,7 @@ export default class HeaderColumn extends React.Component<HeaderColumnProps, Hea
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      padding: '10px 8px 20px 8px',
+      padding: '8px',
       borderRight: 'solid 1px #ccc',
       position: 'relative'
     }

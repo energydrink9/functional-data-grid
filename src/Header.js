@@ -29,6 +29,8 @@ type HeaderState = {
   showColumnsVisibilityMenu: boolean
 }
 
+const columnsOptionsWidth = 26
+
 export default class Header extends React.Component<HeaderProps, HeaderState> {
 
   props: HeaderProps
@@ -78,7 +80,7 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
       </div>
-      { this.props.enableColumnsVisibilityMenu && <div style={{ width: '26px' }}>{ this.renderColumnsVisibilityMenu() }</div> }
+      { this.props.enableColumnsVisibilityMenu && <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.renderColumnsVisibilityMenu() }</div> }
     </div>
   }
 
