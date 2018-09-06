@@ -75,7 +75,6 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
   }
 
   moveColumnBefore = (sourceColumnId: string, targetColumnId: string) => {
-    console.log(sourceColumnId, targetColumnId) //eslint-disable-line
     let sourceColumnIndex = this.props.columnsOrder.findIndex(co => co === sourceColumnId)
     let columnsOrderWithoutSourceColumn = this.props.columnsOrder.delete(sourceColumnIndex)
     let targetColumnIndex = columnsOrderWithoutSourceColumn.findIndex(co => co === targetColumnId)
