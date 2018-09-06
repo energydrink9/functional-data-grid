@@ -55,7 +55,8 @@ type FunctionalDataGridState<T> = {
   sort : List<Sort>,
   filter : List<Filter>,
   columnsWidth : Map<string, number>,
-  columnsVisibility: Map<string, boolean>
+  columnsVisibility: Map<string, boolean>,
+  columnsOrder: List<string>
 }
 
 export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
@@ -89,7 +90,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       sort : this.props.initialSort,
       filter : this.props.initialFilter,
       columnsWidth : this.getInitialColumnsWidth(props.columns),
-      columnsVisibility: this.getInitialColumnsVisibility(props.columns)
+      columnsVisibility: this.getInitialColumnsVisibility(props.columns),
+      columnsOrder: props.columns.map(c => c.id)
     }
   }
 
@@ -128,7 +130,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
           <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Header columns={this.props.columns} columnsVisibility={this.state.columnsVisibility} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} onColumnVisibilityChange={this.updateColumnVisibility} />
+            <Header columns={this.getOrderedColumns()} columnsVisibility={this.state.columnsVisibility} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} onColumnVisibilityChange={this.updateColumnVisibility} onColumnsOrderChange={this.onColumnsOrderChange} columnsOrder={this.state.columnsOrder} />
             <div style={{flexGrow: 1}}>
               <AutoSizer>
                 {({height, width}) => (
@@ -145,7 +147,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
                 )}
               </AutoSizer>
             </div>
-            <HorizontalScrollbar enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} columnsVisibility={this.state.columnsVisibility} columns={this.props.columns} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} />
+            <HorizontalScrollbar enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} columnsVisibility={this.state.columnsVisibility} columns={this.getOrderedColumns()} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} />
             { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().filter(r => r.type === 'element').size} /> }
           </div>
         )}
@@ -153,11 +155,13 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     </div>
   }
 
+  getOrderedColumns = () => this.state.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId))
+
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
     let rowStyle = this.props.style.row != null ? this.props.style.row : {}
     let computedStyle = {...param.style, ...rowStyle}
-    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} groups={this.props.groups} columns={this.flatColumns(this.props.columns)} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} />
+    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} groups={this.props.groups} columns={this.flatColumns(this.getOrderedColumns())} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} />
   }
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
@@ -311,5 +315,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       columnsWidth: this.state.columnsWidth.set(columnId, width)
     })
     this.props.onColumnResize({id: columnId, width: width})
+  }
+
+  onColumnsOrderChange = (columnsOrder: List<string>) => {
+    this.setState({
+      columnsOrder
+    })
   }
 }

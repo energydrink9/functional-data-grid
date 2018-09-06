@@ -23,7 +23,9 @@ type HeaderProps = {
   columnsVisibility: Map<string, boolean>,
   enableColumnsShowAndHide: boolean,
   enableColumnsSorting: boolean,
-  onColumnVisibilityChange: Function
+  onColumnVisibilityChange: Function,
+  onColumnsOrderChange: List<string> => void,
+  columnsOrder: List<string>
 }
 
 type HeaderState = {
@@ -96,7 +98,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
       <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}>
         {({ placement, ref, style }) => (
           <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
-            <ColumnsMenu columns={this.props.columns} columnsVisibility={this.props.columnsVisibility} onColumnVisibilityChange={this.props.onColumnVisibilityChange} onClose={this.toggleColumnsMenu} />,
+            <ColumnsMenu columns={this.props.columns} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} columnsVisibility={this.props.columnsVisibility} onColumnVisibilityChange={this.props.onColumnVisibilityChange} onClose={this.toggleColumnsMenu} onColumnsOrderChange={this.props.onColumnsOrderChange} columnsOrder={this.props.columnsOrder} />,
           </div>
         )}
       </Popper>,
