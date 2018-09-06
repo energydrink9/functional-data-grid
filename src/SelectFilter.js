@@ -11,7 +11,7 @@ type SelectFilterState = {
   value : ?any
 }
 
-export default class SelectFilter extends React.Component<SelectFilterProps, SelectFilterState> {
+export default class SelectFilter extends React.PureComponent<SelectFilterProps, SelectFilterState> {
 
   props: SelectFilterProps
   state: SelectFilterState

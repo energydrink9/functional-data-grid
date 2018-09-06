@@ -15,7 +15,7 @@ type HorizontalScrollbarProps = {
   enableColumnsVisibilityMenu: boolean
 }
 
-export default class HorizontalScrollbar extends React.Component<HorizontalScrollbarProps> {
+export default class HorizontalScrollbar extends React.PureComponent<HorizontalScrollbarProps> {
 
   props: HorizontalScrollbarProps
 
@@ -29,8 +29,9 @@ export default class HorizontalScrollbar extends React.Component<HorizontalScrol
     this.updateScroll()
   }
 
-  componentDidUpdate = () => {
-    this.updateScroll()
+  componentDidUpdate = (prevProps: HorizontalScrollbarProps) => {
+    if (this.props.scrollLeft !== prevProps.scrollLeft)
+      this.updateScroll()
   }
 
   updateScroll = () => {
@@ -73,9 +74,17 @@ export default class HorizontalScrollbar extends React.Component<HorizontalScrol
     </div>
   </div>
 
-  getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id) != null ? this.props.columnsWidth.get(c.id) : c.width
+  getColumnWidth = (c : BaseColumn) : number => {
+    let columnWidth = this.props.columnsWidth.get(c.id)
+    return columnWidth != null
+      ? columnWidth
+      : c.width != null
+        ? c.width
+        : 100
+  }
 
-  renderColumn = (c : BaseColumn) => <div key={c.id} style={{width: this.getColumnWidth(c) + 'px', flexShrink: 0, minHeight: '1px'}} />
+  renderColumn = (c : BaseColumn) => <div key={c.id} style={{width: `${this.getColumnWidth(c)}px`, flexShrink: 0, minHeight: '1px'}} />
 
   isColumnVisible = (columnId: string) => this.props.columnsVisibility.get(columnId)
+
 }

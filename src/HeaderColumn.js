@@ -17,7 +17,7 @@ type HeaderColumnState = {
   hover: boolean
 }
 
-export default class HeaderColumn extends React.Component<HeaderColumnProps, HeaderColumnState> {
+export default class HeaderColumn extends React.PureComponent<HeaderColumnProps, HeaderColumnState> {
 
   static defaultProps = {
     direction: 'none'

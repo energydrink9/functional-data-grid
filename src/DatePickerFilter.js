@@ -24,7 +24,7 @@ const style = {
   color: '#000'
 }
 
-class CustomInput extends React.Component<Object> {
+class CustomInput extends React.PureComponent<Object> {
   props: Object
   
   render = () =>
@@ -39,10 +39,11 @@ export default class DatePickerFilter extends React.Component<DatePickerFilterPr
   container = ({children} : any) => {
     const el = document.body
   
-    return ReactDOM.createPortal(
-      children,
-      el
-    )
+    if (el != null)
+      return ReactDOM.createPortal(
+        children,
+        el
+      )
   }
   
   constructor(props : Object) {

@@ -11,7 +11,7 @@ type ColumnsVisibilityMenuPropsType = {
   onColumnVisibilityChange: Function
 }
 
-export default class ColumnsVisibilityMenu extends React.Component<ColumnsVisibilityMenuPropsType> {
+export default class ColumnsVisibilityMenu extends React.PureComponent<ColumnsVisibilityMenuPropsType> {
   
   props: ColumnsVisibilityMenuPropsType
   

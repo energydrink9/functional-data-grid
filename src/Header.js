@@ -31,7 +31,7 @@ type HeaderState = {
 
 const columnsOptionsWidth = 26
 
-export default class Header extends React.Component<HeaderProps, HeaderState> {
+export default class Header extends React.PureComponent<HeaderProps, HeaderState> {
 
   props: HeaderProps
   state: HeaderState
@@ -49,8 +49,9 @@ export default class Header extends React.Component<HeaderProps, HeaderState> {
     this.updateScroll()
   }
 
-  componentDidUpdate = () => {
-    this.updateScroll()
+  componentDidUpdate = (prevProps: HeaderProps) => {
+    if (this.props.scrollLeft !== prevProps.scrollLeft)
+      this.updateScroll()
   }
 
   updateScroll = () => {

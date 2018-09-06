@@ -56,7 +56,7 @@ type FunctionalDataGridState<T> = {
   columnsVisibility: Map<string, boolean>
 }
 
-export default class FunctionalDataGrid<T, A: void> extends React.Component<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
+export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
 
   props: FunctionalDataGridProps<T, A>;
   state : FunctionalDataGridState<T>
@@ -191,7 +191,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.Component<Func
 
   applySort = (data : List<DataRow<T>>, sort : Sort): List<DataRow<T>> => {
     let column = this.getColumnById(sort.columnId)
-    return data.sortBy((e: DataRow<T>) => column.valueGetter(e.content, e.type), (a, b) => (sort.direction === 'asc' ? 1 : -1) * column.comparator(a, b))
+    return data.sortBy((e: DataRow<T>) => column.valueGetter(e.content), (a, b) => (sort.direction === 'asc' ? 1 : -1) * column.comparator(a, b))
   }
 
   getColumnById = (columnId : string) => {

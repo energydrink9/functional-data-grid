@@ -9,7 +9,7 @@ type TextBoxFilterState = {
   value : string
 }
 
-export default class TextBoxFilter extends React.Component<TextBoxFilterProps, TextBoxFilterState> {
+export default class TextBoxFilter extends React.PureComponent<TextBoxFilterProps, TextBoxFilterState> {
 
   props: TextBoxFilterProps
   state: TextBoxFilterState

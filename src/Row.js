@@ -21,14 +21,14 @@ type RowProps = {
   columnsWidth : Map<string, number>,
   columnsVisibility: Map<string, boolean>,
   enableColumnsVisibilityMenu: boolean,
-  groups: List<Group>
+  groups: List<Group<any, any>>
 }
 
 type RowState = {
   hover: boolean
 }
 
-export default class Row extends React.Component<RowProps, RowState> {
+export default class Row extends React.PureComponent<RowProps, RowState> {
 
   props: RowProps
   state: RowState
@@ -46,8 +46,9 @@ export default class Row extends React.Component<RowProps, RowState> {
     this.updateScroll()
   }
 
-  componentDidUpdate = () => {
-    this.updateScroll()
+  componentDidUpdate = (prevProps: RowProps) => {
+    if (this.props.scrollLeft !== prevProps.scrollLeft)
+      this.updateScroll()
   }
 
   updateScroll = () => {

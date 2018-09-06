@@ -11,7 +11,7 @@ type HeaderColumnResizerState = {
   hover: boolean
 }
 
-export default class HeaderColumnResizer extends React.Component<HeaderColumnResizerProps, HeaderColumnResizerState> {
+export default class HeaderColumnResizer extends React.PureComponent<HeaderColumnResizerProps, HeaderColumnResizerState> {
 
   props: HeaderColumnResizerProps
   state: HeaderColumnResizerState
