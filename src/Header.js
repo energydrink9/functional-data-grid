@@ -7,7 +7,7 @@ import ColumnGroup from "./ColumnGroup"
 import BaseColumn from "./BaseColumn"
 import HeaderColumn from "./HeaderColumn"
 import Sort from "./Sort"
-import ColumnsVisibilityMenu from './ColumnsVisibilityMenu'
+import ColumnsMenu from './ColumnsMenu'
 import { Manager, Reference, Popper } from 'react-popper'
 
 type HeaderProps = {
@@ -21,12 +21,13 @@ type HeaderProps = {
   columnsWidth : Map<string, number>,
   style: Object,
   columnsVisibility: Map<string, boolean>,
-  enableColumnsVisibilityMenu: boolean,
+  enableColumnsShowAndHide: boolean,
+  enableColumnsSorting: boolean,
   onColumnVisibilityChange: Function
 }
 
 type HeaderState = {
-  showColumnsVisibilityMenu: boolean
+  showColumnsMenu: boolean
 }
 
 const columnsOptionsWidth = 26
@@ -41,7 +42,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
   constructor(props : HeaderProps) {
     super(props)
     this.state = {
-      showColumnsVisibilityMenu: false
+      showColumnsMenu: false
     }
   }
 
@@ -81,21 +82,21 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
       </div>
-      { this.props.enableColumnsVisibilityMenu && <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.renderColumnsVisibilityMenu() }</div> }
+      { (this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting) && <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.renderColumnsMenu() }</div> }
     </div>
   }
 
-  renderColumnsVisibilityMenu = () => <Manager>
+  renderColumnsMenu = () => <Manager>
     <Reference>
       {({ ref }) => (
-        <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none', fontSize: '16px' }} onClick={this.toggleColumnsVisibilityMenu}>&#x22ee;</div>
+        <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none', fontSize: '16px' }} onClick={this.toggleColumnsMenu}>&#x22ee;</div>
       )}
     </Reference>
-    { this.state.showColumnsVisibilityMenu && document.body != null && ReactDOM.createPortal(
-      <Popper placement={'bottom-end'}>
+    { this.state.showColumnsMenu && document.body != null && ReactDOM.createPortal(
+      <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}>
         {({ placement, ref, style }) => (
           <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
-            <ColumnsVisibilityMenu columns={this.props.columns} columnsVisibility={this.props.columnsVisibility} onColumnVisibilityChange={this.props.onColumnVisibilityChange} />,
+            <ColumnsMenu columns={this.props.columns} columnsVisibility={this.props.columnsVisibility} onColumnVisibilityChange={this.props.onColumnVisibilityChange} onClose={this.toggleColumnsMenu} />,
           </div>
         )}
       </Popper>,
@@ -103,9 +104,9 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
     )}
   </Manager>
 
-  toggleColumnsVisibilityMenu = () => {
+  toggleColumnsMenu = () => {
     this.setState({
-      showColumnsVisibilityMenu: ! this.state.showColumnsVisibilityMenu
+      showColumnsMenu: ! this.state.showColumnsMenu
     })
   }
 

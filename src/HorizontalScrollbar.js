@@ -12,7 +12,7 @@ type HorizontalScrollbarProps = {
   onScroll: Function,
   columnsWidth : Map<string, number>,
   columnsVisibility: Map<string, boolean>,
-  enableColumnsVisibilityMenu: boolean
+  enableColumnsMenu: boolean
 }
 
 export default class HorizontalScrollbar extends React.PureComponent<HorizontalScrollbarProps> {
@@ -61,7 +61,7 @@ export default class HorizontalScrollbar extends React.PureComponent<HorizontalS
       <div style={{display: 'flex'}}>
         { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
       </div>
-      { this.props.enableColumnsVisibilityMenu && <div style={{ width: '26px' }}></div> }
+      { this.props.enableColumnsMenu && <div style={{ width: '26px' }}></div> }
     </div>
   }
 

@@ -20,7 +20,7 @@ type RowProps = {
   rowIndex : number,
   columnsWidth : Map<string, number>,
   columnsVisibility: Map<string, boolean>,
-  enableColumnsVisibilityMenu: boolean,
+  enableColumnsMenu: boolean,
   groups: List<Group<any, any>>
 }
 

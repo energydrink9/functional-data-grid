@@ -92,7 +92,8 @@ The FunctionalDataGrid component accepts the following props:
 |includeFilteredElementsInAggregates|optional|false|It allows to calculate the aggregates based on all the elements, also the filtered ones|
 |onColumnResize|optional| |Allows to specify an event handler for column resizing|
 |showFooter|optional|true|Shows the footer of the grid with the elements count|
-|enableColumnsVisibilityMenu|optional|false|Allows the user to show and hide columns|
+|enableColumnsShowAndHide|optional|false|Allows the user to show and hide columns|
+|enableColumnsSorting|optional|false|Allows the user to change the order of the columns|
 |overscanRowCount|optional|10|Number of rows to render above/below the visible bounds of the grid|
 |className|optional|''|Css classes to apply to the component|
 
