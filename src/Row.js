@@ -47,7 +47,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
   }
 
   componentDidUpdate = (prevProps: RowProps) => {
-    if (this.props.scrollLeft !== prevProps.scrollLeft)
+    if (this.props.scrollLeft !== this.scrollingDiv.scrollLeft)
       this.updateScroll()
   }
 

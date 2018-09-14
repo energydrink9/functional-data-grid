@@ -53,7 +53,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
   }
 
   componentDidUpdate = (prevProps: HeaderProps) => {
-    if (this.props.scrollLeft !== prevProps.scrollLeft)
+    if (this.props.scrollLeft !== this.scrollingDiv.scrollLeft)
       this.updateScroll()
   }
 

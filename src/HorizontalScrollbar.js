@@ -30,7 +30,7 @@ export default class HorizontalScrollbar extends React.PureComponent<HorizontalS
   }
 
   componentDidUpdate = (prevProps: HorizontalScrollbarProps) => {
-    if (this.props.scrollLeft !== prevProps.scrollLeft)
+    if (this.props.scrollLeft !== this.scrollingDiv.scrollLeft)
       this.updateScroll()
   }
 
