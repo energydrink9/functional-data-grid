@@ -18,7 +18,7 @@ type ColumnsMenuPropsType = {
 
 export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsType> {
   
-  ref: HTMLDivElement
+  ref: ?HTMLDivElement
   props: ColumnsMenuPropsType
   
   static defaultProps = {
@@ -29,7 +29,7 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     onClose: () => {}
   }
 
-  constructor(props: ColumnsMenuProps) {
+  constructor(props: ColumnsMenuPropsType) {
     super(props)
   }
 
@@ -52,8 +52,8 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     { this.props.columns.valueSeq().map((c, index) => this.renderColumnEntry(c, index)) }
   </div>
 
-  renderColumnEntry = (c: BaseColumn | ColumnGroup, index: number) => {
-    return <div key={index} draggable={this.props.enableColumnsSorting} onDragStart={this.onDragStart(c.id)} onDragOver={this.onDragOver} onDragEnd={this.onDragEnd} onDrop={this.onDrop(c.id)} style={{cursor: this.props.enableColumnsSorting ? 'pointer' : 'auto'}}>
+  renderColumnEntry = (c: BaseColumn, index: number) => {
+    return <div key={index} draggable={this.props.enableColumnsSorting} onDragStart={this.onDragStart(c.id)} onDragOver={this.onDragOver} onDrop={this.onDrop(c.id)} style={{cursor: this.props.enableColumnsSorting ? 'pointer' : 'auto'}}>
       { this.props.enableColumnsSorting && <div style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle', color: '#ccc' }}>{ String.fromCodePoint(9776) }</div> }
       <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>{ this.props.enableColumnsShowAndHide && <input type="checkbox" checked={this.props.columnsVisibility.get(c.id)} onChange={this.onColumnVisibilityChange(c.id)} style={{ margin: 0, verticalAlign: 'middle' }} /> } { c.title }</div>
     </div>
