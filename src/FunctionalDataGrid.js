@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 import BaseColumn from './BaseColumn'
 import ColumnGroup from './ColumnGroup'
 import { List, Map, OrderedMap, KeyedSeq } from 'immutable'
@@ -56,14 +57,15 @@ type FunctionalDataGridState<T> = {
   filter : List<Filter>,
   columnsWidth : Map<string, number>,
   columnsVisibility: Map<string, boolean>,
-  columnsOrder: List<string>
+  columnsOrder: List<string>,
+  ref: ?HTMLElement
 }
 
 export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
 
-  props: FunctionalDataGridProps<T, A>;
+  props: FunctionalDataGridProps<T, A>
   state : FunctionalDataGridState<T>
-  list : ReactVirtualizedList;
+  list : ReactVirtualizedList
   debouncedUpdateElements = debounce((data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => this.updateElements(data, groups, sort, filter), debounceTimeout);
 
   static defaultProps = {
@@ -126,11 +128,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   render = () => {
     let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', border: 'solid 1px #ccc'}
-    return <div className={`functional-data-grid ${this.props.className}`} style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
+    return <div ref={ref => this.setState({ ref: ref })} className={`functional-data-grid ${this.props.className}`} style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
           <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Header columns={this.getOrderedColumns()} columnsVisibility={this.state.columnsVisibility} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} onColumnVisibilityChange={this.updateColumnVisibility} onColumnsOrderChange={this.onColumnsOrderChange} columnsOrder={this.state.columnsOrder} />
+            <Header columns={this.getOrderedColumns()} columnsVisibility={this.state.columnsVisibility} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} onColumnVisibilityChange={this.updateColumnVisibility} onColumnsOrderChange={this.onColumnsOrderChange} columnsOrder={this.state.columnsOrder} popperContainer={this.state.ref} />
             <div style={{flexGrow: 1}}>
               <AutoSizer>
                 {({height, width}) => (

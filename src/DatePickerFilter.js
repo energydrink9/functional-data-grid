@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 
 type DatePickerFilterProps = {
   onUpdateFilter : Function,
+  pickerPopperContainer: ?HTMLElement
 }
 type DatePickerFilterState = {
   value : ?moment,
@@ -36,8 +37,12 @@ export default class DatePickerFilter extends React.Component<DatePickerFilterPr
   props: DatePickerFilterProps
   state: DatePickerFilterState
 
+  static defaultProps = {
+    pickerPopperContainer: document.body
+  }
+
   container = ({children} : any) => {
-    const el = document.body
+    const el = this.props.pickerPopperContainer
   
     if (el != null)
       return ReactDOM.createPortal(
@@ -69,7 +74,7 @@ export default class DatePickerFilter extends React.Component<DatePickerFilterPr
     </select>
     <DatePicker selected={this.state.value} isClearable={true} customInput={<CustomInput />} onChange={this.triggerOnUpdateFilter}
       showYearDropdown
-      dropdownMode="select"  
+      dropdownMode="select"
       popperContainer={this.container}
       {...this.props}
     ></DatePicker>

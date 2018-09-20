@@ -25,7 +25,8 @@ type HeaderProps = {
   enableColumnsSorting: boolean,
   onColumnVisibilityChange: Function,
   onColumnsOrderChange: List<string> => void,
-  columnsOrder: List<string>
+  columnsOrder: List<string>,
+  popperContainer: ?HTMLElement
 }
 
 type HeaderState = {
@@ -40,6 +41,10 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
   state: HeaderState
 
   scrollingDiv : any
+
+  static defaultProps = {
+    popperContainer: document.body
+  }
 
   constructor(props : HeaderProps) {
     super(props)
@@ -94,7 +99,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
         <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none', fontSize: '16px' }} onClick={this.toggleColumnsMenu}>&#x22ee;</div>
       )}
     </Reference>
-    { this.state.showColumnsMenu && document.body != null && ReactDOM.createPortal(
+    { this.state.showColumnsMenu && this.props.popperContainer != null && ReactDOM.createPortal(
       <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}>
         {({ placement, ref, style }) => (
           <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
@@ -102,7 +107,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
           </div>
         )}
       </Popper>,
-      document.body
+      this.props.popperContainer
     )}
   </Manager>
 
