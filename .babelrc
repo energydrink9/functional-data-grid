@@ -1,0 +1,17 @@
+{
+  "presets": [["env", {"modules": false}], "react"],
+  "plugins": [
+    "babel-plugin-transform-runtime",
+    "babel-plugin-transform-regenerator",
+    "babel-plugin-transform-async-to-generator",
+    "babel-plugin-transform-class-properties",
+    "babel-plugin-transform-flow-comments",
+    "babel-plugin-syntax-flow",
+    "babel-plugin-transform-object-rest-spread"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}

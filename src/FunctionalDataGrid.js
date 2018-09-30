@@ -93,7 +93,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       filter : this.props.initialFilter,
       columnsWidth : this.getInitialColumnsWidth(props.columns),
       columnsVisibility: this.getInitialColumnsVisibility(props.columns),
-      columnsOrder: props.columns.map(c => c.id)
+      columnsOrder: props.columns.map(c => c.id),
+      ref: null
     }
   }
 
@@ -163,7 +164,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     let element = this.getElement(param.index)
     let rowStyle = this.props.style.row != null ? this.props.style.row : {}
     let computedStyle = {...param.style, ...rowStyle}
-    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} groups={this.props.groups} columns={this.flatColumns(this.getOrderedColumns())} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} />
+    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} groups={this.props.groups} columns={FunctionalDataGrid.flatColumns(this.getOrderedColumns())} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} />
   }
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
@@ -178,13 +179,14 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
   computeElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) : List<DataRow<any>> =>
     this.filterGroups(
       this.groupData(
-        this.sortData(
+        FunctionalDataGrid.sortData(
           this.filterData(
-            this.enrichData(data),
+            FunctionalDataGrid.enrichData(data),
             filter,
             groups
           ),
-          sort
+          sort,
+          this.props.columns
         ),
         groups
       ),
@@ -196,21 +198,26 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
           ? e.flatten(this.props.showGroupHeaders)
           : List([e])
 
-  sortData = (data : List<DataRow<T>>, sort : List<Sort>): List<DataRow<T>> => sort.reverse().reduce((data: List<DataRow<T>>, s: Sort) => this.applySort(data, s), data)
+  static sortData = (data : List<DataRow<T>>, sort : List<Sort>, columns: List<ColumnGroup | BaseColumn>): List<DataRow<T>> => sort
+    .reverse()
+    .reduce((data: List<DataRow<T>>, s: Sort) =>
+      FunctionalDataGrid.applySort(data, s, columns), data)
 
-  applySort = (data : List<DataRow<T>>, sort : Sort): List<DataRow<T>> => {
-    let column = this.getColumnById(sort.columnId)
+  static applySort = (data : List<DataRow<T>>, sort : Sort, columns: List<ColumnGroup | BaseColumn>): List<DataRow<T>> => {
+    let column = FunctionalDataGrid.getColumnById(FunctionalDataGrid.flatColumns(columns), sort.columnId)
     return data.sortBy((e: DataRow<T>) => column.valueGetter(e.content), (a, b) => (sort.direction === 'asc' ? 1 : -1) * column.comparator(a, b))
   }
 
-  getColumnById = (columnId : string) => {
-    let column = this.flatColumns(this.props.columns).find(c => c.id === columnId)
+  getColumnById = (columnId : string) => FunctionalDataGrid.getColumnById(FunctionalDataGrid.flatColumns(this.props.columns), columnId)
+
+  static getColumnById = (columns: List<BaseColumn>, columnId: string) => {
+    let column = columns.find(c => c.id === columnId)
     if (column == null)
       throw new Error('Invalid column id')
     return column
   }
 
-  enrichData = (data : List<T>) : List<DataRow<T>> => data.map((e, index) => new DataRow(e, 'element', index))
+  static enrichData = (data : List<T>) : List<DataRow<T>> => data.map((e, index) => new DataRow(e, 'element', index))
 
   getElement = (index : number) => this.getElements().get(index)
 
@@ -264,7 +271,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   applyFilterToElement = <T,> (e : DataRow<T>, filter : Filter) : boolean => filter.matcher(this.getColumnById(filter.columnId).valueGetter(e.content))
 
-  flatColumns = (columns : List<BaseColumn | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
+  static flatColumns = (columns : List<BaseColumn | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
 
   getTotalCount = () => this.getElements().size
 
