@@ -44,6 +44,8 @@ type FunctionalDataGridProps<T, A> = {
   rowHeight: number | ((T) => number),
   includeFilteredElementsInAggregates: boolean,
   onColumnResize: (Object) => void,
+  onColumnsOrderChange: (Object) => void,
+  onColumnVisibilityChange: (Object) => void,
   showFooter: boolean,
   className: 'string',
   overscanRowCount: number,
@@ -78,6 +80,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     rowHeight: defaultRowHeight,
     includeFilteredElementsInAggregates: false,
     onColumnResize: (e: Object) => {},
+    onColumnsOrderChange: (e: Object) => {},
+    onColumnVisibilityChange: (e: Object) => {},
     showFooter: true,
     className: '',
     overscanRowCount: 10,
@@ -106,6 +110,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     this.setState({
       columnsVisibility: this.state.columnsVisibility.set(columnId, columnVisibility)
     })
+    this.props.onColumnVisibilityChange({id: columnId, visible: columnVisibility})
   }
 
   componentWillMount = () => {
@@ -330,5 +335,6 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     this.setState({
       columnsOrder
     })
+    this.props.onColumnsOrderChange({columnsOrder})
   }
 }
