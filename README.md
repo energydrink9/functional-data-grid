@@ -90,7 +90,9 @@ The FunctionalDataGrid component accepts the following props:
 |rowHeight|optional|26|The height of the rows or a function that accepts an element and returns its row height|
 |showGroupHeaders|optional|true|Set to false to hide the headers for groups|
 |includeFilteredElementsInAggregates|optional|false|It allows to calculate the aggregates based on all the elements, also the filtered ones|
-|onColumnResize|optional| |Allows to specify an event handler for column resizing|
+|onColumnResize|optional| |Allows to specify an event handler for the column resize event|
+|onColumnVisibilityChange|optional| |Allows to specify an event handler for the column visibility change event|
+|onColumnsOrderChange|optional| |Allows to specify an event handler for the column order change event|
 |showFooter|optional|true|Shows the footer of the grid with the elements count|
 |enableColumnsShowAndHide|optional|false|Allows the user to show and hide columns|
 |enableColumnsSorting|optional|false|Allows the user to change the order of the columns|
