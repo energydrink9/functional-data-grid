@@ -1,36 +1,22 @@
 // @flow
 
 import React from 'react'
-import ReactDOM from 'react-dom'
 import BaseColumn from './BaseColumn'
 import ColumnGroup from './ColumnGroup'
-import { List, Map, OrderedMap, KeyedSeq } from 'immutable'
+import { List, Map } from 'immutable'
 import Filter from './Filter'
 import Sort from './Sort'
-import Header from './Header'
-import Row from './Row'
-import { ScrollSync, AutoSizer, List as ReactVirtualizedList } from 'react-virtualized'
 import Group from "./Group"
 import DataGroup from "./DataGroup"
 import DataRow from './DataRow'
 import Aggregate from './Aggregate'
 import debounce from 'debounce'
-import Footer from './Footer'
-import HorizontalScrollbar from './HorizontalScrollbar'
+import type { FunctionalDataGridStyle } from './FunctionalDataGridStyle'
+import PresentationalFunctionalDataGrid from './PresentationalFunctionalDataGrid'
 
 const debounceTimeout = 250
 const defaultInitialColumnWidth = 100
 const defaultRowHeight = 26
-
-type FunctionalDataGridStyle = {
-  grid?: Object,
-  header?: Object,
-  footer?: Object,
-  group?: Object,
-  aggregate?: Object,
-  row?: Object,
-  cell?: Object,
-}
 
 type FunctionalDataGridProps<T, A> = {
   columns: List<BaseColumn | ColumnGroup>,
@@ -59,15 +45,13 @@ type FunctionalDataGridState<T> = {
   filter : List<Filter>,
   columnsWidth : Map<string, number>,
   columnsVisibility: Map<string, boolean>,
-  columnsOrder: List<string>,
-  ref: ?HTMLElement
+  columnsOrder: List<string>
 }
 
 export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
 
   props: FunctionalDataGridProps<T, A>
   state : FunctionalDataGridState<T>
-  list : ReactVirtualizedList
   debouncedUpdateElements = debounce((data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => this.updateElements(data, groups, sort, filter), debounceTimeout);
 
   static defaultProps = {
@@ -79,14 +63,14 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     showGroupHeaders: true,
     rowHeight: defaultRowHeight,
     includeFilteredElementsInAggregates: false,
-    onColumnResize: (e: Object) => {},
-    onColumnsOrderChange: (e: Object) => {},
-    onColumnVisibilityChange: (e: Object) => {},
     showFooter: true,
     className: '',
     overscanRowCount: 10,
     enableColumnsSorting: false,
-    enableColumnsShowAndHide: false
+    enableColumnsShowAndHide: false,
+    onColumnResize: (e: Object) => {},
+    onColumnsOrderChange: (e: Object) => {},
+    onColumnVisibilityChange: (e: Object) => {}
   }
 
   constructor(props : FunctionalDataGridProps<T, A>) {
@@ -97,20 +81,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       filter : this.props.initialFilter,
       columnsWidth : this.getInitialColumnsWidth(props.columns),
       columnsVisibility: this.getInitialColumnsVisibility(props.columns),
-      columnsOrder: props.columns.map(c => c.id),
-      ref: null
+      columnsOrder: props.columns.map(c => c.id)
     }
-  }
-
-  getInitialColumnsWidth = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
-
-  getInitialColumnsVisibility = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).hidden != null ? ! v.get(0).hidden : true)
-
-  updateColumnVisibility = (columnId: string, columnVisibility: boolean) => {
-    this.setState({
-      columnsVisibility: this.state.columnsVisibility.set(columnId, columnVisibility)
-    })
-    this.props.onColumnVisibilityChange({id: columnId, visible: columnVisibility})
   }
 
   componentWillMount = () => {
@@ -122,63 +94,33 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       this.debouncedUpdateElements(newProps.data, newProps.groups, this.state.sort, this.state.filter)
   }
 
-  getRowHeight = () => {
-    let rowHeight = this.props.rowHeight
-    return rowHeight instanceof Function
-    ? (args: Object) => {
-      let element = this.getElement(args.index)
-      return rowHeight(element.content, element.originalIndex, element.type)
-    }
-    : rowHeight
-  }
-
-  render = () => {
-    let style = {display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', border: 'solid 1px #ccc'}
-    return <div ref={ref => this.setState({ ref: ref })} className={`functional-data-grid ${this.props.className}`} style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
-      <ScrollSync>
-        {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
-          <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-            <Header columns={this.getOrderedColumns()} columnsVisibility={this.state.columnsVisibility} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} style={this.props.style.header != null ? this.props.style.header : {}} sort={this.props.initialSort} onUpdateSort={this.updateSortState} onUpdateFilter={this.updateFilterState} onColumnResize={this.resizeColumn} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} onColumnVisibilityChange={this.updateColumnVisibility} onColumnsOrderChange={this.onColumnsOrderChange} columnsOrder={this.state.columnsOrder} popperContainer={this.state.ref} />
-            <div style={{flexGrow: 1}}>
-              <AutoSizer>
-                {({height, width}) => (
-                    <ReactVirtualizedList
-                      rowCount={this.getTotalCount()}
-                      height={height}
-                      width={width}
-                      rowHeight={this.getRowHeight()}
-                      rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
-                      ref={(list) => { this.list = list }}
-                      style={{backgroundColor: '#fff', outline: 'none'}}
-                      overscanRowCount={this.props.overscanRowCount} >
-                    </ReactVirtualizedList>
-                )}
-              </AutoSizer>
-            </div>
-            <HorizontalScrollbar enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} columnsVisibility={this.state.columnsVisibility} columns={this.getOrderedColumns()} columnsWidth={this.state.columnsWidth} scrollLeft={scrollLeft} onScroll={onScroll} />
-            { this.props.showFooter && <Footer style={this.props.style.footer != null ? this.props.style.footer : {}} totalElements={this.getElements().filter(r => r.type === 'element').size} /> }
-          </div>
-        )}
-      </ScrollSync>
-    </div>
-  }
+  render = () => <PresentationalFunctionalDataGrid
+    columns={this.props.columns}
+    elements={this.state.cachedElements}
+    style={this.props.style}
+    showGroupHeaders={this.props.showGroupHeaders}
+    rowHeight={this.props.rowHeight}
+    showFooter={this.props.showFooter}
+    className={this.props.className}
+    overscanRowCount={this.props.overscanRowCount}
+    enableColumnsSorting={this.props.enableColumnsSorting}
+    enableColumnsShowAndHide={this.props.enableColumnsShowAndHide}
+    sort={this.state.sort}
+    groups={this.props.groups}
+    columnsWidth={this.state.columnsWidth}
+    columnsVisibility={this.state.columnsVisibility}
+    columnsOrder={this.state.columnsOrder}
+    onUpdateSort={this.updateSortState}
+    onUpdateFilter={this.updateFilterState}
+    onColumnResize={this.resizeColumn}
+    onColumnsOrderChange={this.onColumnsOrderChange}
+    onColumnVisibilityChange={this.updateColumnVisibility}
+  />
 
   getOrderedColumns = () => this.state.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId))
 
-  rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
-    let element = this.getElement(param.index)
-    let rowStyle = this.props.style.row != null ? this.props.style.row : {}
-    let computedStyle = {...param.style, ...rowStyle}
-    return <Row key={param.index} style={computedStyle} cellStyle={this.props.style.cell != null ? this.props.style.cell : {}} aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}} groupStyle={this.props.style.group != null ? this.props.style.group : {}} groups={this.props.groups} columns={FunctionalDataGrid.flatColumns(this.getOrderedColumns())} columnsWidth={this.state.columnsWidth} columnsVisibility={this.state.columnsVisibility} element={element} onScroll={onScroll} scrollLeft={scrollLeft} rowIndex={param.index} enableColumnsMenu={this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting} />
-  }
-
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
-    this.setState({ cachedElements: this.computeElements(data, groups, sort, filter) }, () => { this.recomputeRowHeights() })
-  }
-
-  recomputeRowHeights = () => {
-    if (this.list != null)
-      this.list.recomputeRowHeights()
+    this.setState({ cachedElements: this.computeElements(data, groups, sort, filter) })
   }
 
   computeElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) : List<DataRow<any>> =>
@@ -278,8 +220,6 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   static flatColumns = (columns : List<BaseColumn | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
 
-  getTotalCount = () => this.getElements().size
-
   updateSortState = (columnId : string, direction : 'asc' | 'desc' | 'none') => {
 
     this.setState({
@@ -336,5 +276,16 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       columnsOrder
     })
     this.props.onColumnsOrderChange({columnsOrder})
+  }
+
+  getInitialColumnsWidth = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
+
+  getInitialColumnsVisibility = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).hidden != null ? ! v.get(0).hidden : true)
+
+  updateColumnVisibility = (columnId: string, columnVisibility: boolean) => {
+    this.setState({
+      columnsVisibility: this.state.columnsVisibility.set(columnId, columnVisibility)
+    })
+    this.props.onColumnVisibilityChange({id: columnId, visible: columnVisibility})
   }
 }

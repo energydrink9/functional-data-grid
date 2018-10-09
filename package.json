@@ -1,6 +1,6 @@
 {
   "name": "functional-data-grid",
-  "version": "1.1.44",
+  "version": "1.1.45",
   "description": "Functional Data Grid",
   "main": "dist/FunctionalDataGrid.js",
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
@@ -70,13 +70,16 @@
     "url": "https://github.com/energydrink9/functional-data-grid.git"
   },
   "jest": {
-    "moduleFileExtensions": ["js", "jsx"],
-    "moduleDirectories": ["node_modules"],
-
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
     "moduleNameMapper": {
       "^react(.*)$": "<rootDir>/vendor/react-master$1",
       "^config$": "<rootDir>/configs/app-config.js",
-
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js"
     }

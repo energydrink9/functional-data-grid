@@ -33,11 +33,11 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     super(props)
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     document.addEventListener('click', this.handleClickOutside, true)
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside, true);
   }
 
