@@ -1,5 +1,5 @@
 
-import FunctionalDataGrid from '../src/FunctionalDataGrid'
+import Engine from '../src/Engine'
 import { List } from 'immutable';
 import Sort from '../src/Sort';
 import BaseColumn from '../src/BaseColumn';
@@ -22,7 +22,7 @@ test('elements are sorted correctly', () => {
     })
   )])
 
-  let result = FunctionalDataGrid.sortData(FunctionalDataGrid.enrichData(data), sort, columns)
+  let result = Engine.computeElements(data, List(), sort, List(), columns, false)
 
   expect(result.get(0).content.position).toBe(1)
   expect(result.get(1).content.position).toBe(2)
