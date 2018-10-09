@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/functional-data-grid.svg)](https://badge.fury.io/js/functional-data-grid)
 ![NPM license](https://img.shields.io/github/license/energydrink9/functional-data-grid.svg)
+[![npm](https://img.shields.io/npm/dm/functional-data-grid.svg)](https://www.npmjs.com/package/functional-data-grid)
 
 
 This is a library made with React and React-Virtualized for creating rich data grids with filtering, sorting, grouping and aggregates computation.
