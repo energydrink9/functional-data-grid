@@ -33,6 +33,7 @@
     "babel-plugin-typecheck": "3.9.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "6.24.1",
+    "codecov": "^3.1.0",
     "cross-env": "^2.0.1",
     "css-loader": "0.28.8",
     "eslint": "4.15.0",
@@ -54,6 +55,8 @@
   },
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage",
+    "codecov": "npm run coverage && codecov",
     "prepublish": "npm run build && npm run test",
     "clean": "rimraf dist",
     "build": "npm run clean && cross-env NODE_ENV=production webpack -p --config webpack.config.js",
