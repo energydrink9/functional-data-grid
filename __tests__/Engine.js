@@ -5,6 +5,7 @@ import Sort from '../src/Sort'
 import Filter from '../src/Filter';
 import BaseColumn from '../src/BaseColumn'
 import Group from '../src/Group';
+import AggregatesCalculators from '../src/AggregatesCalculators';
 
 test('elements are sorted correctly', () => {
 
@@ -160,4 +161,39 @@ test('grouped elements are filtered correctly', () => {
 
   expect(result.get(0).content.name).toBe('Jack')
   expect(result.get(1).content.name).toBe('Mark')
+})
+
+test('aggregates are computed correctly', () => {
+
+  let data = List([
+    { name: 'Jack', gender: 'Male', likes: 3 },
+    { name: 'Alice', gender: 'Female', likes: 10 },
+    { name: 'Mark', gender: 'Male', likes: 1 }
+  ])
+  
+  let groups = List([
+    new Group({
+      id: 'gender',
+      groupingFunction: e => e.gender
+    })
+  ])
+
+  let columns = List([new BaseColumn(
+    new BaseColumn({
+      id: 'name',
+      valueGetter: (e) => e.name
+    }),
+    new BaseColumn({
+      id: 'gender',
+      valueGetter: (e) => e.gender
+    })
+  )])
+
+  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.sum(els.map(e => e.likes)) } })
+
+  expect(result.get(0).content.name).toBe('Alice')
+  expect(result.get(1).content.content.likes).toBe(10)
+  expect(result.get(2).content.name).toBe('Jack')
+  expect(result.get(3).content.name).toBe('Mark')
+  expect(result.get(4).content.content.likes).toBe(4)
 })
