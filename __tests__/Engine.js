@@ -108,7 +108,7 @@ test('elements are grouped correctly', () => {
   let columns = List([new BaseColumn(
     new BaseColumn({
       id: 'name',
-      valueGetter: (e) => e.position
+      valueGetter: (e) => e.name
     }),
     new BaseColumn({
       id: 'gender',
@@ -121,4 +121,43 @@ test('elements are grouped correctly', () => {
   expect(result.get(0).content.name).toBe('Alice')
   expect(result.get(1).content.name).toBe('Jack')
   expect(result.get(2).content.name).toBe('Mark')
+})
+
+test('grouped elements are filtered correctly', () => {
+
+  let data = List([
+    { name: 'Jack', gender: 'Male' },
+    { name: 'Alice', gender: 'Female' },
+    { name: 'Mark', gender: 'Male' }
+  ])
+  
+  let groups = List([
+    new Group({
+      id: 'gender',
+      groupingFunction: e => e.gender
+    })
+  ])
+
+  let columns = List([new BaseColumn(
+    new BaseColumn({
+      id: 'name',
+      valueGetter: (e) => e.name
+    }),
+    new BaseColumn({
+      id: 'gender',
+      valueGetter: (e) => e.gender
+    })
+  )])
+
+  let filters = List([new Filter(
+    'name',
+    (value) => (value == null ? '' : value.toString()).toUpperCase().includes('k'.toUpperCase())
+  )])
+
+  let result = Engine.computeElements(data, groups, List(), filters, columns, false, false, null)
+
+  expect(result.size).toBe(2)
+
+  expect(result.get(0).content.name).toBe('Jack')
+  expect(result.get(1).content.name).toBe('Mark')
 })
