@@ -18,6 +18,13 @@ export default class Group<K, T> {
   comparator : (groupKey1: K, groupKey2: K, aggregate1: ?any, aggregate2: ?any) => number = (a: K, b: K) => a === b ? 0 : (a: any) < (b: any) ? -1 : 1
 
   constructor(options : GroupOptionsType<K, T>) {
+
+    if (options.id == null)
+      throw new Error('Group id is required')
+
+    if (options.groupingFunction == null)
+      throw new Error('Grouping function is required')
+
     this.id = options.id
     this.groupingFunction = options.groupingFunction
     this.title = options.title != null ? options.title : options.id

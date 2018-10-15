@@ -43,6 +43,13 @@ export default class BaseColumn {
   style : Object = {}
 
   constructor(options : BaseColumnOptionsType) {
+
+    if (options.id == null)
+      throw new Error('Column id is required')
+
+    if (options.valueGetter == null)
+      throw new Error('Column value getter is required')
+
     this.id = options.id
     if (options.title != null)
       this.title = options.title
