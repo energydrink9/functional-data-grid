@@ -7,6 +7,7 @@
   "dependencies": {
     "debounce": "^1.0.2",
     "debounce-promise": "^3.0.1",
+    "functional-data-grid": "1.1.45",
     "immutable": "~3.8.2",
     "lodash": "^4.17.4",
     "moment": "~2.20.1",
@@ -51,6 +52,8 @@
     "json-loader": "0.5.7",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.10",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "rimraf": "^2.6.2",
     "style-loader": "^0.20.3",
     "webpack": "3.10.0"
