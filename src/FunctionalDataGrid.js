@@ -74,16 +74,15 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   constructor(props : FunctionalDataGridProps<T, A>) {
     super(props)
+
     this.state = {
-      cachedElements : List(),
+      cachedElements : this.computeElements(this.props.data, this.props.groups, this.props.initialSort, this.props.initialFilter),
       sort : this.props.initialSort,
       filter : this.props.initialFilter,
       columnsWidth : this.getInitialColumnsWidth(props.columns),
       columnsVisibility: this.getInitialColumnsVisibility(props.columns),
       columnsOrder: props.columns.map(c => c.id)
     }
-
-    this.updateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
   }
 
   componentDidUpdate = (newProps: any) => {
@@ -117,8 +116,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
   getOrderedColumns = () => this.state.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId))
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
-    this.setState({ cachedElements: Engine.computeElements(data, groups, sort, filter, this.props.columns, this.props.showGroupHeaders, this.props.includeFilteredElementsInAggregates, this.props.aggregatesCalculator) })
+    this.setState({ cachedElements: this.computeElements(data, groups, sort, filter) })
   }
+
+  computeElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) =>
+    Engine.computeElements(data, groups, sort, filter, this.props.columns, this.props.showGroupHeaders, this.props.includeFilteredElementsInAggregates, this.props.aggregatesCalculator)
 
   getElement = (index : number) => this.getElements().get(index)
 
