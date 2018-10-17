@@ -82,13 +82,11 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       columnsVisibility: this.getInitialColumnsVisibility(props.columns),
       columnsOrder: props.columns.map(c => c.id)
     }
-  }
 
-  componentWillMount = () => {
     this.updateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
   }
 
-  componentWillUpdate = (newProps: any) => {
+  componentDidUpdate = (newProps: any) => {
     if (newProps.data !== this.props.data)
       this.debouncedUpdateElements(newProps.data, newProps.groups, this.state.sort, this.state.filter)
   }
