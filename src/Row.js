@@ -103,9 +103,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
             padding: '2px 10px',
             position: 'relative'
           }}>
-          { Object.entries(element.content).map((e: [any, any], index) => <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}>
-            { this.renderGroup(groups.find(g => g.id === e[0]), e[1]) }
-          </div>) }
+          { this.renderGroups(element, groups) }
         </div>
       </div>
       <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet}>
@@ -114,20 +112,52 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       </div>
     </div>
 
+  renderGroups = (element: DataRow<any>, groups: List<Group<any, any>>) => {
+    let entries: List<[string, any]> = List(Object.entries(element.content))
+
+    return entries.map((e: [string, any], index: number) => {
+    
+      return <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}>
+        { this.renderGroup(groups.find(g => g.id === e[0]), e[1]) }
+      </div>
+    })
+  }
+
   renderGroup = (group: Group<any, any>, v: any) => group.renderer(v, group)
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<BaseColumn>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) => <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
-    <div style={{display: 'flex'}}>
-      { columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
-    </div>
-    <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet} onScroll={onScroll}>
-      { columns.filter(c => isColumnVisible(c.id)).filter(c => ! c.locked).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
-    </div>
-    <div style={{display: 'flex'}}>
-      { columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)).map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />) }
+  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<BaseColumn>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
+    this.renderElementsRow(
+      columns.filter((c, index) => c.locked && (firstUnlockedColumnIndex === -1 || index < firstUnlockedColumnIndex)).filter(c => isColumnVisible(c.id)),
+      columns.filter(c => isColumnVisible(c.id)).filter(c => ! c.locked),
+      columns.filter((c, index) => c.locked && firstUnlockedColumnIndex !== -1 && index >= firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)),
+      rowIndex,
+      element,
+      onScroll,
+      onScrollingDivSet,
+      onMouseOver,
+      onMouseOut,
+      hover,
+      cellStyle,
+      style,
+      isColumnVisible,
+      columnWidthGetter
+    )
+
+  renderElementsRow = (firstLockedColumns: List<BaseColumn>, nonLockedColumns: List<BaseColumn>, secondLockedColumns : List<BaseColumn>, rowIndex: number, element: DataRow<any>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
+    <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
+      <div style={{display: 'flex'}}>
+        { this.renderCells(firstLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+      </div>
+      <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet} onScroll={onScroll}>
+        { this.renderCells(nonLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+      </div>
+      <div style={{display: 'flex'}}>
+        { this.renderCells(secondLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+      </div>
     </div>
 
-  </div>
+  renderCells = (columns: List<BaseColumn>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
+    columns.map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />)
 
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
 

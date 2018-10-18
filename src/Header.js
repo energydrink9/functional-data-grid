@@ -79,19 +79,25 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
 
-    return <div className='functional-data-grid__header' style={{...style, ...this.props.style}}>
-      <div style={{display: 'flex'}}>
-        { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index < firstUnlockedColumnIndex)) }
-      </div>
-      <div style={{display: 'flex', overflow: 'hidden', flexGrow: 1}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
-        { this.renderColumns(this.props.columns.filter(c => ! c.locked)) }
-      </div>
-      <div style={{display: 'flex'}}>
-        { this.renderColumns(this.props.columns.filter((c, index) => c.locked && index >= firstUnlockedColumnIndex)) }
-      </div>
-      { (this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting) && <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.renderColumnsMenu() }</div> }
-    </div>
+    let firstLockedColumns = this.props.columns.filter((c, index) => c.locked && (firstUnlockedColumnIndex === -1 || index < firstUnlockedColumnIndex))
+    let nonLockedColumns = this.props.columns.filter(c => ! c.locked)
+    let secondLockedColumns = this.props.columns.filter((c, index) => c.locked && firstUnlockedColumnIndex !== -1 && index >= firstUnlockedColumnIndex)
+
+    return this.renderHeader(firstLockedColumns, nonLockedColumns, secondLockedColumns, style)
   }
+
+  renderHeader = (firstLockedColumns: List<BaseColumn>, nonLockedColumns: List<BaseColumn>, secondLockedColumns: List<BaseColumn>, style: Object) => <div className='functional-data-grid__header' style={{...style, ...this.props.style}}>
+    <div style={{display: 'flex'}}>
+      { this.renderColumns(firstLockedColumns) }
+    </div>
+    <div style={{display: 'flex', overflow: 'hidden', flexGrow: 1}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
+      { this.renderColumns(nonLockedColumns) }
+    </div>
+    <div style={{display: 'flex'}}>
+      { this.renderColumns(secondLockedColumns) }
+    </div>
+    { (this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting) && <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.renderColumnsMenu() }</div> }
+  </div>
 
   renderColumnsMenu = () => <Manager>
     <Reference>
