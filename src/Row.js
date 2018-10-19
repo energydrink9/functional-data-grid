@@ -1,5 +1,5 @@
 // @flow
-/*eslint-disable*/
+
 import React from 'react'
 import BaseColumn from "./BaseColumn"
 import { List, Map } from 'immutable'
@@ -157,7 +157,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
     </div>
 
   renderCells = (columns: List<BaseColumn>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
-    columns.map((c, index) => <Cell key={index} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />)
+    columns.map((c: BaseColumn) => <Cell key={c.id} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />)
 
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
 
