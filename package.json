@@ -6,10 +6,7 @@
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
   "dependencies": {
     "debounce": "^1.0.2",
-    "debounce-promise": "^3.0.1",
-    "functional-data-grid": "1.1.45",
     "immutable": "~3.8.2",
-    "lodash": "^4.17.4",
     "moment": "~2.20.1",
     "react-datepicker": "1.5.0",
     "react-popper": "^1.0.0",
