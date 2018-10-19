@@ -6,7 +6,6 @@ import { List, Map } from 'immutable'
 import Cell from './Cell'
 import DataRow from './DataRow'
 import Group from './Group'
-const columnsOptionsWidth = 26
 
 type RowProps = {
   columns : List<BaseColumn>,
@@ -157,7 +156,22 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
     </div>
 
   renderCells = (columns: List<BaseColumn>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
-    columns.map((c: BaseColumn) => <Cell key={c.id} rowHover={hover} column={c} width={columnWidthGetter(c)} element={element} rowIndex={rowIndex} style={cellStyle} />)
+    columns.map((c: BaseColumn) =>
+      <Cell value={this.computeValue(c, element)}
+            key={c.id}
+            rowHover={hover}
+            column={c}
+            width={columnWidthGetter(c)}
+            rowIndex={rowIndex}
+            style={cellStyle}
+            type={element.type}
+            content={element.content}
+            originalIndex={element.originalIndex}
+      />)
+
+  computeValue = (c: BaseColumn, e: DataRow<any>) => e.type === 'aggregate'
+    ? c.aggregateValueGetter == null ? null : c.aggregateValueGetter(e.content.content, e.content.key)
+    : c.valueGetter(e.content)
 
   getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
 

@@ -2,23 +2,32 @@
 
 import React from 'react'
 import BaseColumn from "./BaseColumn"
-import DataRow from './DataRow'
 
 type CellProps = {
+  value: any,
   column : BaseColumn,
-  element : DataRow<any>,
   rowIndex : number,
   width : ?number,
   style: Object,
-  rowHover: boolean
+  rowHover: boolean,
+  type: 'element' | 'group-header' | 'aggregate',
+  content: any,
+  originalIndex: number
 }
+
 type CellState = {
   hover : boolean
 }
 
+const contentStyle = {
+  backgroundColor: 'inherit',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  alignSelf: 'center',
+  width: '100%'
+}
+
 export default class Cell extends React.PureComponent<CellProps, CellState> {
-  props : CellProps
-  state : CellState
 
   constructor(props : Object) {
     super(props)
@@ -29,8 +38,8 @@ export default class Cell extends React.PureComponent<CellProps, CellState> {
 
   render = () => {
     return <div className="functional-data-grid__cell" style={{...this.getCellStyle(), ...this.props.column.style, ...this.props.style}} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-      <div className="functional-data-grid__cell-content" style={this.getContentStyle()}>
-        { this.renderValue(this.props.column, this.props.element) }
+      <div className="functional-data-grid__cell-content" style={contentStyle}>
+        { this.renderValue(this.props.column, this.props.type, this.props.content, this.props.originalIndex) }
       </div>
     </div>
   }
@@ -38,9 +47,9 @@ export default class Cell extends React.PureComponent<CellProps, CellState> {
   onMouseEnter = () => this.setState({ 'hover': true })
   onMouseLeave = () => this.setState({ 'hover': false })
 
-  renderValue = (c : BaseColumn, e : DataRow<any>) => e.type === 'aggregate'
-    ? c.aggregateValueGetter == null ? <span/> : c.aggregateRenderer(c.aggregateValueGetter(e.content.content, e.content.key), e.content, this.props.rowIndex, e.originalIndex, this.props.rowHover, this.state.hover)
-    : c.valueGetter == null ? <span/> : c.renderer(c.valueGetter(e.content), e.content, this.props.rowIndex, e.originalIndex, this.props.rowHover, this.state.hover)
+  renderValue = (c : BaseColumn, type: 'element' | 'group-header' | 'aggregate', content: any, originalIndex: number) => type === 'aggregate'
+    ? this.props.value == null ? <span /> : c.aggregateRenderer(this.props.value, content, this.props.rowIndex, originalIndex, this.props.rowHover, this.state.hover)
+    : c.renderer(this.props.value, content, this.props.rowIndex, originalIndex, this.props.rowHover, this.state.hover)
 
   getCellStyle = () => {
     let styles : Object = {
@@ -57,18 +66,6 @@ export default class Cell extends React.PureComponent<CellProps, CellState> {
 
     if (this.props.width != null)
       styles.width = this.props.width
-
-    return styles
-  }
-
-  getContentStyle = () => {
-    let styles : Object = {
-      backgroundColor: 'inherit',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      alignSelf: 'center',
-      width: '100%'
-    }
 
     return styles
   }

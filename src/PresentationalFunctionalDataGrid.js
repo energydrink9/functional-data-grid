@@ -40,6 +40,7 @@ type PresentationalFunctionalDataGridState<T> = {
   ref: ?HTMLElement
 }
 
+const emptyObject = {}
 export default class PresentationalFunctionalDataGrid<T, A: void> extends React.PureComponent<PresentationalFunctionalDataGridProps<T, A>, PresentationalFunctionalDataGridState<T>> {
 
   props: PresentationalFunctionalDataGridProps<T, A>
@@ -118,14 +119,14 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
-    let rowStyle = this.props.style.row != null ? this.props.style.row : {}
+    let rowStyle = this.props.style.row != null ? this.props.style.row : emptyObject
     let computedStyle = {...param.style, ...rowStyle}
     return <Row
       key={param.index}
       style={computedStyle}
-      cellStyle={this.props.style.cell != null ? this.props.style.cell : {}}
-      aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : {}}
-      groupStyle={this.props.style.group != null ? this.props.style.group : {}}
+      cellStyle={this.props.style.cell != null ? this.props.style.cell : emptyObject}
+      aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : emptyObject}
+      groupStyle={this.props.style.group != null ? this.props.style.group : emptyObject}
       groups={this.props.groups}
       columns={PresentationalFunctionalDataGrid.flatColumns(this.getOrderedColumns())}
       columnsWidth={this.props.columnsWidth}
