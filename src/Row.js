@@ -166,7 +166,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
             style={cellStyle}
             type={element.type}
             content={element.content}
-            originalIndex={element.originalIndex}
+            originalIndex={element.originalIndex != null ? element.originalIndex : -1}
       />)
 
   computeValue = (c: BaseColumn, e: DataRow<any>) => e.type === 'aggregate'

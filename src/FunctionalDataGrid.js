@@ -85,9 +85,9 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     }
   }
 
-  componentDidUpdate = (newProps: any) => {
-    if (newProps.data !== this.props.data || newProps.columns !== this.props.columns)
-      this.debouncedUpdateElements(newProps.data, newProps.groups, this.state.sort, this.state.filter)
+  componentDidUpdate = (prevProps: any) => {
+    if (prevProps.data !== this.props.data || prevProps.columns !== this.props.columns)
+      this.debouncedUpdateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
   }
 
   render = () => <PresentationalFunctionalDataGrid
