@@ -115,7 +115,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
 
   static flatColumns = (columns : List<BaseColumn | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
 
-  getOrderedColumns = () => this.props.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId))
+  getOrderedColumns = () => this.props.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId)).filter(e => e != null)
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)

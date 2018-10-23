@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { List, Map } from 'immutable'
 import ColumnGroup from "./ColumnGroup"
 import BaseColumn from "./BaseColumn"

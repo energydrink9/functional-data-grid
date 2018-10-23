@@ -82,8 +82,7 @@ export default class BaseColumn {
     if (options.style != null)
       this.style = options.style
 
-    if (options.locked != null)
-      this.locked = options.locked
+    this.locked = options.locked != null && options.locked
     this.width = options.width
   }
 }

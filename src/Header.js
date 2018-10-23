@@ -78,7 +78,6 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
     let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative', borderBottom: 'solid 1px #ccc' }
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
-
     let firstLockedColumns = this.props.columns.filter((c, index) => c.locked && (firstUnlockedColumnIndex === -1 || index < firstUnlockedColumnIndex))
     let nonLockedColumns = this.props.columns.filter(c => ! c.locked)
     let secondLockedColumns = this.props.columns.filter((c, index) => c.locked && firstUnlockedColumnIndex !== -1 && index >= firstUnlockedColumnIndex)
