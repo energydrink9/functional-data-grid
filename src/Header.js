@@ -75,6 +75,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
   }
 
   render = () => {
+
     let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative', borderBottom: 'solid 1px #ccc' }
 
     let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)

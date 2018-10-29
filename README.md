@@ -92,6 +92,7 @@ The FunctionalDataGrid component accepts the following props:
 |aggregatesCalculator|optional|No aggregates|A function to compute the aggregates from an array of elements|
 |style|optional|{}|Allows to specify additional styles for the grid: accepts an object with the properties grid, row, cell, header, group, aggregate|
 |rowHeight|optional|26|The height of the rows or a function that accepts an element and returns its row height|
+|height|optional|100%|The height of the FunctionalDataGrid component div (unit of measurement needed, f.e.: 800px)|
 |showGroupHeaders|optional|true|Set to false to hide the headers for groups|
 |includeFilteredElementsInAggregates|optional|false|It allows to calculate the aggregates based on all the elements, also the filtered ones|
 |onColumnResize|optional| |Allows to specify an event handler for the column resize event|
