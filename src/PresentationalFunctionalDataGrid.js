@@ -124,7 +124,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
     let rowStyle = this.props.style.row != null ? this.props.style.row : emptyObject
     let computedStyle = {...param.style, ...rowStyle}
     return <Row
-      key={param.index}
+      key={element.key}
       style={computedStyle}
       cellStyle={this.props.style.cell != null ? this.props.style.cell : emptyObject}
       aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : emptyObject}
