@@ -58,10 +58,10 @@
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
-    "codecov": "npm run coverage && codecov",
-    "prepublish": "npm run build && npm run test",
+    "codecov": "yarn run coverage && codecov",
+    "prepublish": "yarn run build && yarn run test",
     "clean": "rimraf dist",
-    "build": "npm run clean && cross-env NODE_ENV=production webpack -p --config webpack.config.js",
+    "build": "yarn run clean && cross-env NODE_ENV=production webpack -p --config webpack.config.js",
     "fast-build": "webpack --config webpack.config.js",
     "start": "webpack --config webpack.config.js --watch",
     "install-flow-def": "flow-typed install"
