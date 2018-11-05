@@ -11,8 +11,14 @@ module.exports = {
     library: 'FunctionalDataGrid',
     libraryTarget: 'umd',
     path: path.join(__dirname, distDir),
-    filename: 'FunctionalDataGrid-[name].js'
+    filename: 'FunctionalDataGrid.js'
   },
+  externals: [
+    'react',
+    'react-dom',
+    'moment',
+    'react-datepicker'
+  ],
   module: {
     rules: [
       {
