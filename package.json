@@ -8,13 +8,11 @@
     "debounce": "^1.0.2",
     "immutable": "~3.8.2",
     "moment": "~2.20.1",
-    "opencollective-postinstall": "^2.0.1",
     "react-datepicker": "1.5.0",
     "react-popper": "^1.0.0",
     "react-select": "~1.1.0",
     "react-virtualized": "^9.18.5",
-    "uuid": "^3.3.2",
-    "opencollective": "^1.0.3"
+    "uuid": "^3.3.2"
   },
   "peerDependencies": {
     "react": "^16.0.0",
@@ -67,8 +65,7 @@
     "build": "yarn run clean && cross-env NODE_ENV=production webpack -p --config webpack.config.js",
     "fast-build": "webpack --config webpack.config.js",
     "start": "webpack --config webpack.config.js --watch",
-    "install-flow-def": "flow-typed install",
-    "postinstall": "opencollective-postinstall"
+    "install-flow-def": "flow-typed install"
   },
   "files": [
     "dist"
