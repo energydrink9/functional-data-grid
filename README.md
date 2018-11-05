@@ -5,6 +5,8 @@
 [![npm](https://img.shields.io/npm/dm/functional-data-grid.svg)](https://www.npmjs.com/package/functional-data-grid)
 [![Build Status](https://travis-ci.org/energydrink9/functional-data-grid.svg?branch=master)](https://travis-ci.org/energydrink9/functional-data-grid)
 [![codecov](https://codecov.io/gh/energydrink9/functional-data-grid/branch/master/graph/badge.svg)](https://codecov.io/gh/energydrink9/functional-data-grid)
+[![Backers on Open Collective](https://opencollective.com/functional-data-grid/backers/badge.svg)](#backers) 
+[![Sponsors on Open Collective](https://opencollective.com/functional-data-grid/sponsors/badge.svg)](#sponsors) 
 
 This is a library made with React and React-Virtualized for creating rich data grids with filtering, sorting, grouping and aggregates computation.
 It supports virtualization, and so it can handle very large amounts of data. It features also locked columns, custom renderers, multi-column headers, columns resize, hide / show columns and variable rows height.
@@ -152,4 +154,34 @@ Check the examples here: https://energydrink9.github.io/functional-data-grid-exa
 # Conclusion
 
 Pull requests are welcome, enjoy your functional data grids!
+
+
+## Contributors
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/energydrink9/functional-data-grid/contributors"><img src="https://opencollective.com/functional-data-grid/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/functional-data-grid#backer)]
+
+<a href="https://opencollective.com/functional-data-grid#backers" target="_blank"><img src="https://opencollective.com/functional-data-grid/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/functional-data-grid#sponsor)]
+
+<a href="https://opencollective.com/functional-data-grid/sponsor/0/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/1/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/2/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/3/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/4/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/5/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/6/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/7/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/8/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/functional-data-grid/sponsor/9/website" target="_blank"><img src="https://opencollective.com/functional-data-grid/sponsor/9/avatar.svg"></a>
+
 
