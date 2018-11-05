@@ -13,8 +13,6 @@ type HeaderColumnResizerState = {
 
 export default class HeaderColumnResizer extends React.PureComponent<HeaderColumnResizerProps, HeaderColumnResizerState> {
 
-  props: HeaderColumnResizerProps
-  state: HeaderColumnResizerState
   element : any;
 
   constructor(props : Object) {

@@ -19,8 +19,7 @@ type ColumnsMenuPropsType = {
 export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsType> {
   
   ref: ?HTMLDivElement
-  props: ColumnsMenuPropsType
-  
+
   static defaultProps = {
     enableColumnsShowAndHide: false,
     enableColumnsSorting: false,

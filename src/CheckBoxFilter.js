@@ -10,10 +10,7 @@ type CheckBoxFilterState = {
 }
 
 export default class CheckBoxFilter extends React.PureComponent<CheckBoxFilterProps, CheckBoxFilterState> {
-
-  props: CheckBoxFilterProps
-  state: CheckBoxFilterState
-
+  
   constructor(props : Object) {
     super(props)
     this.state = {

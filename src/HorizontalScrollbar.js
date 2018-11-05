@@ -16,8 +16,6 @@ type HorizontalScrollbarProps = {
 
 export default class HorizontalScrollbar extends React.PureComponent<HorizontalScrollbarProps> {
 
-  props: HorizontalScrollbarProps
-
   scrollingDiv : any
 
   constructor(props : HorizontalScrollbarProps) {

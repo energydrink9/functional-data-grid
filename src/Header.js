@@ -37,9 +37,6 @@ const columnsOptionsWidth = 26
 
 export default class Header extends React.PureComponent<HeaderProps, HeaderState> {
 
-  props: HeaderProps
-  state: HeaderState
-
   scrollingDiv : any
 
   static defaultProps = {

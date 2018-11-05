@@ -44,8 +44,6 @@ type PresentationalFunctionalDataGridState<T> = {
 const emptyObject = {}
 export default class PresentationalFunctionalDataGrid<T, A: void> extends React.PureComponent<PresentationalFunctionalDataGridProps<T, A>, PresentationalFunctionalDataGridState<T>> {
 
-  props: PresentationalFunctionalDataGridProps<T, A>
-  state : PresentationalFunctionalDataGridState<T>
   list : ReactVirtualizedList
 
   static defaultProps = {

@@ -23,9 +23,6 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
     direction: 'none'
   }
 
-  props: HeaderColumnProps
-  state: HeaderColumnState
-
   element : any;
 
   constructor(props : Object) {

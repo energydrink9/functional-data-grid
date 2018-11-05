@@ -13,9 +13,6 @@ type SelectFilterState = {
 
 export default class SelectFilter extends React.PureComponent<SelectFilterProps, SelectFilterState> {
 
-  props: SelectFilterProps
-  state: SelectFilterState
-
   constructor(props : Object) {
     super(props)
     this.state = {

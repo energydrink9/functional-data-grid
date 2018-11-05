@@ -34,9 +34,6 @@ class CustomInput extends React.PureComponent<Object> {
 
 export default class DatePickerFilter extends React.Component<DatePickerFilterProps, DatePickerFilterState> {
 
-  props: DatePickerFilterProps
-  state: DatePickerFilterState
-
   static defaultProps = {
     pickerPopperContainer: document.body
   }

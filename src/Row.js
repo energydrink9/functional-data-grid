@@ -29,8 +29,6 @@ type RowState = {
 
 export default class Row extends React.PureComponent<RowProps, RowState> {
 
-  props: RowProps
-  state: RowState
   scrollingDiv : any
 
   constructor(props: RowProps) {

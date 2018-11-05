@@ -49,8 +49,6 @@ type FunctionalDataGridState<T> = {
 
 export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
 
-  props: FunctionalDataGridProps<T, A>
-  state : FunctionalDataGridState<T>
   debouncedUpdateElements = debounce((data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => this.updateElements(data, groups, sort, filter), debounceTimeout);
 
   static defaultProps = {
@@ -74,7 +72,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   constructor(props : FunctionalDataGridProps<T, A>) {
     super(props)
-
+console.log(props)//eslint-disable-line
     this.state = {
       cachedElements : this.computeElements(this.props.data, this.props.groups, this.props.initialSort, this.props.initialFilter),
       sort : this.props.initialSort,

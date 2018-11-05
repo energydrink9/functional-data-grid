@@ -11,9 +11,6 @@ type TextBoxFilterState = {
 
 export default class TextBoxFilter extends React.PureComponent<TextBoxFilterProps, TextBoxFilterState> {
 
-  props: TextBoxFilterProps
-  state: TextBoxFilterState
-
   constructor(props : Object) {
     super(props)
     this.state = {

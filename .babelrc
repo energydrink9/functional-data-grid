@@ -1,17 +1,12 @@
 {
-  "presets": [["env", {"modules": false}], "react"],
+  "presets": [["@babel/preset-env", {"modules": false}], "@babel/preset-react", "@babel/preset-flow"],
   "plugins": [
-    "babel-plugin-transform-runtime",
-    "babel-plugin-transform-regenerator",
-    "babel-plugin-transform-async-to-generator",
-    "babel-plugin-transform-class-properties",
-    "babel-plugin-transform-flow-comments",
-    "babel-plugin-syntax-flow",
-    "babel-plugin-transform-object-rest-spread"
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties"
   ],
   "env": {
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
     }
   }
 }
