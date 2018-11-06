@@ -27,9 +27,5 @@ let filterRenderers: Object = {
   CheckBoxFilter: CheckBoxFilter
 }
 
-import('./DatePickerFilter').then(DatePickerFilter => {
-  filterRenderers.DatePickerFilter = DatePickerFilter
-})
-
 export { utils }
 export { filterRenderers }
