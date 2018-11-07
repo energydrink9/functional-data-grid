@@ -72,7 +72,6 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   constructor(props : FunctionalDataGridProps<T, A>) {
     super(props)
-console.log(props)//eslint-disable-line
     this.state = {
       cachedElements : this.computeElements(this.props.data, this.props.groups, this.props.initialSort, this.props.initialFilter),
       sort : this.props.initialSort,
