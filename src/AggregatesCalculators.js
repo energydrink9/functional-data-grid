@@ -1,14 +1,12 @@
 // @flow
 
-import { List } from 'immutable'
-
 export default class AggregatesCalculators {
 
-  static count = <T,> (elements: List<T>) : number => elements.size
+  static count = <T,> (elements: Array<T>) : number => elements.length
 
-  static sum = (elements: List<number>) : number =>
+  static sum = (elements: Array<number>) : number =>
     elements.reduce((accumulator: number, element: number) => accumulator + element, 0)
 
-  static average = (elements: List<number>) : number =>
-    AggregatesCalculators.sum(elements) / elements.size
+  static average = (elements: Array<number>) : ?number =>
+    elements.length === 0 ? null : AggregatesCalculators.sum(elements) / elements.length
 }

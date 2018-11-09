@@ -43,10 +43,8 @@ then you can use it inside your component. For example:
 ```javascript
 import React from 'react'
 import FunctionalDataGrid, { BaseColumn } from 'functional-data-grid'
-import { List } from 'immutable'
 
-
-let columns = List([
+let columns = [
   new BaseColumn({
     id : 'name',
     title: 'Name',
@@ -59,9 +57,9 @@ let columns = List([
     width: 120,
     valueGetter: e => e.surname
   })
-])
+]
 
-let data = List([
+let data = [
   {
     'name': 'Donald',
     'surname': 'Duck'
@@ -70,7 +68,7 @@ let data = List([
     'name': 'Mickey',
     'surname': 'Mouse'
   }
-])
+]
 
 class MyGrid extends React.Component {
 

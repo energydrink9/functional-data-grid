@@ -18,13 +18,13 @@ const defaultInitialColumnWidth = 100
 const defaultRowHeight = 26
 
 type FunctionalDataGridProps<T, A> = {
-  columns: List<BaseColumn | ColumnGroup>,
-  initialFilter : List<Filter>,
-  initialSort : List<Sort>,
-  groups : List<Group<any, T>>,
-  data : List<T>,
+  columns: Array<BaseColumn | ColumnGroup> | List<BaseColumn | ColumnGroup>,
+  initialFilter : Array<Filter> | List<Filter>,
+  initialSort : Array<Sort> | List<Sort>,
+  groups : Array<Group<any, T>> | List<Group<any, T>>,
+  data : Array<T> | List<T>,
   style : FunctionalDataGridStyle,
-  aggregatesCalculator: ?((List<T>, any) => A),
+  aggregatesCalculator: ?((Array<T>, any) => A),
   showGroupHeaders: boolean,
   rowHeight: number | ((T) => number),
   includeFilteredElementsInAggregates: boolean,
@@ -72,23 +72,34 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   constructor(props : FunctionalDataGridProps<T, A>) {
     super(props)
+    
     this.state = {
-      cachedElements : this.computeElements(this.props.data, this.props.groups, this.props.initialSort, this.props.initialFilter),
-      sort : this.props.initialSort,
-      filter : this.props.initialFilter,
-      columnsWidth : this.getInitialColumnsWidth(props.columns),
-      columnsVisibility: this.getInitialColumnsVisibility(props.columns),
-      columnsOrder: props.columns.map(c => c.id)
+      cachedElements : this.computeElements(this.getData(), this.getGroups(), this.getInitialSort(), this.getInitialFilter()),
+      sort : this.getInitialSort(),
+      filter : this.getInitialFilter(),
+      columnsWidth : this.getInitialColumnsWidth(this.getColumns()),
+      columnsVisibility: this.getInitialColumnsVisibility(this.getColumns()),
+      columnsOrder: this.getColumns().map(c => c.id)
     }
   }
 
+  getData = () => this.wrapInImmutableList(this.props.data)
+  getColumns = () => this.wrapInImmutableList(this.props.columns)
+  getInitialSort = () => this.wrapInImmutableList(this.props.initialSort)
+  getInitialFilter = () => this.wrapInImmutableList(this.props.initialFilter)
+  getGroups = () => this.wrapInImmutableList(this.props.groups)
+
+  wrapInImmutableList = <T,> (element: Array<T> | List<T>) => element instanceof List ? element : List(element)
+
   componentDidUpdate = (prevProps: any) => {
     if (prevProps.data !== this.props.data || prevProps.columns !== this.props.columns)
-      this.debouncedUpdateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
+      this.doUpdateElements()
   }
 
+  doUpdateElements = () => this.debouncedUpdateElements(this.getData(), this.getGroups(), this.state.sort, this.state.filter)
+
   render = () => <PresentationalFunctionalDataGrid
-    columns={this.props.columns}
+    columns={this.getColumns()}
     elements={this.state.cachedElements}
     style={this.props.style}
     showGroupHeaders={this.props.showGroupHeaders}
@@ -99,7 +110,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     enableColumnsSorting={this.props.enableColumnsSorting}
     enableColumnsShowAndHide={this.props.enableColumnsShowAndHide}
     sort={this.state.sort}
-    groups={this.props.groups}
+    groups={this.getGroups()}
     columnsWidth={this.state.columnsWidth}
     columnsVisibility={this.state.columnsVisibility}
     columnsOrder={this.state.columnsOrder}
@@ -110,14 +121,14 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     onColumnVisibilityChange={this.updateColumnVisibility}
   />
 
-  getOrderedColumns = () => this.state.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId))
+  getOrderedColumns = () => this.state.columnsOrder.map(columnId => this.getColumns().find(c => c.id === columnId))
 
   updateElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => {
     this.setState({ cachedElements: this.computeElements(data, groups, sort, filter) })
   }
 
   computeElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) =>
-    Engine.computeElements(data, groups, sort, filter, this.props.columns, this.props.showGroupHeaders, this.props.includeFilteredElementsInAggregates, this.props.aggregatesCalculator)
+    Engine.computeElements(data, groups, sort, filter, this.getColumns(), this.props.showGroupHeaders, this.props.includeFilteredElementsInAggregates, this.props.aggregatesCalculator)
 
   getElement = (index : number) => this.getElements().get(index)
 
@@ -128,7 +139,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     this.setState({
       'sort' : this.updateSort(this.state.sort, columnId, direction)
     }, () => {
-      this.debouncedUpdateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
+      this.doUpdateElements()
     })
   }
 
@@ -137,7 +148,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     this.setState({
       'filter' : this.updateFilter(this.state.filter, columnId, matcher)
     }, () => {
-      this.debouncedUpdateElements(this.props.data, this.props.groups, this.state.sort, this.state.filter)
+      this.doUpdateElements()
     })
   }
 

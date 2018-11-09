@@ -12,7 +12,7 @@ import Aggregate from './Aggregate'
 
 export default class Engine<T, A: void> {
 
-  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<BaseColumn | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((List<T>, any) => A)) : List<DataRow<any>> =>
+  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<BaseColumn | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<T>, any) => A)) : List<DataRow<any>> =>
     Engine.filterGroups(
       Engine.groupData(
         Engine.sortData(
@@ -59,25 +59,25 @@ export default class Engine<T, A: void> {
 
   static enrichData = (data : List<T>) : List<DataRow<T>> => data.map((e, index) => new DataRow(e, 'element', index))
 
-  static groupData = <K, A> (data : List<DataRow<T>>, groups : List<Group<any, T>>, currentSubGroup: List<[string, any]> = List(), aggregatesCalculator: ?((List<T>, any) => A)): (List<DataRow<T> | DataGroup<any, any, A>>) => groups.isEmpty()
+  static groupData = <K, A> (data : List<DataRow<T>>, groups : List<Group<any, T>>, currentSubGroup: List<[string, any]> = List(), aggregatesCalculator: ?((Array<any>, any) => A)): (List<DataRow<T> | DataGroup<any, any, A>>) => groups.isEmpty()
     ? data
     : Engine.groupDataByGroup(data, groups.first(), currentSubGroup, aggregatesCalculator)
           .map((e : DataGroup<K, T, A>) => new DataGroup(e.key, Engine.groupData(e.data, groups.shift(), currentSubGroup.push([groups.first().id, ((e.key): any)[groups.first().id]]), aggregatesCalculator), e.aggregate))
 
-  static groupDataByGroup = <K, A> (data : (List<DataRow<T>>), group : Group<K, T>, subGroup: List<[string, any]>, aggregatesCalculator: ?((List<T>, any) => A)) : List<DataGroup<K, DataRow<T>, A>> =>
+  static groupDataByGroup = <K, A> (data : (List<DataRow<T>>), group : Group<K, T>, subGroup: List<[string, any]>, aggregatesCalculator: ?((Array<any>, any) => A)) : List<DataGroup<K, DataRow<T>, A>> =>
     data.groupBy((e: DataRow<T>) => group.groupingFunction(e.content))
         .map((g: List<T>, key: K) => Engine.createDataGroup(g, group.id, key, subGroup.push([group.id, key]), aggregatesCalculator))
         .toList()
         .sort((dg1, dg2) => group.comparator(dg1.key, dg2.key, dg1.aggregate, dg2.aggregate))
 
-  static createDataGroup = <K, A> (data: List<T>, groupId: string, key : K, subGroup: List<[string, any]>, aggregatesCalculator: ?((List<T>, any) => A)): DataGroup<any, T, Aggregate<any>> => aggregatesCalculator != null
+  static createDataGroup = <K, A> (data: List<T>, groupId: string, key : K, subGroup: List<[string, any]>, aggregatesCalculator: ?((Array<T>, any) => A)): DataGroup<any, T, Aggregate<any>> => aggregatesCalculator != null
     ? new DataGroup(Engine.getGroupKey(subGroup), data, Engine.createAggregate(Engine.getGroupKey(subGroup), data.map(e => e.content), aggregatesCalculator))
     : new DataGroup(Engine.getGroupKey(subGroup), data)
 
-  static createAggregate = <K, A> (groupKey: any, data: List<T>, aggregatesCalculator: ?((List<T>, any) => A)) : Aggregate<A> => {
+  static createAggregate = <K, A> (groupKey: any, data: List<T>, aggregatesCalculator: ?((Array<any>, any) => A)) : Aggregate<A> => {
     if (aggregatesCalculator == null)
       throw new Error('Aggregates calculator not specified.')
-    return new Aggregate(groupKey, aggregatesCalculator(data, groupKey))
+    return new Aggregate(groupKey, aggregatesCalculator((data.toArray()), groupKey))
   }
 
   static getGroupKey = (subGroup: List<[string, any]>) => {
