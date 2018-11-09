@@ -3,7 +3,7 @@ import Engine from '../src/Engine'
 import { List } from 'immutable'
 import Sort from '../src/Sort'
 import Filter from '../src/Filter';
-import BaseColumn from '../src/BaseColumn'
+import Column from '../src/Column'
 import Group from '../src/Group';
 import AggregatesCalculators from '../src/AggregatesCalculators';
 
@@ -18,8 +18,8 @@ test('elements are sorted correctly', () => {
     'position',
     'asc'
   )])
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'position',
       valueGetter: (e) => e.position
     })
@@ -45,8 +45,8 @@ test('elements are filtered correctly', () => {
     (value) => (value == null ? '' : value.toString()).toUpperCase().includes('Ja'.toUpperCase())
   )])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     })
@@ -77,8 +77,8 @@ test('elements are filtered correctly with two filters', () => {
     ),
   ])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     })
@@ -106,12 +106,12 @@ test('elements are grouped correctly', () => {
     })
   ])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     }),
-    new BaseColumn({
+    new Column({
       id: 'gender',
       valueGetter: (e) => e.gender
     })
@@ -139,12 +139,12 @@ test('grouped elements are filtered correctly', () => {
     })
   ])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     }),
-    new BaseColumn({
+    new Column({
       id: 'gender',
       valueGetter: (e) => e.gender
     })
@@ -178,12 +178,12 @@ test('sum aggregates are computed correctly', () => {
     })
   ])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     }),
-    new BaseColumn({
+    new Column({
       id: 'gender',
       valueGetter: (e) => e.gender
     })
@@ -213,12 +213,12 @@ test('average aggregates are computed correctly', () => {
     })
   ])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     }),
-    new BaseColumn({
+    new Column({
       id: 'gender',
       valueGetter: (e) => e.gender
     })
@@ -248,12 +248,12 @@ test('count aggregates are computed correctly', () => {
     })
   ])
 
-  let columns = List([new BaseColumn(
-    new BaseColumn({
+  let columns = List([new Column(
+    new Column({
       id: 'name',
       valueGetter: (e) => e.name
     }),
-    new BaseColumn({
+    new Column({
       id: 'gender',
       valueGetter: (e) => e.gender
     })

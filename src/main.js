@@ -1,7 +1,7 @@
 // @flow
 
 import FunctionalDataGrid from './FunctionalDataGrid'
-import BaseColumn from './BaseColumn'
+import Column from './Column'
 import ColumnGroup from './ColumnGroup'
 import Filter from './Filter'
 import Sort from './Sort'
@@ -14,7 +14,7 @@ import AggregatesCalculators from './AggregatesCalculators'
 
 export default FunctionalDataGrid
 
-export { BaseColumn, ColumnGroup }
+export { Column, Column as BaseColumn, ColumnGroup }
 export { Filter, Sort, Group }
 
 let utils = {

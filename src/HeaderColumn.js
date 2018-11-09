@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import BaseColumn from "./BaseColumn"
+import Column from "./Column"
 import HeaderColumnResizer from "./HeaderColumnResizer"
 
 type HeaderColumnProps = {
-  column: BaseColumn,
+  column: Column,
   direction: 'asc' | 'desc' | 'none',
   onUpdateSort : Function,
   onUpdateFilter : Function,
@@ -59,7 +59,7 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
     this.props.onUpdateFilter(this.props.column.id, matcher)
   }
 
-  getCellStyle = (c : BaseColumn) => {
+  getCellStyle = (c : Column) => {
     let styles : Object = {
       overflow: 'visible',
       textOverflow: 'ellipsis',

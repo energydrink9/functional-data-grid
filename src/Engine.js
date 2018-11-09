@@ -5,14 +5,14 @@ import DataRow from './DataRow'
 import DataGroup from './DataGroup'
 import Sort from './Sort'
 import ColumnGroup from './ColumnGroup'
-import BaseColumn from './BaseColumn'
+import Column from './Column'
 import Group from './Group'
 import Filter from './Filter'
 import Aggregate from './Aggregate'
 
 export default class Engine<T, A: void> {
 
-  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<BaseColumn | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<T>, any) => A)) : List<DataRow<any>> =>
+  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<Column | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<T>, any) => A)) : List<DataRow<any>> =>
     Engine.filterGroups(
       Engine.groupData(
         Engine.sortData(
@@ -40,17 +40,17 @@ export default class Engine<T, A: void> {
           ? e.flatten(showGroupHeaders)
           : List([e])
 
-  static sortData = (data : List<DataRow<T>>, sort : List<Sort>, columns: List<ColumnGroup | BaseColumn>): List<DataRow<T>> => sort
+  static sortData = (data : List<DataRow<T>>, sort : List<Sort>, columns: List<ColumnGroup | Column>): List<DataRow<T>> => sort
     .reverse()
     .reduce((data: List<DataRow<T>>, s: Sort) =>
       Engine.applySort(data, s, columns), data)
 
-  static applySort = (data : List<DataRow<T>>, sort : Sort, columns: List<ColumnGroup | BaseColumn>): List<DataRow<T>> => {
+  static applySort = (data : List<DataRow<T>>, sort : Sort, columns: List<ColumnGroup | Column>): List<DataRow<T>> => {
     let column = Engine.getColumnById(Engine.flatColumns(columns), sort.columnId)
     return data.sortBy((e: DataRow<T>) => column.valueGetter(e.content), (a, b) => (sort.direction === 'asc' ? 1 : -1) * column.comparator(a, b))
   }
 
-  static getColumnById = (columns: List<BaseColumn>, columnId: string) => {
+  static getColumnById = (columns: List<Column>, columnId: string) => {
     let column = columns.find(c => c.id === columnId)
     if (column == null)
       throw new Error('Invalid column id')
@@ -88,13 +88,13 @@ export default class Engine<T, A: void> {
 
   static filterElementsBeforeGrouping = (groups: List<Group<>>, includeFilteredElementsInAggregates: boolean) => groups.isEmpty() || ! includeFilteredElementsInAggregates
 
-  static filterData = (data : List<DataRow<T>>, filters : List<Filter>, groups: List<Group<>>, includeFilteredElementsInAggregates: boolean, columns : List<BaseColumn | ColumnGroup>) => Engine.filterElementsBeforeGrouping(groups, includeFilteredElementsInAggregates) ? data.filter(e => Engine.applyFiltersToElement(e, filters, columns)) : data
+  static filterData = (data : List<DataRow<T>>, filters : List<Filter>, groups: List<Group<>>, includeFilteredElementsInAggregates: boolean, columns : List<Column | ColumnGroup>) => Engine.filterElementsBeforeGrouping(groups, includeFilteredElementsInAggregates) ? data.filter(e => Engine.applyFiltersToElement(e, filters, columns)) : data
 
-  static filterGroups = (data : List<DataRow<T> | DataGroup<DataRow<T>>>, filters : List<Filter>, groups: List<Group<>>, includeFilteredElementsInAggregates: boolean, columns : List<BaseColumn | ColumnGroup>) => Engine.filterElementsBeforeGrouping(groups, includeFilteredElementsInAggregates) ? data : data
+  static filterGroups = (data : List<DataRow<T> | DataGroup<DataRow<T>>>, filters : List<Filter>, groups: List<Group<>>, includeFilteredElementsInAggregates: boolean, columns : List<Column | ColumnGroup>) => Engine.filterElementsBeforeGrouping(groups, includeFilteredElementsInAggregates) ? data : data
     .map(e => e instanceof DataGroup ? Engine.filterDataGroup(e, filters, columns) : e)          // filter data group
     .filter(e => !(e instanceof DataGroup) || e.data.size > 0)                        // remove empty data groups
 
-  static filterDataGroup = <K, G> (dataGroup : DataGroup<K, G, A>, filters : List<Filter>, columns : List<BaseColumn | ColumnGroup>) : DataGroup<K, T, A> =>
+  static filterDataGroup = <K, G> (dataGroup : DataGroup<K, G, A>, filters : List<Filter>, columns : List<Column | ColumnGroup>) : DataGroup<K, T, A> =>
     new DataGroup(
       dataGroup.key,
       dataGroup.data.filter(e => e instanceof DataGroup || Engine.applyFiltersToElement(e, filters, columns))
@@ -103,9 +103,9 @@ export default class Engine<T, A: void> {
       dataGroup.aggregate
     )
 
-  static applyFiltersToElement = <T,> (e: DataRow<T>, filters : List<Filter>, columns : List<BaseColumn | ColumnGroup>): boolean => filters.reduce((a: boolean, f: Filter) => a && Engine.applyFilterToElement(e, f, columns), true)
+  static applyFiltersToElement = <T,> (e: DataRow<T>, filters : List<Filter>, columns : List<Column | ColumnGroup>): boolean => filters.reduce((a: boolean, f: Filter) => a && Engine.applyFilterToElement(e, f, columns), true)
 
-  static applyFilterToElement = <T,> (e : DataRow<T>, filter : Filter, columns : List<BaseColumn | ColumnGroup>) : boolean => filter.matcher(Engine.getColumnById(columns, filter.columnId).valueGetter(e.content))
+  static applyFilterToElement = <T,> (e : DataRow<T>, filter : Filter, columns : List<Column | ColumnGroup>) : boolean => filter.matcher(Engine.getColumnById(columns, filter.columnId).valueGetter(e.content))
 
-  static flatColumns = (columns : List<BaseColumn | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
+  static flatColumns = (columns : List<Column | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
 }

@@ -1,14 +1,14 @@
 // @flow
 
 import React from 'react'
-import BaseColumn from "./BaseColumn"
+import Column from "./Column"
 import { List, Map } from 'immutable'
 import Cell from './Cell'
 import DataRow from './DataRow'
 import Group from './Group'
 
 type RowProps = {
-  columns : List<BaseColumn>,
+  columns : List<Column>,
   element : DataRow<any>,
   style : Object,
   aggregateStyle: Object,
@@ -122,7 +122,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
 
   renderGroup = (group: Group<any, any>, v: any) => group.renderer(v, group)
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<BaseColumn>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
+  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<Column>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
     this.renderElementsRow(
       columns.filter((c, index) => c.locked && (firstUnlockedColumnIndex === -1 || index < firstUnlockedColumnIndex)).filter(c => isColumnVisible(c.id)),
       columns.filter(c => isColumnVisible(c.id)).filter(c => ! c.locked),
@@ -140,7 +140,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       columnWidthGetter
     )
 
-  renderElementsRow = (firstLockedColumns: List<BaseColumn>, nonLockedColumns: List<BaseColumn>, secondLockedColumns : List<BaseColumn>, rowIndex: number, element: DataRow<any>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
+  renderElementsRow = (firstLockedColumns: List<Column>, nonLockedColumns: List<Column>, secondLockedColumns : List<Column>, rowIndex: number, element: DataRow<any>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
     <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
       <div style={{display: 'flex'}}>
         { this.renderCells(firstLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
@@ -153,8 +153,8 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       </div>
     </div>
 
-  renderCells = (columns: List<BaseColumn>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
-    columns.map((c: BaseColumn) =>
+  renderCells = (columns: List<Column>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
+    columns.map((c: Column) =>
       <Cell value={this.computeValue(c, element)}
             key={c.id}
             rowHover={hover}
@@ -167,11 +167,11 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
             originalIndex={element.originalIndex != null ? element.originalIndex : -1}
       />)
 
-  computeValue = (c: BaseColumn, e: DataRow<any>) => e.type === 'aggregate'
+  computeValue = (c: Column, e: DataRow<any>) => e.type === 'aggregate'
     ? c.aggregateValueGetter == null ? null : c.aggregateValueGetter(e.content.content, e.content.key)
     : c.valueGetter(e.content)
 
-  getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id)
+  getColumnWidth = (c : Column) => this.props.columnsWidth.get(c.id)
 
   isColumnVisible = (columnId: string) => this.props.columnsVisibility.get(columnId)
 

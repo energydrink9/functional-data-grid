@@ -1,9 +1,9 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import TextBoxFilter from "./TextBoxFilter"
 
-type BaseColumnOptionsType = {
+type ColumnOptionsType = {
   id : string,
   title? : ?string,
   valueGetter? : ?Function,
@@ -23,7 +23,7 @@ type BaseColumnOptionsType = {
   style? : ?Object
 };
 
-export default class BaseColumn {
+export default class Column {
   id : string;
   title : string = '';
   valueGetter : Function;
@@ -36,13 +36,13 @@ export default class BaseColumn {
   aggregateValueGetter : Function;  // eslint-disable-line
   comparator : (any, any) => number = (a, b) => a === b ? 0 : a < b ? -1 : 1;
   filterRenderer : Function = (onUpdateFilter : Function) => <TextBoxFilter onUpdateFilter={onUpdateFilter} />;  // eslint-disable-line
-  headerRenderer : (BaseColumn) => any = (column : BaseColumn) => column.title;
+  headerRenderer : (Column) => React.Node = (column : Column) => column.title;
   locked : boolean = false;
   width : ?number;
   headerStyle : Object = {};
   style : Object = {}
 
-  constructor(options : BaseColumnOptionsType) {
+  constructor(options : ColumnOptionsType) {
 
     if (options.id == null)
       throw new Error('Column id is required')

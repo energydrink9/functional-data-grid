@@ -2,11 +2,11 @@
 
 import React from 'react'
 import {List, Map} from 'immutable'
-import BaseColumn from './BaseColumn'
+import Column from './Column'
 import ColumnGroup from './ColumnGroup'
 
 type ColumnsMenuPropsType = {
-  columns: List<BaseColumn | ColumnGroup>,
+  columns: List<Column | ColumnGroup>,
   enableColumnsShowAndHide: boolean,
   enableColumnsSorting: boolean,
   columnsVisibility: Map<string, boolean>,
@@ -51,7 +51,7 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     { this.props.columns.valueSeq().map((c, index) => this.renderColumnEntry(c, index)) }
   </div>
 
-  renderColumnEntry = (c: BaseColumn, index: number) => {
+  renderColumnEntry = (c: Column, index: number) => {
     return <div key={index} draggable={this.props.enableColumnsSorting} onDragStart={this.onDragStart(c.id)} onDragOver={this.onDragOver} onDrop={this.onDrop(c.id)} style={{cursor: this.props.enableColumnsSorting ? 'pointer' : 'auto'}}>
       { this.props.enableColumnsSorting && <div style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle', color: '#ccc' }}>{ String.fromCodePoint(9776) }</div> }
       <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>{ this.props.enableColumnsShowAndHide && <input type="checkbox" checked={this.props.columnsVisibility.get(c.id)} onChange={this.onColumnVisibilityChange(c.id)} style={{ margin: 0, verticalAlign: 'middle' }} /> } { c.title }</div>

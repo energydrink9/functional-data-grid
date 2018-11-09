@@ -3,10 +3,10 @@
 import React from 'react'
 import { List, Map } from 'immutable'
 import ColumnGroup from "./ColumnGroup"
-import BaseColumn from "./BaseColumn"
+import Column from "./Column"
 
 type HorizontalScrollbarProps = {
-  columns: List<BaseColumn | ColumnGroup>,
+  columns: List<Column | ColumnGroup>,
   scrollLeft: number,
   onScroll: Function,
   columnsWidth : Map<string, number>,
@@ -62,7 +62,7 @@ export default class HorizontalScrollbar extends React.PureComponent<HorizontalS
     </div>
   }
 
-  renderColumns = (columns : List<BaseColumn | ColumnGroup>) => columns
+  renderColumns = (columns : List<Column | ColumnGroup>) => columns
     .map((c, index) => c instanceof ColumnGroup ? this.renderColumnGroup(c, index) : (this.isColumnVisible(c.id) && this.renderColumn(c)))
 
   renderColumnGroup = (cg : ColumnGroup, index : number) => <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
@@ -71,7 +71,7 @@ export default class HorizontalScrollbar extends React.PureComponent<HorizontalS
     </div>
   </div>
 
-  getColumnWidth = (c : BaseColumn) : number => {
+  getColumnWidth = (c : Column) : number => {
     let columnWidth = this.props.columnsWidth.get(c.id)
     return columnWidth != null
       ? columnWidth
@@ -80,7 +80,7 @@ export default class HorizontalScrollbar extends React.PureComponent<HorizontalS
         : 100
   }
 
-  renderColumn = (c : BaseColumn) => <div key={c.id} style={{width: `${this.getColumnWidth(c)}px`, flexShrink: 0, minHeight: '1px'}} />
+  renderColumn = (c : Column) => <div key={c.id} style={{width: `${this.getColumnWidth(c)}px`, flexShrink: 0, minHeight: '1px'}} />
 
   isColumnVisible = (columnId: string) => this.props.columnsVisibility.get(columnId)
 

@@ -4,14 +4,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { List, Map } from 'immutable'
 import ColumnGroup from "./ColumnGroup"
-import BaseColumn from "./BaseColumn"
+import Column from "./Column"
 import HeaderColumn from "./HeaderColumn"
 import Sort from "./Sort"
 import ColumnsMenu from './ColumnsMenu'
 import { Manager, Reference, Popper } from 'react-popper'
 
 type HeaderProps = {
-  columns: List<BaseColumn | ColumnGroup>,
+  columns: List<Column | ColumnGroup>,
   scrollLeft: number,
   onScroll: Function,
   sort : List<Sort>,
@@ -83,7 +83,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
     return this.renderHeader(firstLockedColumns, nonLockedColumns, secondLockedColumns, style)
   }
 
-  renderHeader = (firstLockedColumns: List<BaseColumn>, nonLockedColumns: List<BaseColumn>, secondLockedColumns: List<BaseColumn>, style: Object) => <div className='functional-data-grid__header' style={{...style, ...this.props.style}}>
+  renderHeader = (firstLockedColumns: List<Column>, nonLockedColumns: List<Column>, secondLockedColumns: List<Column>, style: Object) => <div className='functional-data-grid__header' style={{...style, ...this.props.style}}>
     <div style={{display: 'flex'}}>
       { this.renderColumns(firstLockedColumns) }
     </div>
@@ -120,7 +120,7 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
     })
   }
 
-  renderColumns = (columns : List<BaseColumn | ColumnGroup>) => columns
+  renderColumns = (columns : List<Column | ColumnGroup>) => columns
     .map((c, index) => c instanceof ColumnGroup ? this.renderColumnGroup(c, index) : (this.isColumnVisible(c.id) && this.renderColumn(c)))
 
   renderColumnGroup = (cg : ColumnGroup, index : number) => <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
@@ -130,9 +130,9 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
     </div>
   </div>
 
-  getColumnWidth = (c : BaseColumn) => this.props.columnsWidth.get(c.id) != null ? this.props.columnsWidth.get(c.id) : c.width
+  getColumnWidth = (c : Column) => this.props.columnsWidth.get(c.id) != null ? this.props.columnsWidth.get(c.id) : c.width
 
-  renderColumn = (c : BaseColumn) => <HeaderColumn key={c.id} column={c} width={this.getColumnWidth(c)} direction={this.getSortDirection(c.id)} onUpdateSort={this.props.onUpdateSort} onUpdateFilter={this.props.onUpdateFilter} onColumnResize={(width : number) => this.props.onColumnResize(c.id, width)} />
+  renderColumn = (c : Column) => <HeaderColumn key={c.id} column={c} width={this.getColumnWidth(c)} direction={this.getSortDirection(c.id)} onUpdateSort={this.props.onUpdateSort} onUpdateFilter={this.props.onUpdateFilter} onColumnResize={(width : number) => this.props.onColumnResize(c.id, width)} />
   
   getSortDirection = (columnId : string) => {
     let sort = this.props.sort.find(c => c.columnId === columnId)

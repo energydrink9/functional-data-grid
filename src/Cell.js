@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import BaseColumn from "./BaseColumn"
+import Column from "./Column"
 
 type CellProps = {
   value: any,
-  column : BaseColumn,
+  column : Column,
   rowIndex : number,
   width : ?number,
   style: Object,
@@ -47,7 +47,7 @@ export default class Cell extends React.PureComponent<CellProps, CellState> {
   onMouseEnter = () => this.setState({ 'hover': true })
   onMouseLeave = () => this.setState({ 'hover': false })
 
-  renderValue = (c : BaseColumn, type: 'element' | 'group-header' | 'aggregate', content: any, originalIndex: number) => type === 'aggregate'
+  renderValue = (c : Column, type: 'element' | 'group-header' | 'aggregate', content: any, originalIndex: number) => type === 'aggregate'
     ? this.props.value == null ? <span /> : c.aggregateRenderer(this.props.value, content, this.props.rowIndex, originalIndex, this.props.rowHover, this.state.hover)
     : c.renderer(this.props.value, content, this.props.rowIndex, originalIndex, this.props.rowHover, this.state.hover)
 

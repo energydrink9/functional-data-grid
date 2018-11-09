@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import BaseColumn from './BaseColumn'
+import Column from './Column'
 import ColumnGroup from './ColumnGroup'
 import { List, Map } from 'immutable'
 import Filter from './Filter'
@@ -18,7 +18,7 @@ const defaultInitialColumnWidth = 100
 const defaultRowHeight = 26
 
 type FunctionalDataGridProps<T, A> = {
-  columns: Array<BaseColumn | ColumnGroup> | List<BaseColumn | ColumnGroup>,
+  columns: Array<Column | ColumnGroup> | List<Column | ColumnGroup>,
   initialFilter : Array<Filter> | List<Filter>,
   initialSort : Array<Sort> | List<Sort>,
   groups : Array<Group<any, T>> | List<Group<any, T>>,
@@ -192,9 +192,9 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     this.props.onColumnsOrderChange({columnsOrder})
   }
 
-  getInitialColumnsWidth = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
+  getInitialColumnsWidth = (columns : List<Column | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).width != null ? v.get(0).width : defaultInitialColumnWidth)
 
-  getInitialColumnsVisibility = (columns : List<BaseColumn | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).hidden != null ? ! v.get(0).hidden : true)
+  getInitialColumnsVisibility = (columns : List<Column | ColumnGroup>) => columns.groupBy(c => c.id).map(v => v.get(0).hidden != null ? ! v.get(0).hidden : true)
 
   updateColumnVisibility = (columnId: string, columnVisibility: boolean) => {
     this.setState({

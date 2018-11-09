@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import BaseColumn from './BaseColumn'
+import Column from './Column'
 import ColumnGroup from './ColumnGroup'
 import { List, Map } from 'immutable'
 import Sort from './Sort'
@@ -15,7 +15,7 @@ import HorizontalScrollbar from './HorizontalScrollbar'
 import type { FunctionalDataGridStyle } from './FunctionalDataGridStyle'
 
 type PresentationalFunctionalDataGridProps<T, A> = {
-  columns: List<BaseColumn | ColumnGroup>,
+  columns: List<Column | ColumnGroup>,
   elements: List<DataRow<T>>,
   style : FunctionalDataGridStyle,
   showGroupHeaders: boolean,
@@ -113,7 +113,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
     : rowHeight
   }
 
-  static flatColumns = (columns : List<BaseColumn | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
+  static flatColumns = (columns : List<Column | ColumnGroup>) => columns.flatMap(c => c instanceof ColumnGroup ? c.columns : [c])
 
   getOrderedColumns = () => this.props.columnsOrder.map(columnId => this.props.columns.find(c => c.id === columnId)).filter(e => e != null)
 

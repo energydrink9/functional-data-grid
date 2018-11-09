@@ -35,23 +35,23 @@ yarn add functional-data-grid
 To use Functional Data Grid, you have to import the library and its base types you intend to use, for example:
 
 ```javascript
-import FunctionalDataGrid, { BaseColumn, Group } from 'functional-data-grid'
+import FunctionalDataGrid, { Column, Group } from 'functional-data-grid'
 ```
 
 then you can use it inside your component. For example:
 
 ```javascript
 import React from 'react'
-import FunctionalDataGrid, { BaseColumn } from 'functional-data-grid'
+import FunctionalDataGrid, { Column } from 'functional-data-grid'
 
 let columns = [
-  new BaseColumn({
+  new Column({
     id : 'name',
     title: 'Name',
     width: 120,
     valueGetter: e => e.name
   },
-  new BaseColumn({
+  new Column({
     id : 'surname',
     title: 'Surname',
     width: 120,
@@ -84,7 +84,7 @@ The FunctionalDataGrid component accepts the following props:
 
 |Prop|Required / optional|Default|Description|
 |---|---|---|---|
-|columns|required| |An array of BaseColumn with columns definitions|
+|columns|required| |An array of Column with columns definitions|
 |data|required| |An array of elements to show in the grid, one per row|
 |initialFilter|optional|No filters|An array of Filter to filter the elements|
 |initialSort|optional|No sorting|An array of Sort to sort the elements|
@@ -106,8 +106,8 @@ The FunctionalDataGrid component accepts the following props:
 
 # Columns definition
 
-Columns are defined by creating an instance of the class BaseColumn.
-BaseColumn constructor accepts an object with the following keys:
+Columns are defined by creating an instance of the class Column.
+Column constructor accepts an object with the following keys:
 
 |Key      |Required / optional|Default|Description               |
 |---|---|---|---|
