@@ -6,6 +6,7 @@ import { List, Map } from 'immutable'
 import Cell from './Cell'
 import DataRow from './DataRow'
 import Group from './Group'
+import RowSkeleton from './RowSkeleton'
 
 type RowProps = {
   leftLockedColumns: List<Column>,
@@ -29,36 +30,12 @@ type RowState = {
 
 export default class Row extends React.PureComponent<RowProps, RowState> {
 
-  scrollingDiv : any
-
   constructor(props: RowProps) {
     super(props)
 
     this.state = {
       hover: false
     }
-  }
-
-  componentDidMount = () => {
-    this.updateScroll()
-  }
-
-  componentDidUpdate = (prevProps: RowProps) => {
-    if (this.props.scrollLeft !== this.scrollingDiv.scrollLeft)
-      this.updateScroll()
-  }
-
-  updateScroll = () => {
-    this.scrollingDiv.scrollLeft = this.props.scrollLeft
-  }
-
-  triggerOnScroll = (event : Object) => {
-
-    let scrollEvent = {
-      scrollLeft: event.target.scrollLeft
-    }
-    if (this.props.onScroll != null)
-      this.props.onScroll(scrollEvent)
   }
 
   render = () => {
@@ -90,22 +67,21 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
   }
 
   groupHeaderRowRenderer = (style: Object, element: DataRow<any>, groups: List<Group<any, any>>, onMouseOver: Function, onMouseOut: Function, onScrollingDivSet: Function) => 
-    <div className="functional-data-grid__row functional-data-grid__row--group-header" onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
-      <div style={{display: 'flex'}}>
-        <div style={{
-            overflow: 'hidden',
-            flexShrink: 0,
-            padding: '2px 10px',
-            position: 'relative'
-          }}>
-          { this.renderGroups(element, groups) }
-        </div>
-      </div>
-      <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet}>
-      </div>
-      <div style={{display: 'flex'}}>
-      </div>
-    </div>
+    <RowSkeleton
+      className="functional-data-grid__row functional-data-grid__row--group-header"
+      onMouseEnter={onMouseOver}
+      onMouseLeave={onMouseOut}
+      style={style}
+      leftLocked={<div style={{
+          overflow: 'hidden',
+          flexShrink: 0,
+          padding: '2px 10px',
+          position: 'relative'
+        }}>
+        { this.renderGroups(element, groups) }
+      </div>}
+
+    />
 
   renderGroups = (element: DataRow<any>, groups: List<Group<any, any>>) => {
     let entries: List<[string, any]> = List(Object.entries(element.content))
@@ -137,18 +113,28 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       columnWidthGetter
     )
 
-  renderElementsRow = (leftLockedColumns: List<Column>, freeColumns: List<Column>, rightLockedColumns : List<Column>, rowIndex: number, element: DataRow<any>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, columnWidthGetter: Function) =>
-    <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
-      <div style={{display: 'flex'}}>
-        { this.renderCells(leftLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
-      </div>
-      <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet} onScroll={onScroll}>
-        { this.renderCells(freeColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
-      </div>
-      <div style={{display: 'flex'}}>
-        { this.renderCells(rightLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
-      </div>
-    </div>
+renderElementsRow = (
+  leftLockedColumns: List<Column>,
+  freeColumns: List<Column>,
+  rightLockedColumns : List<Column>,
+  rowIndex: number,
+  element: DataRow<any>,
+  onScroll: Function,
+  onScrollingDivSet: Function,
+  onMouseOver: Function,
+  onMouseOut: Function,
+  hover: boolean,
+  cellStyle: Object,
+  style: Object,
+  columnWidthGetter: Function
+) => <RowSkeleton data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut}
+  style={style}
+  leftLocked={ this.renderCells(leftLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+  free={this.renderCells(freeColumns, hover, element, rowIndex, cellStyle, columnWidthGetter)}
+  rightLocked={this.renderCells(rightLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter)}
+  scrollLeft={this.props.scrollLeft}
+  onScroll={this.props.onScroll}
+/>
 
   renderCells = (columns: List<Column>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
     columns.map((c: Column) =>

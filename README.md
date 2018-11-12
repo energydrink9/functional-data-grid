@@ -129,6 +129,7 @@ Column constructor accepts an object with the following keys:
 |headerStyle|optional|{}|Allows to specify additional styles for the column header|
 |style|optional|{}|Allows to specify additional styles for the column|
 |comparator|optional|(a, b) => a === b ? 0 : a < b ? -1 : 1|Specifies a comparator for the sorting function|
+|columnGroup|optional|null|The id of the column's column group|
 
 
 # Groups definition
