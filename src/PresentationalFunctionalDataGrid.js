@@ -3,6 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Column from './Column'
+import ColumnGroup from './ColumnGroup'
 import ColumnsMenu from './ColumnsMenu'
 import { List, Map } from 'immutable'
 import Sort from './Sort'
@@ -198,14 +199,14 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
     { this.state.showColumnsMenu && this.renderColumnsMenuPopper(this.getPopperContainer()) }
   </Manager>
 
-  renderColumnsMenuPopper = (popperContainer: ?HTMLElement) => ReactDOM.createPortal(
-    <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}>
+  renderColumnsMenuPopper = (popperContainer: ?HTMLElement) => popperContainer != null && ReactDOM.createPortal(
+    <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, hide: { enabled: false }, flip: { enabled: false } }}>
       {({ placement, ref, style }) => (
         <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
           <ColumnsMenu
-            leftLockedColumns={this.getLeftLockedColumns()}
-            freeColumns={this.getFreeColumns()}
-            rightLockedColumns={this.getRightLockedColumns()}
+            leftLockedColumns={this.getSortedColumns(this.getLeftLockedColumns())}
+            freeColumns={this.getSortedColumns(this.getFreeColumns())}
+            rightLockedColumns={this.getSortedColumns(this.getRightLockedColumns())}
             columnGroups={this.props.columnGroups}
             enableColumnsShowAndHide={this.props.enableColumnsShowAndHide}
             enableColumnsSorting={this.props.enableColumnsSorting}
