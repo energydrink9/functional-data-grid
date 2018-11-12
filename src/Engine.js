@@ -12,7 +12,7 @@ import Aggregate from './Aggregate'
 
 export default class Engine<T, A: void> {
 
-  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<Column | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<T>, any) => A)) : List<DataRow<any>> =>
+  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<Column | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<any>, any) => A)) : List<DataRow<any>> =>
     Engine.filterGroups(
       Engine.groupData(
         Engine.sortData(

@@ -1,6 +1,6 @@
 {
   "name": "functional-data-grid",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Functional Data Grid",
   "main": "dist/FunctionalDataGrid.cjs.js",
   "module": "dist/FunctionalDataGrid.esm.js",
@@ -10,7 +10,6 @@
     "debounce": "^1.0.2",
     "immutable": "~3.8.2",
     "react-popper": "^1.0.0",
-    "react-select": "~1.1.0",
     "react-virtualized": "^9.18.5",
     "uuid": "^3.3.2"
   },

@@ -1,17 +1,17 @@
 // @flow
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import * as React from 'react'
 import { List, Map } from 'immutable'
 import ColumnGroup from "./ColumnGroup"
 import Column from "./Column"
 import HeaderColumn from "./HeaderColumn"
 import Sort from "./Sort"
-import ColumnsMenu from './ColumnsMenu'
-import { Manager, Reference, Popper } from 'react-popper'
 
 type HeaderProps = {
-  columns: List<Column | ColumnGroup>,
+  leftLockedColumns: List<Column>,
+  freeColumns: List<Column>,
+  rightLockedColumns: List<Column>,
+  columnGroups: List<ColumnGroup>,
   scrollLeft: number,
   onScroll: Function,
   sort : List<Sort>,
@@ -20,34 +20,18 @@ type HeaderProps = {
   onColumnResize : Function,
   columnsWidth : Map<string, number>,
   style: Object,
-  columnsVisibility: Map<string, boolean>,
-  enableColumnsShowAndHide: boolean,
-  enableColumnsSorting: boolean,
-  onColumnVisibilityChange: Function,
-  onColumnsOrderChange: List<string> => void,
-  columnsOrder: List<string>,
-  popperContainer: ?HTMLElement
-}
-
-type HeaderState = {
-  showColumnsMenu: boolean
+  columnsMenu: React.Node
 }
 
 const columnsOptionsWidth = 26
 
-export default class Header extends React.PureComponent<HeaderProps, HeaderState> {
+export default class Header extends React.PureComponent<HeaderProps> {
 
   scrollingDiv : any
-
-  static defaultProps = {
-    popperContainer: document.body
-  }
+  columnGroupsScrollingDiv : any
 
   constructor(props : HeaderProps) {
     super(props)
-    this.state = {
-      showColumnsMenu: false
-    }
   }
 
   componentDidMount = () => {
@@ -57,10 +41,16 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
   componentDidUpdate = (prevProps: HeaderProps) => {
     if (this.props.scrollLeft !== this.scrollingDiv.scrollLeft)
       this.updateScroll()
+    if (this.props.scrollLeft !== this.columnGroupsScrollingDiv.scrollLeft)
+      this.updateColumnGroupsScroll()
   }
 
   updateScroll = () => {
-    this.scrollingDiv.scrollLeft = this.props.scrollLeft // eslint-disable-line
+    this.scrollingDiv.scrollLeft = this.props.scrollLeft
+  }
+
+  updateColumnGroupsScroll = () => {
+    this.columnGroupsScrollingDiv.scrollLeft = this.props.scrollLeft
   }
 
   triggerOnScroll = (event : Object) => {
@@ -74,61 +64,66 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
   render = () => {
 
     let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative', borderBottom: 'solid 1px #ccc' }
-
-    let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
-    let firstLockedColumns = this.props.columns.filter((c, index) => c.locked && (firstUnlockedColumnIndex === -1 || index < firstUnlockedColumnIndex))
-    let nonLockedColumns = this.props.columns.filter(c => ! c.locked)
-    let secondLockedColumns = this.props.columns.filter((c, index) => c.locked && firstUnlockedColumnIndex !== -1 && index >= firstUnlockedColumnIndex)
-
-    return this.renderHeader(firstLockedColumns, nonLockedColumns, secondLockedColumns, style)
+    
+    return [
+      this.renderColumnGroupsHeader(style),
+      this.renderHeader(this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, style)
+    ]
   }
 
-  renderHeader = (firstLockedColumns: List<Column>, nonLockedColumns: List<Column>, secondLockedColumns: List<Column>, style: Object) => <div className='functional-data-grid__header' style={{...style, ...this.props.style}}>
+  renderColumnGroupsHeader = (style: Object) => this.props.columnGroups.size > 0 && <div key={1} style={{ ...style, ...this.props.style }}>
     <div style={{display: 'flex'}}>
-      { this.renderColumns(firstLockedColumns) }
+      { this.renderColumnGroupsHeaderForColumns(this.props.leftLockedColumns) }
+    </div>
+    <div style={{display: 'flex', overflow: 'hidden', flexGrow: 1}} ref={(el) => this.columnGroupsScrollingDiv = el} onScroll={this.triggerOnScroll}>
+      { this.renderColumnGroupsHeaderForColumns(this.props.freeColumns) }
+    </div>
+    <div style={{display: 'flex'}}>    
+      { this.renderColumnGroupsHeaderForColumns(this.props.rightLockedColumns) }
+    </div>
+    <div style={{ flexShrink: 0, width: `${columnsOptionsWidth}px` }}></div>
+  </div>
+  
+  renderColumnGroupHeader = (c: Column | ColumnGroup, w: number, index: number) => <div style={{ flexShrink: 0, width: `${w}px`, padding: '8px', borderRight: 'solid 1px #ccc' }} key={index}>
+    { c instanceof ColumnGroup && c.headerRenderer() }
+  </div>
+  
+  renderColumnGroupsHeaderForColumns = (columns: List<Column>) => columns
+    .reduce((accumulator: List<Column | ColumnGroup>, c: Column) => accumulator.size === 0 || c.columnGroup == null || (accumulator.last() instanceof Column ? accumulator.last().columnGroup : accumulator.last().id) !== c.columnGroup
+      ? this.addColumnGroup(accumulator, c)
+      : accumulator
+      , List())
+    .map(g => [g, this.getColumnGroupWidth(g, columns)])
+    .map((g, index) => this.renderColumnGroupHeader(g[0], g[1], index))
+
+  addColumnGroup = (accumulator: List<Column | ColumnGroup>, c: Column | ColumnGroup) => accumulator.push(
+    c.columnGroup != null
+      ? this.getColumnGroupById(c.columnGroup)
+      : c
+  )
+
+  getColumnGroupWidth = (g: Column | ColumnGroup, columns: List<Column>) => (g instanceof Column ? [g] : this.getColumnGroupColumns(g, columns))
+    .reduce((accumulator: number, c: Column) => accumulator + this.getColumnWidth(c), 0)
+
+  getColumnGroupColumns = (g: ColumnGroup, columns: List<Column>) => columns.filter(c => c.columnGroup === g.id)
+
+  getColumnGroupById = (id: string) => this.props.columnGroups.find(g => g.id === id)
+
+  renderHeader = (leftLockedColumns: List<Column>, freeColumns: List<Column>, rightLockedColumns: List<Column>, style: Object) => <div key={2} className='functional-data-grid__header' style={{...style, ...this.props.style}}>
+    <div style={{display: 'flex'}}>
+      { this.renderColumns(leftLockedColumns) }
     </div>
     <div style={{display: 'flex', overflow: 'hidden', flexGrow: 1}} ref={(el) => this.scrollingDiv = el} onScroll={this.triggerOnScroll}>
-      { this.renderColumns(nonLockedColumns) }
+      { this.renderColumns(freeColumns) }
     </div>
     <div style={{display: 'flex'}}>
-      { this.renderColumns(secondLockedColumns) }
+      { this.renderColumns(rightLockedColumns) }
     </div>
-    { (this.props.enableColumnsShowAndHide || this.props.enableColumnsSorting) && <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.renderColumnsMenu() }</div> }
+    <div style={{ width: `${columnsOptionsWidth}px` }}>{ this.props.columnsMenu }</div>
   </div>
-
-  renderColumnsMenu = () => <Manager>
-    <Reference>
-      {({ ref }) => (
-        <div ref={ref} style={{ padding: '5px', cursor: 'pointer', userSelect: 'none', fontSize: '16px' }} onClick={this.toggleColumnsMenu}>&#x22ee;</div>
-      )}
-    </Reference>
-    { this.state.showColumnsMenu && this.props.popperContainer != null && ReactDOM.createPortal(
-      <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}>
-        {({ placement, ref, style }) => (
-          <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
-            <ColumnsMenu columns={this.props.columns} enableColumnsShowAndHide={this.props.enableColumnsShowAndHide} enableColumnsSorting={this.props.enableColumnsSorting} columnsVisibility={this.props.columnsVisibility} onColumnVisibilityChange={this.props.onColumnVisibilityChange} onClose={this.toggleColumnsMenu} onColumnsOrderChange={this.props.onColumnsOrderChange} columnsOrder={this.props.columnsOrder} />,
-          </div>
-        )}
-      </Popper>,
-      this.props.popperContainer
-    )}
-  </Manager>
-
-  toggleColumnsMenu = () => {
-    this.setState({
-      showColumnsMenu: ! this.state.showColumnsMenu
-    })
-  }
 
   renderColumns = (columns : List<Column | ColumnGroup>) => columns
-    .map((c, index) => c instanceof ColumnGroup ? this.renderColumnGroup(c, index) : (this.isColumnVisible(c.id) && this.renderColumn(c)))
-
-  renderColumnGroup = (cg : ColumnGroup, index : number) => <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-    { cg.headerRenderer() }
-    <div style={{ display: 'flex' }}>
-      { cg.columns.filter(c => this.isColumnVisible(c.id)).map(c => this.renderColumn(c)) }
-    </div>
-  </div>
+    .map((c, index) => this.renderColumn(c))
 
   getColumnWidth = (c : Column) => this.props.columnsWidth.get(c.id) != null ? this.props.columnsWidth.get(c.id) : c.width
 
@@ -138,6 +133,4 @@ export default class Header extends React.PureComponent<HeaderProps, HeaderState
     let sort = this.props.sort.find(c => c.columnId === columnId)
     return sort == null ? 'none' : sort.direction
   }
-
-  isColumnVisible = (columnId: string) => this.props.columnsVisibility.get(columnId)
 }

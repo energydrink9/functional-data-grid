@@ -85,6 +85,7 @@ The FunctionalDataGrid component accepts the following props:
 |Prop|Required / optional|Default|Description|
 |---|---|---|---|
 |columns|required| |An array of Column with columns definitions|
+|columnGroups|optional| |An array of ColumnGroup with column group definitions|
 |data|required| |An array of elements to show in the grid, one per row|
 |initialFilter|optional|No filters|An array of Filter to filter the elements|
 |initialSort|optional|No sorting|An array of Sort to sort the elements|

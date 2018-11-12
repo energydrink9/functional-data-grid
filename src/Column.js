@@ -20,10 +20,12 @@ type ColumnOptionsType = {
   locked? : ?boolean,
   width? : ?number,
   headerStyle? : ?Object,
-  style? : ?Object
+  style? : ?Object,
+  columnGroup?: ?string
 };
 
 export default class Column {
+
   id : string;
   title : string = '';
   valueGetter : Function;
@@ -41,6 +43,7 @@ export default class Column {
   width : ?number;
   headerStyle : Object = {};
   style : Object = {}
+  columnGroup: ?string
 
   constructor(options : ColumnOptionsType) {
 
@@ -81,6 +84,8 @@ export default class Column {
       this.headerStyle = options.headerStyle
     if (options.style != null)
       this.style = options.style
+    if (options.columnGroup != null)
+      this.columnGroup = options.columnGroup
 
     this.locked = options.locked != null && options.locked
     this.width = options.width

@@ -18,7 +18,8 @@ const defaultInitialColumnWidth = 100
 const defaultRowHeight = 26
 
 type FunctionalDataGridProps<T, A> = {
-  columns: Array<Column | ColumnGroup> | List<Column | ColumnGroup>,
+  columns: Array<Column> | List<Column>,
+  columnGroups: Array<ColumnGroup> | List<ColumnGroup>,
   initialFilter : Array<Filter> | List<Filter>,
   initialSort : Array<Sort> | List<Sort>,
   groups : Array<Group<any, T>> | List<Group<any, T>>,
@@ -52,6 +53,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
   debouncedUpdateElements = debounce((data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>) => this.updateElements(data, groups, sort, filter), debounceTimeout);
 
   static defaultProps = {
+    columnGroups: List(),
     initialFilter : List(),
     initialSort : List(),
     groups : List(),
@@ -85,6 +87,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   getData = () => this.wrapInImmutableList(this.props.data)
   getColumns = () => this.wrapInImmutableList(this.props.columns)
+  getColumnGroups = () => this.wrapInImmutableList(this.props.columnGroups)
   getInitialSort = () => this.wrapInImmutableList(this.props.initialSort)
   getInitialFilter = () => this.wrapInImmutableList(this.props.initialFilter)
   getGroups = () => this.wrapInImmutableList(this.props.groups)
@@ -100,6 +103,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
 
   render = () => <PresentationalFunctionalDataGrid
     columns={this.getColumns()}
+    columnGroups={this.getColumnGroups()}
     elements={this.state.cachedElements}
     style={this.props.style}
     showGroupHeaders={this.props.showGroupHeaders}

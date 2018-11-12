@@ -8,7 +8,9 @@ import DataRow from './DataRow'
 import Group from './Group'
 
 type RowProps = {
-  columns : List<Column>,
+  leftLockedColumns: List<Column>,
+  freeColumns: List<Column>,
+  rightLockedColumns: List<Column>,
   element : DataRow<any>,
   style : Object,
   aggregateStyle: Object,
@@ -18,8 +20,6 @@ type RowProps = {
   onScroll : Function,
   rowIndex : number,
   columnsWidth : Map<string, number>,
-  columnsVisibility: Map<string, boolean>,
-  enableColumnsMenu: boolean,
   groups: List<Group<any, any>>
 }
 
@@ -63,13 +63,11 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
 
   render = () => {
 
-    let firstUnlockedColumnIndex = this.props.columns.findIndex((c) => ! c.locked)
-
     let rowStyle = this.getRowStyle(this.props.element.type, this.props.style, this.props.groupStyle, this.props.aggregateStyle)
 
     return this.props.element.type === 'group-header'
       ? this.groupHeaderRowRenderer(rowStyle, this.props.element, this.props.groups, this.onMouseOver, this.onMouseOut, this.setScrollingDiv)
-      : this.elementsRowRenderer(firstUnlockedColumnIndex, this.props.rowIndex, this.props.element, this.props.columns, this.triggerOnScroll, this.setScrollingDiv, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.isColumnVisible, this.getColumnWidth)
+      : this.elementsRowRenderer(this.props.rowIndex, this.props.element, this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, this.triggerOnScroll, this.setScrollingDiv, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.getColumnWidth)
   }
 
   getRowStyle = (type: string, style: Object, groupStyle: Object, aggregateStyle: Object) => {
@@ -122,11 +120,11 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
 
   renderGroup = (group: Group<any, any>, v: any) => group.renderer(v, group)
 
-  elementsRowRenderer = (firstUnlockedColumnIndex: number, rowIndex: number, element: DataRow<any>, columns : List<Column>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
+  elementsRowRenderer = (rowIndex: number, element: DataRow<any>, leftLockedColumns : List<Column>, freeColumns : List<Column>, rightLockedColumns : List<Column>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, columnWidthGetter: Function) =>
     this.renderElementsRow(
-      columns.filter((c, index) => c.locked && (firstUnlockedColumnIndex === -1 || index < firstUnlockedColumnIndex)).filter(c => isColumnVisible(c.id)),
-      columns.filter(c => isColumnVisible(c.id)).filter(c => ! c.locked),
-      columns.filter((c, index) => c.locked && firstUnlockedColumnIndex !== -1 && index >= firstUnlockedColumnIndex).filter(c => isColumnVisible(c.id)),
+      leftLockedColumns,
+      freeColumns,
+      rightLockedColumns,
       rowIndex,
       element,
       onScroll,
@@ -136,20 +134,19 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       hover,
       cellStyle,
       style,
-      isColumnVisible,
       columnWidthGetter
     )
 
-  renderElementsRow = (firstLockedColumns: List<Column>, nonLockedColumns: List<Column>, secondLockedColumns : List<Column>, rowIndex: number, element: DataRow<any>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, isColumnVisible: Function, columnWidthGetter: Function) =>
+  renderElementsRow = (leftLockedColumns: List<Column>, freeColumns: List<Column>, rightLockedColumns : List<Column>, rowIndex: number, element: DataRow<any>, onScroll: Function, onScrollingDivSet: Function, onMouseOver: Function, onMouseOut: Function, hover: boolean, cellStyle: Object, style: Object, columnWidthGetter: Function) =>
     <div data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} style={style}>
       <div style={{display: 'flex'}}>
-        { this.renderCells(firstLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+        { this.renderCells(leftLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
       </div>
       <div style={{display: 'flex', overflow: 'hidden', 'flexGrow': 1}} ref={onScrollingDivSet} onScroll={onScroll}>
-        { this.renderCells(nonLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+        { this.renderCells(freeColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
       </div>
       <div style={{display: 'flex'}}>
-        { this.renderCells(secondLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
+        { this.renderCells(rightLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
       </div>
     </div>
 
@@ -172,8 +169,6 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
     : c.valueGetter(e.content)
 
   getColumnWidth = (c : Column) => this.props.columnsWidth.get(c.id)
-
-  isColumnVisible = (columnId: string) => this.props.columnsVisibility.get(columnId)
 
   onMouseOver = () => {
     this.setState({

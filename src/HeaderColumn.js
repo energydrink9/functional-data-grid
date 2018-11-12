@@ -86,11 +86,13 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
       hover : true
     })
   }
+
   onMouseLeave = () => {
     this.setState({
       hover : false
     })
   }
+  
   onColumnResize = (right : number) => {
     this.props.onColumnResize(right - this.element.getBoundingClientRect().left)
   }
