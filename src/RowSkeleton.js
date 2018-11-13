@@ -43,6 +43,18 @@ export default class RowSkeleton extends React.PureComponent<RowSkeletonProps, R
       this.updateScroll()
   }
 
+  componentDidUpdate = (prevProps: RowSkeletonProps) => {
+    let scrollingDiv = this.state.scrollingDiv
+    if (scrollingDiv != null && this.props.scrollLeft !== scrollingDiv.scrollLeft)
+      this.updateScroll()
+  }
+
+  componentDidUpdate = (prevProps: RowSkeletonProps) => {
+    let scrollingDiv = this.state.scrollingDiv
+    if (scrollingDiv != null && this.props.scrollLeft !== scrollingDiv.scrollLeft)
+      this.updateScroll()
+  }
+
   updateScroll = () => {
     let scrollingDiv = this.state.scrollingDiv
     if (scrollingDiv != null)

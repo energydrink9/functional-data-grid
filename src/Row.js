@@ -62,7 +62,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
     }
   }
 
-  groupHeaderRowRenderer = (style: Object, element: DataRow<any>, groups: List<Group<any, any>>, onMouseOver: Function, onMouseOut: Function) => 
+  groupHeaderRowRenderer = (style: Object, element: DataRow<any>, groups: List<Group<any, any>>, onMouseOver: Function, onMouseOut: Function) =>
     <RowSkeleton
       className="functional-data-grid__row functional-data-grid__row--group-header"
       onMouseEnter={onMouseOver}
