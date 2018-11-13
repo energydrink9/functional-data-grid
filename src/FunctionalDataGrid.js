@@ -32,6 +32,7 @@ type FunctionalDataGridProps<T, A> = {
   onColumnResize: (Object) => void,
   onColumnsOrderChange: (Object) => void,
   onColumnVisibilityChange: (Object) => void,
+  onRowClick: (Object) => void,
   showFooter: boolean,
   className: 'string',
   overscanRowCount: number,
@@ -69,7 +70,8 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     enableColumnsShowAndHide: false,
     onColumnResize: (e: Object) => {},
     onColumnsOrderChange: (e: Object) => {},
-    onColumnVisibilityChange: (e: Object) => {}
+    onColumnVisibilityChange: (e: Object) => {},
+    onRowClick: (e: Object) => {}
   }
 
   constructor(props : FunctionalDataGridProps<T, A>) {
@@ -123,6 +125,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     onColumnResize={this.resizeColumn}
     onColumnsOrderChange={this.onColumnsOrderChange}
     onColumnVisibilityChange={this.updateColumnVisibility}
+    onRowClick={this.props.onRowClick}
   />
 
   getOrderedColumns = () => this.state.columnsOrder.map(columnId => this.getColumns().find(c => c.id === columnId))

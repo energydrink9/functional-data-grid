@@ -38,6 +38,7 @@ type PresentationalFunctionalDataGridProps<T, A> = {
   onColumnResize: (string, number) => void,
   onColumnsOrderChange: (List<string>) => void,
   onColumnVisibilityChange: (string, boolean) => void,
+  onRowClick: (Object) => void,
   height: string,
   columnGroups: List<ColumnGroup>
 }
@@ -63,6 +64,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
     onColumnResize: (e: Object) => {},
     onColumnsOrderChange: (e: Object) => {},
     onColumnVisibilityChange: (e: Object) => {},
+    onRowClick: (e: Object) => {},
     height: '100%'
   }
 
@@ -179,6 +181,9 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
       onScroll={onScroll}
       scrollLeft={scrollLeft}
       rowIndex={param.index}
+      onClick={(e: Object) => { this.props.onRowClick({
+        row: element
+      })}}
     />
   }
 

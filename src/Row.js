@@ -21,7 +21,8 @@ type RowProps = {
   onScroll : Function,
   rowIndex : number,
   columnsWidth : Map<string, number>,
-  groups: List<Group<any, any>>
+  groups: List<Group<any, any>>,
+  onClick: (Object) => void
 }
 
 type RowState = {
@@ -68,6 +69,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       onMouseEnter={onMouseOver}
       onMouseLeave={onMouseOut}
       style={style}
+      onClick={this.props.onClick}
       leftLocked={<div style={{
           overflow: 'hidden',
           flexShrink: 0,
@@ -125,6 +127,7 @@ renderElementsRow = (
   rightLocked={this.renderCells(rightLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter)}
   scrollLeft={this.props.scrollLeft}
   onScroll={this.props.onScroll}
+  onClick={this.props.onClick}
 />
 
   renderCells = (columns: List<Column>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
