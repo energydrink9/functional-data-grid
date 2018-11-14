@@ -21,7 +21,8 @@ type ColumnOptionsType = {
   width? : ?number,
   headerStyle? : ?Object,
   style? : ?Object,
-  columnGroup?: ?string
+  columnGroup?: ?string,
+  enableColumnShowAndHide?: ?boolean
 };
 
 export default class Column {
@@ -44,6 +45,7 @@ export default class Column {
   headerStyle : Object = {};
   style : Object = {}
   columnGroup: ?string
+  enableColumnShowAndHide: boolean = true
 
   constructor(options : ColumnOptionsType) {
 
@@ -86,6 +88,8 @@ export default class Column {
       this.style = options.style
     if (options.columnGroup != null)
       this.columnGroup = options.columnGroup
+    if(options.enableColumnShowAndHide != null)
+      this.enableColumnShowAndHide = options.enableColumnShowAndHide
 
     this.locked = options.locked != null && options.locked
     this.width = options.width
