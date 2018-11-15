@@ -164,14 +164,12 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
 
   rowRenderer = (scrollLeft : number, onScroll : Function) => (param: { key: number, index: number, style: Object }) => {
     let element = this.getElement(param.index)
-    let rowStyle = this.props.style.row != null ? this.props.style.row : emptyObject
+    let rowStyle = this.props.style.row != null ? this.props.style.row(element) : emptyObject
     let computedStyle = {...param.style, ...rowStyle}
     return <Row
       key={element.key}
       style={computedStyle}
-      cellStyle={this.props.style.cell != null ? this.props.style.cell : emptyObject}
-      aggregateStyle={this.props.style.aggregate != null ? this.props.style.aggregate : emptyObject}
-      groupStyle={this.props.style.group != null ? this.props.style.group : emptyObject}
+      cellStyle={this.props.style.cell != null ? this.props.style.cell : () => emptyObject}
       groups={this.props.groups}
       leftLockedColumns={this.getSortedColumns(this.getLeftLockedColumns()).filter(c => this.isColumnVisible(c.id))}
       freeColumns={this.getSortedColumns(this.getFreeColumns()).filter(c => this.isColumnVisible(c.id))}

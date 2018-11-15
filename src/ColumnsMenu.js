@@ -40,7 +40,7 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
   constructor(props: ColumnsMenuPropsType) {
     super(props)
     this.state = {
-      searchValue: "",
+      searchValue: ''
     }
   }
 
@@ -65,7 +65,7 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     })
   }
 
-  filterInitialColumns = (columns, inputValue) => columns.filter(c => (c.title.toLowerCase()).includes(inputValue.toLowerCase()))
+  filterInitialColumns = (columns: List<Column>, inputValue: string) => columns.filter(c => (c.title.toLowerCase()).includes(inputValue.toLowerCase()))
 
   render = () => {
 
@@ -89,17 +89,20 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
 
   renderColumnEntries = (columns: List<Column>) => <div >{ getComputedColumnGroups(columns).map(g => this.renderColumnGroup(g)) }</div>
 
-  renderColumnGroup = (g: ComputedColumnGroup) => <div>
-    { g.columnGroup != null
-      ? <div className="functional-data-grid__columns-menu__column-group" style={{padding: '0 5px', borderTop: 'solid 1px #aaa', whiteSpace: 'nowrap'}}>
-          <div className="functional-data-grid__columns-menu__column-group__header" style={{ display: 'flex'}}>
-            <b style={{overflow: 'hidden', textOverflow: 'ellipsis'}} title={this.getColumnGroupById(g.columnGroup).title}>{ this.getColumnGroupById(g.columnGroup).title }</b>
+  renderColumnGroup = (g: ComputedColumnGroup) => {
+    let columnGroup = g.columnGroup
+    return <div>
+      { columnGroup != null
+        ? <div className="functional-data-grid__columns-menu__column-group" style={{padding: '0 5px', borderTop: 'solid 1px #aaa', whiteSpace: 'nowrap'}}>
+            <div className="functional-data-grid__columns-menu__column-group__header" style={{ display: 'flex'}}>
+              <b style={{overflow: 'hidden', textOverflow: 'ellipsis'}} title={this.getColumnGroupById(columnGroup).title}>{ this.getColumnGroupById(columnGroup).title }</b>
+            </div>
+          { g.columns.map((c) => this.renderColumnEntry(c)) }
           </div>
-        { g.columns.map((c) => this.renderColumnEntry(c)) }
-        </div>
-      : <div style={{padding: '0 5px', whiteSpace: 'nowrap'}}>{ g.columns.map((c) => this.renderColumnEntry(c)) }</div>
-    }
-  </div>
+        : <div style={{padding: '0 5px', whiteSpace: 'nowrap'}}>{ g.columns.map((c) => this.renderColumnEntry(c)) }</div>
+      }
+    </div>
+  }
 
   renderColumnEntry = (c: Column) => {
     return <div key={c.id}

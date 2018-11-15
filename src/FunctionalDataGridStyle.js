@@ -1,11 +1,11 @@
 // @flow
 
+import DataRow from './DataRow'
+
 export type FunctionalDataGridStyle = {
   grid?: Object,
   header?: Object,
   footer?: Object,
-  group?: Object,
-  aggregate?: Object,
-  row?: Object,
+  row?: (DataRow<any>) => Object,
   cell?: Object,
-};
+}

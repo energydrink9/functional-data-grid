@@ -14,8 +14,6 @@ type RowProps = {
   rightLockedColumns: List<Column>,
   element : DataRow<any>,
   style : Object,
-  aggregateStyle: Object,
-  groupStyle: Object,
   cellStyle: Object,
   scrollLeft : number,
   onScroll : Function,
@@ -41,14 +39,14 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
 
   render = () => {
 
-    let rowStyle = this.getRowStyle(this.props.element.type, this.props.style, this.props.groupStyle, this.props.aggregateStyle)
+    let rowStyle = this.getRowStyle(this.props.element.type, this.props.style)
 
     return this.props.element.type === 'group-header'
       ? this.groupHeaderRowRenderer(rowStyle, this.props.element, this.props.groups, this.onMouseOver, this.onMouseOut)
       : this.elementsRowRenderer(this.props.rowIndex, this.props.element, this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.getColumnWidth)
   }
 
-  getRowStyle = (type: string, style: Object, groupStyle: Object, aggregateStyle: Object) => {
+  getRowStyle = (type: string, style: Object) => {
 
     return {
       ...{
@@ -57,9 +55,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
         lineHeight: '25px',
         backgroundColor: '#fff'
       },
-      ...style,
-      ...(type === 'group-header' ? groupStyle : {}),
-      ...(type === 'aggregate' ? { backgroundColor: '#eee', ...aggregateStyle } : {})
+      ...style
     }
   }
 
@@ -131,18 +127,20 @@ renderElementsRow = (
 />
 
   renderCells = (columns: List<Column>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
-    columns.map((c: Column) =>
-      <Cell value={this.computeValue(c, element)}
-            key={c.id}
-            rowHover={hover}
-            column={c}
-            width={columnWidthGetter(c)}
-            rowIndex={rowIndex}
-            style={cellStyle}
-            type={element.type}
-            content={element.content}
-            originalIndex={element.originalIndex != null ? element.originalIndex : -1}
-      />)
+    columns.map((c: Column) => {
+      let value = this.computeValue(c, element)
+      return <Cell value={value}
+        key={c.id}
+        rowHover={hover}
+        column={c}
+        width={columnWidthGetter(c)}
+        rowIndex={rowIndex}
+        style={cellStyle}
+        type={element.type}
+        content={element.content}
+        originalIndex={element.originalIndex != null ? element.originalIndex : -1}
+      />
+    })
 
   computeValue = (c: Column, e: DataRow<any>) => e.type === 'aggregate'
     ? c.aggregateValueGetter == null ? null : c.aggregateValueGetter(e.content.content, e.content.key)
