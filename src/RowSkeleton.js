@@ -1,6 +1,7 @@
 //@flow
 
 import * as React from 'react'
+import { css } from 'emotion'
 
 const columnsOptionsWidth = 26
 
@@ -17,6 +18,20 @@ type RowSkeletonProps = {
 type RowSkeletonState = {
   scrollingDiv: ?HTMLElement
 }
+
+const leftLockedClassName = css`
+  display: flex;
+`
+const freeClassName = css`
+  display: flex;
+  flex-grow: 1;
+`
+const rightLockedClassName = css`
+  display: flex;
+`
+const rightClassName = css`
+  flex-shrink: 0;
+`
 
 export default class RowSkeleton extends React.PureComponent<RowSkeletonProps, RowSkeletonState> {
 
@@ -72,16 +87,16 @@ export default class RowSkeleton extends React.PureComponent<RowSkeletonProps, R
   render = () => {
     let { leftLocked, free, rightLocked, right, scrollLeft, onScroll, scrollbar, ...otherProps } = this.props;
     return <div {...otherProps}>
-      <div style={{display: 'flex'}}>
+      <div className={`functional-data-grid__row__left-locked ${leftLockedClassName}`}>
         { leftLocked }
       </div>
-      <div style={{display: 'flex', overflow: scrollbar ? 'auto': 'hidden', flexGrow: 1}} ref={(el) => this.setState({ scrollingDiv: el }, () => this.updateScroll())} onScroll={this.triggerOnScroll}>
+      <div className={`functional-data-grid__row__free ${freeClassName}`} style={{overflow: scrollbar ? 'auto': 'hidden'}} ref={(el) => this.setState({ scrollingDiv: el }, () => this.updateScroll())} onScroll={this.triggerOnScroll}>
         { free }
       </div>
-      <div style={{display: 'flex'}}>    
+      <div className={`functional-data-grid__row__right-locked ${rightLockedClassName}`}>    
         { rightLocked }
       </div>
-      <div style={{ flexShrink: 0, width: `${columnsOptionsWidth}px` }}>
+      <div className={`functional-data-grid__row__right ${rightClassName}`} style={{width: `${columnsOptionsWidth}px`}}>
         { right }
       </div>
     </div>

@@ -16,6 +16,25 @@ import Footer from './Footer'
 import HorizontalScrollbar from './HorizontalScrollbar'
 import type { FunctionalDataGridStyle } from './FunctionalDataGridStyle'
 import { Manager, Reference, Popper } from 'react-popper'
+import { css } from 'emotion'
+
+const gridClassName = css`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: solid 1px #ccc;
+`
+
+const layoutContainerClassName = css`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`
+
+const rowsContainerClassName = css`
+  flex-grow: 1;
+`
 
 type PresentationalFunctionalDataGridProps<T, A> = {
   columns: List<Column>,
@@ -82,11 +101,11 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
   }
 
   render = () => {
-    let style = {display: 'flex', flexGrow: 1, flexDirection: 'column', height: this.props.height, boxSizing: 'border-box', border: 'solid 1px #ccc'}
-    return <div ref={ref => this.setState({ ref })} className={`functional-data-grid ${this.props.className}`} style={{...style, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
+
+    return <div ref={ref => this.setState({ ref })} className={`functional-data-grid ${this.props.className} ${gridClassName}`} style={{height: this.props.height, ...(this.props.style.grid != null ? this.props.style.grid : {})}}>
       <ScrollSync>
         {({clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth}) => (
-          <div style={{display: 'flex', flexDirection: 'column', flexGrow: 1}}>
+          <div className={`functional-data-grid__layout-container ${layoutContainerClassName}`}>
             <Header
               leftLockedColumns={this.getSortedColumns(this.getLeftLockedColumns()).filter(c => this.isColumnVisible(c.id))}
               freeColumns={this.getSortedColumns(this.getFreeColumns()).filter(c => this.isColumnVisible(c.id))}
@@ -106,7 +125,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
                 : <div style={{ flexShrink: 0, width: '26px' }}></div>}
               columnGroups={this.props.columnGroups}
             />
-            <div style={{flexGrow: 1}}>
+            <div className={`functional-data-grid__rows-container ${rowsContainerClassName}`}>
               <AutoSizer>
                 {({height, width}) => (
                     <ReactVirtualizedList
