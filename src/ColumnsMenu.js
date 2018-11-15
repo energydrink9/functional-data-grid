@@ -21,7 +21,11 @@ type ColumnsMenuPropsType = {
   onColumnsOrderChange: List<string> => void
 }
 
-export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsType> {
+type ColumnsMenuStateType = {
+  searchValue: string,
+}
+
+export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsType, ColumnsMenuStateType> {
   
   ref: ?HTMLDivElement
 
@@ -35,6 +39,9 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
 
   constructor(props: ColumnsMenuPropsType) {
     super(props)
+    this.state = {
+      searchValue: "",
+    }
   }
 
   componentDidMount() {
@@ -52,28 +59,65 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     }
   }
 
-  render = () => <div ref={ref => this.ref = ref} style={{ backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px', maxHeight: '500px', overflow: 'auto' }}>
-    { this.props.leftLockedColumns.size > 0 && this.renderColumnEntries(this.props.leftLockedColumns) }
-    { this.props.freeColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(this.props.freeColumns) }</div> }
-    { this.props.rightLockedColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(this.props.rightLockedColumns) }</div> }
-  </div>
+  filterColumns = (searchValue: string) => {
+    this.setState({
+      searchValue
+    })
+  }
 
-  renderColumnEntries = (columns: List<Column>) => <div>{ getComputedColumnGroups(columns).map(g => this.renderColumnGroup(g)) }</div>
+  filterInitialColumns = (columns, inputValue) => columns.filter(c => (c.title.toLowerCase()).includes(inputValue.toLowerCase()))
+
+  render = () => {
+
+    let leftLockedColumns = this.filterInitialColumns(this.props.leftLockedColumns, this.state.searchValue)
+    let freeColumns = this.filterInitialColumns(this.props.freeColumns, this.state.searchValue)
+    let rightLockedColumns = this.filterInitialColumns(this.props.rightLockedColumns, this.state.searchValue)
+
+    return <div ref={ref => this.ref = ref}
+                style={{ backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px', maxHeight: '500px', overflow: 'auto', width:'200px'}}>
+            <div className = "functional-data-grid__columns-menu__search" style={{width:'100%',padding:'5px'}}>
+              <input onChange={(e: Object) => this.filterColumns(e.target.value)}
+                     placeholder={'Search...'}
+                     autoFocus="true"
+                     style={{width: '100%', boxSizing: 'border-box', paddingLeft:'5px',  height: '20px'}}/>
+            </div>
+          { leftLockedColumns.size > 0 && this.renderColumnEntries(leftLockedColumns) }
+          { freeColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(freeColumns) }</div> }
+          { rightLockedColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(rightLockedColumns) }</div> }
+          </div>
+  }
+
+  renderColumnEntries = (columns: List<Column>) => <div >{ getComputedColumnGroups(columns).map(g => this.renderColumnGroup(g)) }</div>
 
   renderColumnGroup = (g: ComputedColumnGroup) => <div>
     { g.columnGroup != null
-      ? <div className="functional-data-grid__columns-menu__column-group" style={{padding: '0 5px', borderTop: 'solid 1px #aaa'}}>
-        <b>{ this.getColumnGroupById(g.columnGroup).title }</b>
+      ? <div className="functional-data-grid__columns-menu__column-group" style={{padding: '0 5px', borderTop: 'solid 1px #aaa', whiteSpace: 'nowrap'}}>
+          <div className="functional-data-grid__columns-menu__column-group__header" style={{ display: 'flex'}}>
+            <b style={{overflow: 'hidden', textOverflow: 'ellipsis'}} title={this.getColumnGroupById(g.columnGroup).title}>{ this.getColumnGroupById(g.columnGroup).title }</b>
+          </div>
         { g.columns.map((c) => this.renderColumnEntry(c)) }
-      </div>
-      : <div style={{padding: '0 5px'}}>{ g.columns.map((c) => this.renderColumnEntry(c)) }</div>
+        </div>
+      : <div style={{padding: '0 5px', whiteSpace: 'nowrap'}}>{ g.columns.map((c) => this.renderColumnEntry(c)) }</div>
     }
   </div>
 
   renderColumnEntry = (c: Column) => {
-    return <div key={c.id} className="functional-data-grid__columns-menu__column" draggable={this.props.enableColumnsSorting} onDragStart={this.onDragStart(c.id)} onDragOver={this.onDragOver} onDrop={this.onDrop(c.id)} style={{cursor: this.props.enableColumnsSorting ? 'pointer' : 'auto'}}>
-      { this.props.enableColumnsSorting && <div style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle', color: '#999' }}>{ String.fromCodePoint(9776) }</div> }
-      <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>{ this.props.enableColumnsShowAndHide && c.enableShowAndHide && <input type="checkbox" checked={this.props.columnsVisibility.get(c.id)} onChange={this.onColumnVisibilityChange(c.id)} style={{ margin: 0, verticalAlign: 'middle' }} /> } { c.title }</div>
+    return <div key={c.id}
+                className="functional-data-grid__columns-menu__column"
+                draggable={this.props.enableColumnsSorting}
+                onDragStart={this.onDragStart(c.id)}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop(c.id)}
+                style={{cursor: this.props.enableColumnsSorting ? 'pointer' : 'auto', display: 'flex'}}>
+      { this.props.enableColumnsSorting && <div style={{ paddingRight: '4px', color: '#999' }}>{ String.fromCodePoint(9776) }</div> }
+      <div style={{ overflow: 'hidden', display: 'flex', alignItems: 'center' }}
+           title={c.title}>
+        { this.props.enableColumnsShowAndHide && c.enableShowAndHide && <input type="checkbox"
+                                                                               checked={this.props.columnsVisibility.get(c.id)}
+                                                                               onChange={this.onColumnVisibilityChange(c.id)}
+                                                                               style={{ margin: 0, marginRight: '2px' }} /> }
+        <span style={{textOverflow: 'ellipsis', overflow: 'hidden'}}>{ c.title }</span>
+      </div>
     </div>
   }
 
