@@ -33,6 +33,9 @@ const rowClassName = css`
   border-bottom: solid 1px #eee;
   line-height: 25px;
   background-color: #fff;
+  &:hover {
+    background-color: #fafafa;
+  }
 `
 
 const groupClassName = css`

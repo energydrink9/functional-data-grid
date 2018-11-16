@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react'
-import {List} from 'immutable'
 
 type SelectFilterProps = {
-  choices : List<[string, any]>,
+  choices : Array<[string, any]>,
   onUpdateFilter : Function
 }
 type SelectFilterState = {
