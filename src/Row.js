@@ -7,6 +7,7 @@ import Cell from './Cell'
 import DataRow from './DataRow'
 import Group from './Group'
 import RowSkeleton from './RowSkeleton'
+import { css } from 'emotion'
 
 type RowProps = {
   leftLockedColumns: List<Column>,
@@ -14,8 +15,6 @@ type RowProps = {
   rightLockedColumns: List<Column>,
   element : DataRow<any>,
   style : Object,
-  aggregateStyle: Object,
-  groupStyle: Object,
   cellStyle: Object,
   scrollLeft : number,
   onScroll : Function,
@@ -29,6 +28,20 @@ type RowState = {
   hover: boolean
 }
 
+const rowClassName = css`
+  display: flex;
+  border-bottom: solid 1px #eee;
+  line-height: 25px;
+  background-color: #fff;
+`
+
+const groupClassName = css`
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 2px 10px;
+  position: relative;
+`
+
 export default class Row extends React.PureComponent<RowProps, RowState> {
 
   constructor(props: RowProps) {
@@ -41,41 +54,19 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
 
   render = () => {
 
-    let rowStyle = this.getRowStyle(this.props.element.type, this.props.style, this.props.groupStyle, this.props.aggregateStyle)
-
     return this.props.element.type === 'group-header'
-      ? this.groupHeaderRowRenderer(rowStyle, this.props.element, this.props.groups, this.onMouseOver, this.onMouseOut)
-      : this.elementsRowRenderer(this.props.rowIndex, this.props.element, this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, rowStyle, this.getColumnWidth)
-  }
-
-  getRowStyle = (type: string, style: Object, groupStyle: Object, aggregateStyle: Object) => {
-
-    return {
-      ...{
-        display: 'flex',
-        borderBottom: 'solid 1px #eee',
-        lineHeight: '25px',
-        backgroundColor: '#fff'
-      },
-      ...style,
-      ...(type === 'group-header' ? groupStyle : {}),
-      ...(type === 'aggregate' ? { backgroundColor: '#eee', ...aggregateStyle } : {})
-    }
+      ? this.groupHeaderRowRenderer(this.props.style, this.props.element, this.props.groups, this.onMouseOver, this.onMouseOut)
+      : this.elementsRowRenderer(this.props.rowIndex, this.props.element, this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, this.props.style, this.getColumnWidth)
   }
 
   groupHeaderRowRenderer = (style: Object, element: DataRow<any>, groups: List<Group<any, any>>, onMouseOver: Function, onMouseOut: Function) =>
     <RowSkeleton
-      className="functional-data-grid__row functional-data-grid__row--group-header"
+      className={`${rowClassName} functional-data-grid__row functional-data-grid__row--group-header`}
       onMouseEnter={onMouseOver}
       onMouseLeave={onMouseOut}
       style={style}
       onClick={this.props.onClick}
-      leftLocked={<div style={{
-          overflow: 'hidden',
-          flexShrink: 0,
-          padding: '2px 10px',
-          position: 'relative'
-        }}>
+      leftLocked={<div className={groupClassName}>
         { this.renderGroups(element, groups) }
       </div>}
     />
@@ -120,7 +111,12 @@ renderElementsRow = (
   cellStyle: Object,
   style: Object,
   columnWidthGetter: Function
-) => <RowSkeleton data-index={rowIndex} data-original-index={element.originalIndex} className={'functional-data-grid__row ' + (element.type === 'aggregate' ? 'functional-data-grid__row--aggregate' : 'functional-data-grid__row--element')} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut}
+) => <RowSkeleton
+  data-index={rowIndex}
+  data-original-index={element.originalIndex}
+  className={`${rowClassName} functional-data-grid__row functional-data-grid__row--${element.type}`}
+  onMouseEnter={onMouseOver}
+  onMouseLeave={onMouseOut}
   style={style}
   leftLocked={ this.renderCells(leftLockedColumns, hover, element, rowIndex, cellStyle, columnWidthGetter) }
   free={this.renderCells(freeColumns, hover, element, rowIndex, cellStyle, columnWidthGetter)}
@@ -131,18 +127,20 @@ renderElementsRow = (
 />
 
   renderCells = (columns: List<Column>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>
-    columns.map((c: Column) =>
-      <Cell value={this.computeValue(c, element)}
-            key={c.id}
-            rowHover={hover}
-            column={c}
-            width={columnWidthGetter(c)}
-            rowIndex={rowIndex}
-            style={cellStyle}
-            type={element.type}
-            content={element.content}
-            originalIndex={element.originalIndex != null ? element.originalIndex : -1}
-      />)
+    columns.map((c: Column) => {
+      let value = this.computeValue(c, element)
+      return <Cell value={value}
+        key={c.id}
+        rowHover={hover}
+        column={c}
+        width={columnWidthGetter(c)}
+        rowIndex={rowIndex}
+        style={cellStyle}
+        type={element.type}
+        content={element.content}
+        originalIndex={element.originalIndex != null ? element.originalIndex : -1}
+      />
+    })
 
   computeValue = (c: Column, e: DataRow<any>) => e.type === 'aggregate'
     ? c.aggregateValueGetter == null ? null : c.aggregateValueGetter(e.content.content, e.content.key)

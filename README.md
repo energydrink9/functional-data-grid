@@ -91,7 +91,7 @@ The FunctionalDataGrid component accepts the following props:
 |initialSort|optional|No sorting|An array of Sort to sort the elements|
 |groups|optional|No grouping|An array of Group to specify grouping of the elements|
 |aggregatesCalculator|optional|No aggregates|A function to compute the aggregates from an array of elements|
-|style|optional|{}|Allows to specify additional styles for the grid: accepts an object with the properties grid, row, cell, header, group, aggregate|
+|style|optional|{}|Allows to specify additional styles for the grid: accepts an object with the optional properties grid, cell, header, row. Row must be a function that accepts a DataRow and returns an Object, the other properties are plain Objects|
 |rowHeight|optional|26|The height of the rows or a function that accepts an element and returns its row height|
 |height|optional|100%|The height of the FunctionalDataGrid component div (unit of measurement needed, f.e.: 800px)|
 |showGroupHeaders|optional|true|Set to false to hide the headers for groups|

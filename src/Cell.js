@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Column from "./Column"
+import { css } from 'emotion'
 
 type CellProps = {
   value: any,
@@ -19,13 +20,21 @@ type CellState = {
   hover : boolean
 }
 
-const contentStyle = {
-  backgroundColor: 'inherit',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  alignSelf: 'center',
-  width: '100%'
-}
+const contentClassName = css`
+  background-color: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-self: center;
+  width: 100%;
+`
+
+const cellClassName = css`
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 2px 10px;
+  position: relative;
+  display: flex;
+`
 
 export default class Cell extends React.PureComponent<CellProps, CellState> {
 
@@ -37,8 +46,8 @@ export default class Cell extends React.PureComponent<CellProps, CellState> {
   }
 
   render = () => {
-    return <div className="functional-data-grid__cell" style={{...this.getCellStyle(), ...this.props.column.style, ...this.props.style}} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-      <div className="functional-data-grid__cell-content" style={contentStyle}>
+    return <div className={`functional-data-grid__cell ${cellClassName}`} style={{...this.getCellStyle(), ...this.props.column.style, ...this.props.style}} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+      <div className={`functional-data-grid__cell-content ${contentClassName}`}>
         { this.renderValue(this.props.column, this.props.type, this.props.content, this.props.originalIndex) }
       </div>
     </div>
@@ -53,11 +62,6 @@ export default class Cell extends React.PureComponent<CellProps, CellState> {
 
   getCellStyle = () => {
     let styles : Object = {
-      overflow: 'hidden',
-      flexShrink: 0,
-      padding: '2px 10px',
-      position: 'relative',
-      display: 'flex'
     }
 
     if (this.state.hover) {

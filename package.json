@@ -1,6 +1,6 @@
 {
   "name": "functional-data-grid",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Functional Data Grid",
   "main": "dist/FunctionalDataGrid.cjs.js",
   "module": "dist/FunctionalDataGrid.esm.js",
@@ -8,6 +8,7 @@
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
   "dependencies": {
     "debounce": "^1.0.2",
+    "emotion": "^9.2.12",
     "immutable": "~3.8.2",
     "react-popper": "^1.0.0",
     "react-virtualized": "^9.18.5",
@@ -52,8 +53,7 @@
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-eslint": "^5.0.0",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "style-loader": "^0.23.1"
+    "rollup-plugin-node-resolve": "^3.0.0"
   },
   "scripts": {
     "test": "jest",
