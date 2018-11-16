@@ -9,10 +9,10 @@ export default class DataRow<T> {
   originalIndex: ?number
   key: string
 
-  constructor(content : T, type : 'element' | 'group-header' | 'aggregate', originalIndex: ?number) {
+  constructor(content : T, type : 'element' | 'group-header' | 'aggregate', originalIndex: ?number, key: ?string) {
     this.content = content
     this.type = type
     this.originalIndex = originalIndex
-    this.key = uuidv4()
+    this.key = key != null ? key : uuidv4()
   }
 }

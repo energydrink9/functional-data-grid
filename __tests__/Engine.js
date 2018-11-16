@@ -1,6 +1,6 @@
 
 import Engine from '../src/Engine'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import Sort from '../src/Sort'
 import Filter from '../src/Filter';
 import Column from '../src/Column'
@@ -25,7 +25,7 @@ test('elements are sorted correctly', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, List(), sort, List(), columns, false, false, null)
+  let result = Engine.computeElements(data, List(), sort, List(), columns, false, false, null, Map())
 
   expect(result.get(0).content.position).toBe(1)
   expect(result.get(1).content.position).toBe(2)
@@ -52,7 +52,7 @@ test('elements are filtered correctly', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, List(), List(), filters, columns, false, false, null)
+  let result = Engine.computeElements(data, List(), List(), filters, columns, false, false, null, Map())
 
   expect(result.size).toBe(1)
   expect(result.get(0).content.name).toBe('Jack')
@@ -84,7 +84,7 @@ test('elements are filtered correctly with two filters', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, List(), List(), filters, columns, false, false, null)
+  let result = Engine.computeElements(data, List(), List(), filters, columns, false, false, null, Map())
 
   expect(result.size).toBe(2)
   expect(result.get(0).content.name).toBe('Jack')
@@ -117,7 +117,7 @@ test('elements are grouped correctly', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, null)
+  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, null, Map())
 
   expect(result.get(0).content.name).toBe('Alice')
   expect(result.get(1).content.name).toBe('Jack')
@@ -155,7 +155,7 @@ test('grouped elements are filtered correctly', () => {
     (value) => (value == null ? '' : value.toString()).toUpperCase().includes('k'.toUpperCase())
   )])
 
-  let result = Engine.computeElements(data, groups, List(), filters, columns, false, false, null)
+  let result = Engine.computeElements(data, groups, List(), filters, columns, false, false, null, Map())
 
   expect(result.size).toBe(2)
 
@@ -189,7 +189,7 @@ test('sum aggregates are computed correctly', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.sum(els.map(e => e.likes)) } })
+  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.sum(els.map(e => e.likes)) } }, Map())
 
   expect(result.get(0).content.name).toBe('Alice')
   expect(result.get(1).content.content.likes).toBe(10)
@@ -224,7 +224,7 @@ test('average aggregates are computed correctly', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.average(els.map(e => e.likes)) } })
+  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.average(els.map(e => e.likes)) } }, Map())
 
   expect(result.get(0).content.name).toBe('Alice')
   expect(result.get(1).content.content.likes).toBeCloseTo(10)
@@ -259,7 +259,7 @@ test('count aggregates are computed correctly', () => {
     })
   )])
 
-  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.count(els) } })
+  let result = Engine.computeElements(data, groups, List(), List(), columns, false, false, (els) => { return { likes: AggregatesCalculators.count(els) } }, Map())
 
   expect(result.get(0).content.name).toBe('Alice')
   expect(result.get(1).content.content.likes).toBe(1)

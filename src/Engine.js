@@ -1,6 +1,6 @@
 // @flow
 
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import DataRow from './DataRow'
 import DataGroup from './DataGroup'
 import Sort from './Sort'
@@ -9,15 +9,16 @@ import Column from './Column'
 import Group from './Group'
 import Filter from './Filter'
 import Aggregate from './Aggregate'
+import uuidv4 from 'uuid/v4'
 
 export default class Engine<T, A: void> {
 
-  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<Column | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<any>, any) => A)) : List<DataRow<any>> =>
+  static computeElements = <A,> (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, columns: List<Column | ColumnGroup>, showGroupHeaders: boolean, includeFilteredElementsInAggregates: boolean, aggregatesCalculator: ?((Array<any>, any) => A), keysMap: Map<Object, string>) : List<DataRow<any>> =>
     Engine.filterGroups(
       Engine.groupData(
         Engine.sortData(
           Engine.filterData(
-            Engine.enrichData(data),
+            Engine.enrichData(data, keysMap),
             filter,
             groups,
             includeFilteredElementsInAggregates,
@@ -57,7 +58,9 @@ export default class Engine<T, A: void> {
     return column
   }
 
-  static enrichData = (data : List<T>) : List<DataRow<T>> => data.map((e, index) => new DataRow(e, 'element', index))
+  static getKey = (e: Object, keysMap: Map<Object, string>) => keysMap.contains(e) != null ? keysMap.get(e) : uuidv4()
+
+  static enrichData = (data : List<T>, keysMap: Map<Object, string>) : List<DataRow<T>> => data.map((e, index) => new DataRow(e, 'element', index, Engine.getKey(e, keysMap)))
 
   static groupData = <K, A> (data : List<DataRow<T>>, groups : List<Group<any, T>>, currentSubGroup: List<[string, any]> = List(), aggregatesCalculator: ?((Array<any>, any) => A)): (List<DataRow<T> | DataGroup<any, any, A>>) => groups.isEmpty()
     ? data
