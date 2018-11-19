@@ -50,7 +50,7 @@ let columns = [
     title: 'Name',
     width: 120,
     valueGetter: e => e.name
-  },
+  }),
   new Column({
     id : 'surname',
     title: 'Surname',
