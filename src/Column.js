@@ -27,6 +27,25 @@ type ColumnOptionsType = {
 
 export default class Column {
 
+  defaultComparator = (a, b) => {
+    if (a == null) {
+      if (b == null)
+        return 0
+      else
+        return 1
+    }
+    else if (b == null)
+      return -1
+    else {
+      if (a === b)
+        return 0
+      else if (a < b)
+        return -1
+      else
+        return 1
+    }
+  }
+
   id : string;
   title : string = '';
   valueGetter : Function;
@@ -37,7 +56,7 @@ export default class Column {
   renderer : Function = v => v;
   aggregateRenderer : Function;
   aggregateValueGetter : Function;  // eslint-disable-line
-  comparator : (any, any) => number = (a, b) => a === b ? 0 : a < b ? -1 : 1;
+  comparator : (any, any) => number = this.defaultComparator
   filterRenderer : Function = (onUpdateFilter : Function) => <TextBoxFilter onUpdateFilter={onUpdateFilter} />;  // eslint-disable-line
   headerRenderer : (Column) => React.Node = (column : Column) => column.title;
   locked : boolean = false;
