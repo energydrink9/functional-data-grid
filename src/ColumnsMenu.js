@@ -74,16 +74,18 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     let rightLockedColumns = this.filterInitialColumns(this.props.rightLockedColumns, this.state.searchValue)
 
     return <div ref={ref => this.ref = ref}
-                style={{ backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px', maxHeight: '500px', overflow: 'auto', width:'200px'}}>
-            <div className = "functional-data-grid__columns-menu__search" style={{width:'100%',padding:'5px'}}>
+                style={{ backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px', maxHeight: '500px', width:'200px', display: 'flex', flexDirection: 'column'}}>
+            <div className = "functional-data-grid__columns-menu__search" style={{width:'100%',padding:'5px', paddingBottom:'4px', borderBottom: '1px solid rgb(204, 204, 204)'}}>
               <input onChange={(e: Object) => this.filterColumns(e.target.value)}
                      placeholder={'Search...'}
                      autoFocus="true"
                      style={{width: '100%', boxSizing: 'border-box', paddingLeft:'5px',  height: '20px'}}/>
             </div>
+            <div className = "functional-data-grid__columns-menu__columns" style={{width:'100%',overflow: 'auto'}}>
           { leftLockedColumns.size > 0 && this.renderColumnEntries(leftLockedColumns) }
           { freeColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(freeColumns) }</div> }
           { rightLockedColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(rightLockedColumns) }</div> }
+            </div>
           </div>
   }
 
