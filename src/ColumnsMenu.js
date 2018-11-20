@@ -53,10 +53,8 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
   }
 
   handleClickOutside = (event: Object) => {
-    if (this.ref != null && ! this.ref.contains(event.target)) {
+    if (this.ref != null && ! this.ref.contains(event.target))
       this.props.onClose()
-      event.stopPropagation()
-    }
   }
 
   filterColumns = (searchValue: string) => {
