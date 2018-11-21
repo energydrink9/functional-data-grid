@@ -17,7 +17,8 @@ export default [
 		plugins: [
       autoExternal(),
       eslint({
-				exclude: ['node_modules/**']
+        exclude: ['node_modules/**'],
+        throwOnError: true
       }),
       babel({
         babelrc: true,
@@ -50,7 +51,8 @@ export default [
     plugins: [
       autoExternal(),
       eslint({
-				exclude: ['node_modules/**']
+        exclude: ['node_modules/**'],
+        throwOnError: true
       }),
       babel({
         babelrc: true,
