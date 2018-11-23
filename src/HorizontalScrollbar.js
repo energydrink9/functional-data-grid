@@ -1,9 +1,7 @@
 // @flow
 
 import React from 'react'
-import { List, Map } from 'immutable'
-import ColumnGroup from "./ColumnGroup"
-import Column from "./Column"
+import { Map } from 'immutable'
 import RowSkeleton from './RowSkeleton'
 
 type HorizontalScrollbarProps = {

@@ -13,8 +13,7 @@ type HeaderColumnProps = {
   width: ?number
 }
 type HeaderColumnState = {
-  direction: 'asc' | 'desc' | 'none',
-  hover: boolean
+  direction: 'asc' | 'desc' | 'none'
 }
 
 export default class HeaderColumn extends React.PureComponent<HeaderColumnProps, HeaderColumnState> {
@@ -25,11 +24,10 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
 
   element : any;
 
-  constructor(props : Object) {
+  constructor(props : HeaderColumnProps) {
     super(props)
     this.state = {
-      direction : this.props.direction,
-      hover : false
+      direction : this.props.direction
     }
   }
 
@@ -79,18 +77,6 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
       styles.cursor = 'pointer'
 
     return styles
-  }
-
-  onMouseEnter = () => {
-    this.setState({
-      hover : true
-    })
-  }
-
-  onMouseLeave = () => {
-    this.setState({
-      hover : false
-    })
   }
   
   onColumnResize = (right : number) => {

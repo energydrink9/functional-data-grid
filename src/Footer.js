@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react'
-import { List } from 'immutable'
 
 const defaultFooterHeight = 22
 

@@ -24,7 +24,7 @@ type FunctionalDataGridProps<T, A> = {
   initialSort : Array<Sort> | List<Sort>,
   groups : Array<Group<any, T>> | List<Group<any, T>>,
   data : Array<T> | List<T>,
-  style : FunctionalDataGridStyle,
+  style : FunctionalDataGridStyle<T>,
   aggregatesCalculator: ?((Array<T>, any) => A),
   showGroupHeaders: boolean,
   rowHeight: number | ((T) => number),

@@ -27,7 +27,7 @@ type ColumnOptionsType = {
 
 export default class Column {
 
-  defaultComparator = (a, b) => {
+  defaultComparator = (a: any, b: any) => {
     if (a == null) {
       if (b == null)
         return 0

@@ -6,7 +6,7 @@ type CheckBoxFilterProps = {
   onUpdateFilter : Function
 }
 type CheckBoxFilterState = {
-  value : string
+  value : ?null
 }
 
 export default class CheckBoxFilter extends React.PureComponent<CheckBoxFilterProps, CheckBoxFilterState> {
@@ -14,14 +14,18 @@ export default class CheckBoxFilter extends React.PureComponent<CheckBoxFilterPr
   constructor(props : Object) {
     super(props)
     this.state = {
-      value : ''
+      value : null
     }
   }
 
-  render = () => <input type="checkbox" onChange={this.triggerOnUpdateFilter} />
+  render = () => <input type="checkbox" checked={this.state.value} onChange={this.triggerOnUpdateFilter} />
 
   triggerOnUpdateFilter = (event : Object) => {
     event.persist()
-    this.props.onUpdateFilter((value) => value === event.target.checked)
+    this.setState({
+      value: event.target.checked
+    }, () => {
+      this.props.onUpdateFilter((value) => value === this.state.value)
+    })
   }
 }

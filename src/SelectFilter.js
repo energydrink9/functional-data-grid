@@ -6,17 +6,11 @@ type SelectFilterProps = {
   choices : Array<[string, any]>,
   onUpdateFilter : Function
 }
-type SelectFilterState = {
-  value : ?any
-}
 
-export default class SelectFilter extends React.PureComponent<SelectFilterProps, SelectFilterState> {
+export default class SelectFilter extends React.PureComponent<SelectFilterProps> {
 
   constructor(props : Object) {
     super(props)
-    this.state = {
-      value : null
-    }
   }
 
   render = () => <select style={{width: '100%', boxSizing: 'border-box', padding: '2.5px'}} onChange={this.triggerOnUpdateFilter}>

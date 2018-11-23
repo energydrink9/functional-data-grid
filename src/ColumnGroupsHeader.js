@@ -4,8 +4,6 @@ import * as React from 'react'
 import { List, Map } from 'immutable'
 import ColumnGroup from "./ColumnGroup"
 import Column from "./Column"
-import HeaderColumn from "./HeaderColumn"
-import Sort from "./Sort"
 import RowSkeleton from './RowSkeleton'
 import type { ComputedColumnGroup } from './ComputedColumnGroup'
 import { getComputedColumnGroups } from './Utils'

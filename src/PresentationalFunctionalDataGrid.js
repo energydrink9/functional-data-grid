@@ -39,7 +39,7 @@ const rowsContainerClassName = css`
 type PresentationalFunctionalDataGridProps<T, A> = {
   columns: List<Column>,
   elements: List<DataRow<T>>,
-  style : FunctionalDataGridStyle,
+  style : FunctionalDataGridStyle<T>,
   showGroupHeaders: boolean,
   rowHeight: number | ((T) => number),
   showFooter: boolean,
