@@ -5,6 +5,7 @@
 [![npm](https://img.shields.io/npm/dm/functional-data-grid.svg)](https://www.npmjs.com/package/functional-data-grid)
 [![Build Status](https://travis-ci.org/energydrink9/functional-data-grid.svg?branch=master)](https://travis-ci.org/energydrink9/functional-data-grid)
 [![codecov](https://codecov.io/gh/energydrink9/functional-data-grid/branch/master/graph/badge.svg)](https://codecov.io/gh/energydrink9/functional-data-grid)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/energydrink9/functional-data-grid.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/energydrink9/functional-data-grid/context:javascript)
 [![Backers on Open Collective](https://opencollective.com/functional-data-grid/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/functional-data-grid/sponsors/badge.svg)](#sponsors) 
 
