@@ -52,6 +52,8 @@ type FunctionalDataGridState<T> = {
 
 export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
 
+  grid: PresentationalFunctionalDataGrid
+
   debouncedUpdateElements = debounce((data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, keysMap: Map<Object, string>) => this.updateElements(data, groups, sort, filter, keysMap), debounceTimeout);
 
   static defaultProps = {
@@ -109,6 +111,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
   doUpdateElements = () => this.debouncedUpdateElements(this.getData(), this.getGroups(), this.state.sort, this.state.filter, this.state.keysMap)
 
   render = () => <PresentationalFunctionalDataGrid
+    ref={ref => this.grid = ref}
     columns={this.getColumns()}
     columnGroups={this.getColumnGroups()}
     elements={this.state.cachedElements}
@@ -219,5 +222,10 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
       columnsVisibility: this.state.columnsVisibility.set(columnId, columnVisibility)
     })
     this.props.onColumnVisibilityChange({id: columnId, visible: columnVisibility})
+  }
+
+  recomputeRowHeights = () => { 
+    if (this.grid != null)
+      this.grid.recomputeRowHeights()
   }
 }
