@@ -7,6 +7,7 @@ import Column from "./Column"
 import RowSkeleton from './RowSkeleton'
 import type { ComputedColumnGroup } from './ComputedColumnGroup'
 import { getComputedColumnGroups } from './Utils'
+import Constants from './Constants'
 
 type ColumnGroupsHeaderProps = {
   leftLockedColumns: List<Column>,
@@ -35,6 +36,7 @@ export default class ColumnGroupsHeader extends React.PureComponent<ColumnGroups
     rightLocked={this.renderColumnGroupsHeaderForColumns(this.props.rightLockedColumns)}
     scrollLeft={this.props.scrollLeft}
     onScroll={this.props.onScroll}
+    rightWidth={Constants.columnsOptionsWidth}
   />
   
   renderColumnGroupHeader = (c: ComputedColumnGroup, index: number) => <div style={{ flexShrink: 0, width: `${this.getColumnsWidth(c.columns)}px`, padding: '8px', borderRight: 'solid 1px #ccc' }} key={index}>

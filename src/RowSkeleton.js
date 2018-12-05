@@ -3,8 +3,6 @@
 import * as React from 'react'
 import { css } from 'emotion'
 
-const columnsOptionsWidth = 26
-
 type RowSkeletonProps = {
   leftLocked: ?React.Node,
   free: ?React.Node,
@@ -12,7 +10,8 @@ type RowSkeletonProps = {
   right: ?React.Node,
   scrollLeft: number,
   onScroll: Function,
-  scrollbar: boolean
+  scrollbar: boolean,
+  rightWidth: number
 }
 
 type RowSkeletonState = {
@@ -85,7 +84,7 @@ export default class RowSkeleton extends React.PureComponent<RowSkeletonProps, R
   }
 
   render = () => {
-    let { leftLocked, free, rightLocked, right, scrollLeft, onScroll, scrollbar, ...otherProps } = this.props;
+    const { leftLocked, free, rightLocked, right, scrollLeft, onScroll, scrollbar, rightWidth, ...otherProps } = this.props;
     return <div {...otherProps}>
       <div className={`functional-data-grid__row__left-locked ${leftLockedClassName}`}>
         { leftLocked }
@@ -96,7 +95,7 @@ export default class RowSkeleton extends React.PureComponent<RowSkeletonProps, R
       <div className={`functional-data-grid__row__right-locked ${rightLockedClassName}`}>    
         { rightLocked }
       </div>
-      <div className={`functional-data-grid__row__right ${rightClassName}`} style={{width: `${columnsOptionsWidth}px`}}>
+      <div className={`functional-data-grid__row__right ${rightClassName}`} style={{width: `${rightWidth}px`}}>
         { right }
       </div>
     </div>

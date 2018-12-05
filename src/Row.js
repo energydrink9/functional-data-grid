@@ -8,6 +8,7 @@ import DataRow from './DataRow'
 import Group from './Group'
 import RowSkeleton from './RowSkeleton'
 import { css } from 'emotion'
+import Constants from './Constants'
 
 type RowProps = {
   leftLockedColumns: List<Column>,
@@ -21,7 +22,8 @@ type RowProps = {
   rowIndex : number,
   columnsWidth : Map<string, number>,
   groups: List<Group<any, any>>,
-  onClick: (Object) => void
+  onClick: (Object) => void,
+  scrollbarWidth: number
 }
 
 type RowState = {
@@ -56,7 +58,6 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
   }
 
   render = () => {
-
     return this.props.element.type === 'group-header'
       ? this.groupHeaderRowRenderer(this.props.style, this.props.element, this.props.groups, this.onMouseOver, this.onMouseOut)
       : this.elementsRowRenderer(this.props.rowIndex, this.props.element, this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, this.onMouseOver, this.onMouseOut, this.state.hover, this.props.cellStyle, this.props.style, this.getColumnWidth)
@@ -72,6 +73,7 @@ export default class Row extends React.PureComponent<RowProps, RowState> {
       leftLocked={<div className={groupClassName}>
         { this.renderGroups(element, groups) }
       </div>}
+      rightWidth={Constants.columnsOptionsWidth - this.props.scrollbarWidth}
     />
 
   renderGroups = (element: DataRow<any>, groups: List<Group<any, any>>) => {
@@ -127,6 +129,7 @@ renderElementsRow = (
   scrollLeft={this.props.scrollLeft}
   onScroll={this.props.onScroll}
   onClick={this.props.onClick}
+  rightWidth={Constants.columnsOptionsWidth - this.props.scrollbarWidth}
 />
 
   renderCells = (columns: List<Column>, hover: boolean, element: DataRow<any>, rowIndex: number, cellStyle: Object, columnWidthGetter: Function) =>

@@ -3,6 +3,7 @@
 import React from 'react'
 import { Map } from 'immutable'
 import RowSkeleton from './RowSkeleton'
+import Constants from './Constants';
 
 type HorizontalScrollbarProps = {
   leftLockedColumnsWidth: number,
@@ -32,6 +33,7 @@ export default class HorizontalScrollbar extends React.PureComponent<HorizontalS
       onScroll={this.props.onScroll}
       scrollLeft={this.props.scrollLeft}
       scrollbar
+      rightWidth={Constants.columnsOptionsWidth}
     />
   }
 

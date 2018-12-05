@@ -64,7 +64,8 @@ type PresentationalFunctionalDataGridProps<T, A> = {
 
 type PresentationalFunctionalDataGridState<T> = {
   ref: ?HTMLElement,
-  showColumnsMenu: boolean
+  showColumnsMenu: boolean,
+  scrollbarWidth: number
 }
 
 const emptyObject = {}
@@ -91,13 +92,20 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
     super(props)
     this.state = {
       ref: null,
-      showColumnsMenu: false
+      showColumnsMenu: false,
+      scrollbarWidth: 0
     }
   }
 
   componentDidUpdate(prevProps: PresentationalFunctionalDataGridProps<T, A>) {
     if (this.props.elements !== prevProps.elements)
-      this.recomputeRowHeights()
+      this.recomputeRowHeights()    
+  }
+
+  updateScrollbarWidth = (width: number) => {
+    this.setState({
+      scrollbarWidth: width
+    })
   }
 
   render = () => {
@@ -136,7 +144,9 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
                       rowRenderer={this.rowRenderer(scrollLeft, onScroll)}
                       ref={(list) => { this.list = list }}
                       style={{backgroundColor: '#fff', outline: 'none'}}
-                      overscanRowCount={this.props.overscanRowCount} >
+                      overscanRowCount={this.props.overscanRowCount}
+                      onScrollbarPresenceChange={(e: Object) => { this.updateScrollbarWidth(e.vertical ? e.size : 0) }} //eslint-disable-line
+                    >
                     </ReactVirtualizedList>
                 )}
               </AutoSizer>
@@ -201,6 +211,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
       onClick={(e: Object) => { this.props.onRowClick({
         row: element
       })}}
+      scrollbarWidth={this.state.scrollbarWidth}
     />
   }
 

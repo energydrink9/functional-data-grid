@@ -8,6 +8,7 @@ import HeaderColumn from "./HeaderColumn"
 import ColumnGroupsHeader from "./ColumnGroupsHeader"
 import Sort from "./Sort"
 import RowSkeleton from './RowSkeleton'
+import Constants from './Constants';
 
 type HeaderProps = {
   leftLockedColumns: List<Column>,
@@ -62,6 +63,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
       right={this.props.columnsMenu}
       scrollLeft={this.props.scrollLeft}
       onScroll={this.props.onScroll}
+      rightWidth={Constants.columnsOptionsWidth}
     />
 
   renderColumns = (columns : List<Column | ColumnGroup>) => columns
