@@ -8,6 +8,7 @@ import RowSkeleton from './RowSkeleton'
 import type { ComputedColumnGroup } from './ComputedColumnGroup'
 import { getComputedColumnGroups } from './Utils'
 import Constants from './Constants'
+import { css } from 'emotion'
 
 type ColumnGroupsHeaderProps = {
   leftLockedColumns: List<Column>,
@@ -17,8 +18,15 @@ type ColumnGroupsHeaderProps = {
   scrollLeft: number,
   onScroll: Function,
   columnsWidth : Map<string, number>,
-  style: Object
+  style: Object,
+  className: string
 }
+
+const columnGroupHeaderStyle = css`
+  flex-shrink: 0;
+  padding: 8px;
+  border-right: solid 1px #ccc;
+`
 
 export default class ColumnGroupsHeader extends React.PureComponent<ColumnGroupsHeaderProps> {
 
@@ -29,6 +37,7 @@ export default class ColumnGroupsHeader extends React.PureComponent<ColumnGroups
   render = () => this.renderColumnGroupsHeader(this.props.style)
 
   renderColumnGroupsHeader = (style: Object) => this.props.columnGroups.size > 0 && <RowSkeleton
+    className={this.props.className}
     key={1}
     style={{ ...style, ...this.props.style }}
     leftLocked={this.renderColumnGroupsHeaderForColumns(this.props.leftLockedColumns)}
@@ -39,7 +48,7 @@ export default class ColumnGroupsHeader extends React.PureComponent<ColumnGroups
     rightWidth={Constants.columnsOptionsWidth}
   />
   
-  renderColumnGroupHeader = (c: ComputedColumnGroup, index: number) => <div style={{ flexShrink: 0, width: `${this.getColumnsWidth(c.columns)}px`, padding: '8px', borderRight: 'solid 1px #ccc' }} key={index}>
+  renderColumnGroupHeader = (c: ComputedColumnGroup, index: number) => <div className={columnGroupHeaderStyle} style={{ width: `${this.getColumnsWidth(c.columns)}px` }} key={index}>
     { c.columnGroup != null && this.getColumnGroupById(c.columnGroup).headerRenderer() }
   </div>
   

@@ -9,6 +9,7 @@ import ColumnGroupsHeader from "./ColumnGroupsHeader"
 import Sort from "./Sort"
 import RowSkeleton from './RowSkeleton'
 import Constants from './Constants';
+import { css } from 'emotion'
 
 type HeaderProps = {
   leftLockedColumns: List<Column>,
@@ -26,16 +27,19 @@ type HeaderProps = {
   columnsMenu: React.Node
 }
 
+const headerStyle = css`
+  display: flex;
+  flex-grow: 0;
+  width: 100%;
+  background-color: #ddd;
+  position: relative;
+  border-bottom: solid 1px #ccc;
+`
+
 export default class Header extends React.PureComponent<HeaderProps> {
 
-  constructor(props : HeaderProps) {
-    super(props)
-  }
-
   render = () => {
-
-    let style = { display: 'flex', flexGrow: 0, width: '100%', backgroundColor: '#ddd', position: 'relative', borderBottom: 'solid 1px #ccc' }
-    
+   
     return [
       <ColumnGroupsHeader
         key={1}
@@ -46,17 +50,18 @@ export default class Header extends React.PureComponent<HeaderProps> {
         scrollLeft={this.props.scrollLeft}
         onScroll={this.props.onScroll}
         columnsWidth={this.props.columnsWidth}
-        style={{...style, ...this.props.style}}
+        className={`functional-data-grid__column-groups-header ${headerStyle}`}
+        style={this.props.style}
       />,
-      this.renderHeader(this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns, style)
+      this.renderHeader(this.props.leftLockedColumns, this.props.freeColumns, this.props.rightLockedColumns)
     ]
   }
 
-  renderHeader = (leftLockedColumns: List<Column>, freeColumns: List<Column>, rightLockedColumns: List<Column>, style: Object) =>
+  renderHeader = (leftLockedColumns: List<Column>, freeColumns: List<Column>, rightLockedColumns: List<Column>) =>
     <RowSkeleton
       key={2}
-      className='functional-data-grid__header'
-      style={{ ...style, ...this.props.style }}
+      className={`functional-data-grid__header ${headerStyle}`}
+      style={this.props.style}
       leftLocked={this.renderColumns(leftLockedColumns)}
       free={this.renderColumns(freeColumns)}
       rightLocked={this.renderColumns(rightLockedColumns)}
