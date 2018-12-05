@@ -26,5 +26,5 @@ export default class Footer<T> extends React.PureComponent<FooterProps<T>> {
     height: Constants.defaultFooterHeight + 'px'
   })
 
-  render = () => <div className={footerStyle} style={ this.getStyle() }>{ this.props.totalElements } elements</div>
+  render = () => <div className={`functional-data-grid__footer ${footerStyle}`} style={ this.getStyle() }>{ this.props.totalElements } elements</div>
 }
