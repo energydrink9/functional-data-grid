@@ -1,6 +1,6 @@
 {
   "name": "functional-data-grid",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "Functional Data Grid",
   "main": "dist/FunctionalDataGrid.cjs.js",
   "module": "dist/FunctionalDataGrid.esm.js",
