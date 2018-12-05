@@ -69,6 +69,11 @@ type PresentationalFunctionalDataGridState<T> = {
 }
 
 const emptyObject = {}
+
+const columnsVisibilityMenuStyle = css`
+  z-index: 1;
+`
+
 export default class PresentationalFunctionalDataGrid<T, A: void> extends React.PureComponent<PresentationalFunctionalDataGridProps<T, A>, PresentationalFunctionalDataGridState<T>> {
 
   list : ReactVirtualizedList
@@ -235,7 +240,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
   renderColumnsMenuPopper = (popperContainer: ?HTMLElement) => popperContainer != null && ReactDOM.createPortal(
     <Popper placement={'bottom-end'} modifiers={{ preventOverflow: { enabled: false }, hide: { enabled: false }, flip: { enabled: false } }}>
       {({ placement, ref, style }) => (
-        <div ref={ref} style={style} data-placement={placement} className={'functional-data-grid__columns-visibility-menu'}>
+        <div ref={ref} style={style} data-placement={placement} className={`functional-data-grid__columns-visibility-menu ${columnsVisibilityMenuStyle}`}>
           <ColumnsMenu
             leftLockedColumns={this.getSortedColumns(this.getLeftLockedColumns())}
             freeColumns={this.getSortedColumns(this.getFreeColumns())}

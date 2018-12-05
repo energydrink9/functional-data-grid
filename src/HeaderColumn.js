@@ -3,6 +3,7 @@
 import React from 'react'
 import Column from "./Column"
 import HeaderColumnResizer from "./HeaderColumnResizer"
+import { css } from 'emotion';
 
 type HeaderColumnProps = {
   column: Column,
@@ -15,6 +16,29 @@ type HeaderColumnProps = {
 type HeaderColumnState = {
   direction: 'asc' | 'desc' | 'none'
 }
+
+const headerColumnStyle = css`
+  overflow: visible;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px;
+  border-right: solid 1px #ccc;
+  position: relative;
+`
+
+const headerColumnTitleStyle = css`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`
+
+const headerColumnFilterStyle = css`
+  text-align: center;
+  margin-top: 2px;
+`
 
 export default class HeaderColumn extends React.PureComponent<HeaderColumnProps, HeaderColumnState> {
 
@@ -33,13 +57,13 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
 
   render = () => {
     let right = this.element == null ? 0 : this.element.getBoundingClientRect().right
-    return <div ref={(el => this.element = el)} key={this.props.column.id} style={Object.assign(this.getCellStyle(this.props.column), this.props.column.headerStyle)}>
+    return <div ref={(el => this.element = el)} key={this.props.column.id} className={headerColumnStyle} style={Object.assign(this.getCellStyle(this.props.column), this.props.column.headerStyle)}>
       { this.props.column.resizable && <HeaderColumnResizer right={right} onResize={this.onColumnResize} /> }
-      <div onClick={this.toggleSortDirection} style={{textOverflow: 'ellipsis', overflow: 'hidden',whiteSpace: 'nowrap'}}>
+      <div onClick={this.toggleSortDirection} className={headerColumnTitleStyle}>
         { this.props.column.headerRenderer(this.props.column) }
         <span> { this.state.direction === 'asc' ? '▲' : this.state.direction === 'desc' ? '▼' : '' }</span>
       </div>
-      { this.props.column.filterable && <div style={{ textAlign: 'center', marginTop: '2px' }}>{ this.props.column.filterRenderer(this.triggerOnUpdateFilter) }</div> }
+      { this.props.column.filterable && <div className={headerColumnFilterStyle}>{ this.props.column.filterRenderer(this.triggerOnUpdateFilter) }</div> }
     </div>
   }
 
@@ -58,17 +82,7 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
   }
 
   getCellStyle = (c : Column) => {
-    let styles : Object = {
-      overflow: 'visible',
-      textOverflow: 'ellipsis',
-      flexShrink: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      padding: '8px',
-      borderRight: 'solid 1px #ccc',
-      position: 'relative'
-    }
+    let styles : Object = {}
 
     if (this.props.width != null)
       styles.width = this.props.width

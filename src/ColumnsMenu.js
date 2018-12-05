@@ -6,6 +6,7 @@ import Column from './Column'
 import ColumnGroup from './ColumnGroup'
 import type { ComputedColumnGroup } from './ComputedColumnGroup'
 import { getComputedColumnGroups } from './Utils'
+import { css } from 'emotion'
 
 type ColumnsMenuPropsType = {
   leftLockedColumns: List<Column>,
@@ -24,6 +25,55 @@ type ColumnsMenuPropsType = {
 type ColumnsMenuStateType = {
   searchValue: string,
 }
+
+const columnsMenuStyle = css`
+  background-color: #ddd;
+  border: solid 1px #ccc;
+  line-height: 26px;
+  max-height: 500px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+`
+
+const searchStyle = css`
+  width: 100%;
+  padding: 5px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgb(204, 204, 204);
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    background-color: #eeeeee;
+    border: solid 1px #ccc;
+  }
+  input:focus {
+    outline: none;
+  }
+`
+
+const columnsStyle = css`
+  width: 100%;
+  overflow: auto;
+  > div:nth-child(2) {
+    border-top: solid 3px #aaa;
+  }
+  > div:nth-child(3) {
+    border-top: solid 3px #aaa;
+  }
+`
+
+const columnGroupStyle = css`
+  padding: 0 5px;
+  border-top: solid 1px #aaa;
+  white-space: nowrap;
+`
+
+const columnGroupHeaderStyle = css`
+  display: flex;
+`
 
 export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsType, ColumnsMenuStateType> {
   
@@ -71,31 +121,27 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
     let freeColumns = this.filterInitialColumns(this.props.freeColumns, this.state.searchValue)
     let rightLockedColumns = this.filterInitialColumns(this.props.rightLockedColumns, this.state.searchValue)
 
-    return <div ref={ref => this.ref = ref}
-                style={{ backgroundColor: '#ddd', border: 'solid 1px #ccc', lineHeight: '26px', maxHeight: '500px', width:'200px', display: 'flex', flexDirection: 'column'}}>
-            <div className = "functional-data-grid__columns-menu__search" style={{width:'100%',padding:'5px', paddingBottom:'4px', borderBottom: '1px solid rgb(204, 204, 204)'}}>
-              <input onChange={(e: Object) => this.filterColumns(e.target.value)}
-                     placeholder={'Search...'}
-                     autoFocus="true"
-                     style={{width: '100%', boxSizing: 'border-box', paddingLeft:'5px',  height: '20px'}}/>
+    return <div ref={ref => this.ref = ref} className={`functional-data-grid__columns-menu ${columnsMenuStyle}`}>
+            <div className={`functional-data-grid__columns-menu__search ${searchStyle}`}>
+              <input onChange={(e: Object) => this.filterColumns(e.target.value)} placeholder={'Search...'} autoFocus="true" />
             </div>
-            <div className = "functional-data-grid__columns-menu__columns" style={{width:'100%',overflow: 'auto'}}>
-          { leftLockedColumns.size > 0 && this.renderColumnEntries(leftLockedColumns) }
-          { freeColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(freeColumns) }</div> }
-          { rightLockedColumns.size > 0 && <div style={{ borderTop: 'solid 3px #aaa' }}>{ this.renderColumnEntries(rightLockedColumns) }</div> }
+            <div className={`functional-data-grid__columns-menu__columns ${columnsStyle}`}>
+              { leftLockedColumns.size > 0 && this.renderColumnEntries(leftLockedColumns) }
+              { freeColumns.size > 0 && <div>{ this.renderColumnEntries(freeColumns) }</div> }
+              { rightLockedColumns.size > 0 && <div>{ this.renderColumnEntries(rightLockedColumns) }</div> }
             </div>
           </div>
   }
 
-  renderColumnEntries = (columns: List<Column>) => <div >{ getComputedColumnGroups(columns).map(g => this.renderColumnGroup(g)) }</div>
+  renderColumnEntries = (columns: List<Column>) => <div>{ getComputedColumnGroups(columns).map(g => this.renderColumnGroup(g)) }</div>
 
   renderColumnGroup = (g: ComputedColumnGroup) => {
     let columnGroup = g.columnGroup
     return <div>
       { columnGroup != null
-        ? <div className="functional-data-grid__columns-menu__column-group" style={{padding: '0 5px', borderTop: 'solid 1px #aaa', whiteSpace: 'nowrap'}}>
-            <div className="functional-data-grid__columns-menu__column-group__header" style={{ display: 'flex'}}>
-              <b style={{overflow: 'hidden', textOverflow: 'ellipsis'}} title={this.getColumnGroupById(columnGroup).title}>{ this.getColumnGroupById(columnGroup).title }</b>
+        ? <div className={`functional-data-grid__columns-menu__column-group ${columnGroupStyle}`}>
+            <div className={`functional-data-grid__columns-menu__column-group__header ${columnGroupHeaderStyle}`}>
+              <span style={{fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis'}} title={this.getColumnGroupById(columnGroup).title}>{ this.getColumnGroupById(columnGroup).title }</span>
             </div>
           { g.columns.map((c) => this.renderColumnEntry(c)) }
           </div>
