@@ -52,7 +52,7 @@ type FunctionalDataGridState<T> = {
 
 export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<FunctionalDataGridProps<T, A>, FunctionalDataGridState<T>> {
 
-  grid: PresentationalFunctionalDataGrid
+  grid: ?PresentationalFunctionalDataGrid<T, A>
 
   debouncedUpdateElements = debounce((data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, keysMap: Map<Object, string>) => this.updateElements(data, groups, sort, filter, keysMap), debounceTimeout);
 
@@ -146,7 +146,7 @@ export default class FunctionalDataGrid<T, A: void> extends React.PureComponent<
     })
   }
 
-  computeKeysMap = (elements: List<DataRow>) => Map(elements.filter(e => e.type === 'element').map(e => [e.content, e.key]))
+  computeKeysMap = (elements: List<DataRow<T>>) => Map(elements.filter(e => e.type === 'element').map(e => [e.content, e.key]))
 
   computeElements = (data : List<T>, groups : List<Group<any, T>>, sort : List<Sort>, filter : List<Filter>, keysMap: Map<Object, string>) =>
     Engine.computeElements(data, groups, sort, filter, this.getColumns(), this.props.showGroupHeaders, this.props.includeFilteredElementsInAggregates, this.props.aggregatesCalculator, keysMap)

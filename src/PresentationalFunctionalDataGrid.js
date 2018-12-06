@@ -23,6 +23,9 @@ const gridClassName = css`
   flex-grow: 1;
   flex-direction: column;
   box-sizing: border-box;
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
   border: solid 1px #ccc;
 `
 

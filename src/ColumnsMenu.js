@@ -123,7 +123,7 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
 
     return <div ref={ref => this.ref = ref} className={`functional-data-grid__columns-menu ${columnsMenuStyle}`}>
             <div className={`functional-data-grid__columns-menu__search ${searchStyle}`}>
-              <input onChange={(e: Object) => this.filterColumns(e.target.value)} placeholder={'Search...'} autoFocus="true" />
+              <input onChange={(e: Object) => this.filterColumns(e.target.value)} placeholder={'Search...'} autoFocus />
             </div>
             <div className={`functional-data-grid__columns-menu__columns ${columnsStyle}`}>
               { leftLockedColumns.size > 0 && this.renderColumnEntries(leftLockedColumns) }
@@ -133,11 +133,11 @@ export default class ColumnsMenu extends React.PureComponent<ColumnsMenuPropsTyp
           </div>
   }
 
-  renderColumnEntries = (columns: List<Column>) => <div>{ getComputedColumnGroups(columns).map(g => this.renderColumnGroup(g)) }</div>
+  renderColumnEntries = (columns: List<Column>) => <div>{ getComputedColumnGroups(columns).map((g, i) => this.renderColumnGroup(g, i)) }</div>
 
-  renderColumnGroup = (g: ComputedColumnGroup) => {
+  renderColumnGroup = (g: ComputedColumnGroup, key: number) => {
     let columnGroup = g.columnGroup
-    return <div>
+    return <div key={key}>
       { columnGroup != null
         ? <div className={`functional-data-grid__columns-menu__column-group ${columnGroupStyle}`}>
             <div className={`functional-data-grid__columns-menu__column-group__header ${columnGroupHeaderStyle}`}>
