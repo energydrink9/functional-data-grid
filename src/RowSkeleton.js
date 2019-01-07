@@ -21,14 +21,9 @@ type RowSkeletonState = {
 const leftLockedClassName = css`
   display: flex;
 `
-const freeClassName = (scrollbar: boolean) => css`
+const freeClassName = css`
   display: flex;
   flex-grow: 1;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    width: 0 !important;
-  }
-  -webkit-overflow-scrolling: touch;
 `
 const rightLockedClassName = css`
   display: flex;
@@ -94,12 +89,10 @@ export default class RowSkeleton extends React.PureComponent<RowSkeletonProps, R
       <div className={`functional-data-grid__row__left-locked ${leftLockedClassName}`}>
         { leftLocked }
       </div>
-      <div className={`functional-data-grid__row__free ${freeClassName(scrollbar)}`} ref={(el) => this.setState({ scrollingDiv: el }, () => this.updateScroll())} onScroll={this.triggerOnScroll}>
-        <div style={{display: 'flex'}}>
-          { free }
-        </div>
+      <div className={`functional-data-grid__row__free ${freeClassName}`} style={{overflow: scrollbar ? 'auto': 'hidden'}} ref={(el) => this.setState({ scrollingDiv: el }, () => this.updateScroll())} onScroll={this.triggerOnScroll}>
+        { free }
       </div>
-      <div className={`functional-data-grid__row__right-locked ${rightLockedClassName}`}>
+      <div className={`functional-data-grid__row__right-locked ${rightLockedClassName}`}>    
         { rightLocked }
       </div>
       <div className={`functional-data-grid__row__right ${rightClassName}`} style={{width: `${rightWidth}px`}}>
