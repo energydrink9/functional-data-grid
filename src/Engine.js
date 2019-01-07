@@ -58,7 +58,7 @@ export default class Engine<T, A: void> {
     return column
   }
 
-  static getKey = (e: Object, keysMap: Map<Object, string>) => keysMap.contains(e) != null ? keysMap.get(e) : uuidv4()
+  static getKey = (e: Object, keysMap: Map<Object, string>) => keysMap.has(e) ? keysMap.get(e) : uuidv4()
 
   static enrichData = (data : List<T>, keysMap: Map<Object, string>) : List<DataRow<T>> => data.map((e, index) => new DataRow(e, 'element', index, Engine.getKey(e, keysMap)))
 
