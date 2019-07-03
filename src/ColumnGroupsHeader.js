@@ -48,7 +48,7 @@ export default class ColumnGroupsHeader extends React.PureComponent<ColumnGroups
     rightWidth={Constants.columnsOptionsWidth}
   />
   
-  renderColumnGroupHeader = (c: ComputedColumnGroup, index: number) => <div className={columnGroupHeaderStyle} style={{ width: `${this.getColumnsWidth(c.columns)}px` }} key={index}>
+  renderColumnGroupHeader = (c: ComputedColumnGroup, index: number) => <div className={[columnGroupHeaderStyle, 'functional-data-grid__cell'].join(' ')} style={{ width: `${this.getColumnsWidth(c.columns)}px` }} key={index}>
     { c.columnGroup != null && this.getColumnGroupById(c.columnGroup).headerRenderer() }
   </div>
   

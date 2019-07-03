@@ -57,7 +57,7 @@ export default class HeaderColumn extends React.PureComponent<HeaderColumnProps,
 
   render = () => {
     let right = this.element == null ? 0 : this.element.getBoundingClientRect().right
-    return <div ref={(el => this.element = el)} key={this.props.column.id} className={headerColumnStyle} style={Object.assign(this.getCellStyle(this.props.column), this.props.column.headerStyle)}>
+    return <div ref={(el => this.element = el)} key={this.props.column.id} className={[headerColumnStyle, 'functional-data-grid__cell'].join(' ')} style={Object.assign(this.getCellStyle(this.props.column), this.props.column.headerStyle)}>
       { this.props.column.resizable && <HeaderColumnResizer right={right} onResize={this.onColumnResize} /> }
       <div onClick={this.toggleSortDirection} className={headerColumnTitleStyle}>
         { this.props.column.headerRenderer(this.props.column) }
