@@ -92,8 +92,7 @@ export default class PresentationalFunctionalDataGrid<T, A: void> extends React.
     onColumnResize: (e: Object) => {},
     onColumnsOrderChange: (e: Object) => {},
     onColumnVisibilityChange: (e: Object) => {},
-    onRowClick: (e: Object) => {},
-    height: '100%'
+    onRowClick: (e: Object) => {}
   }
 
   constructor(props : PresentationalFunctionalDataGridProps<T, A>) {
