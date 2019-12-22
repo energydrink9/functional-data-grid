@@ -8,7 +8,7 @@
   "author": "Michele Lugano <michele.lugano9@gmail.com> (https://www.linkedin.com/in/mlugano/)",
   "dependencies": {
     "debounce": "^1.0.2",
-    "emotion": "^10.0.14",
+    "emotion": "10.0.22",
     "immutable": "~3.8.2",
     "react-popper": "^1.0.0",
     "react-virtualized": "^9.18.5",
