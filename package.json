@@ -12,7 +12,7 @@
     "immutable": "~3.8.2",
     "react-popper": "^1.0.0",
     "react-virtualized": "^9.18.5",
-    "uuid": "^3.3.2"
+    "uuid": "^7.0.1"
   },
   "peerDependencies": {
     "react": "^16.0.0",
