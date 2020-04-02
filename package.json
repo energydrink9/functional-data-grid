@@ -37,7 +37,7 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "eslint": "6.0.1",
-    "eslint-loader": "2.2.0",
+    "eslint-loader": "3.0.4",
     "eslint-plugin-flowtype": "3.11.1",
     "eslint-plugin-react": "^7.0.0",
     "file-loader": "4.0.0",
