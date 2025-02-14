@@ -6,9 +6,7 @@
 ![NPM license](https://img.shields.io/github/license/energydrink9/functional-data-grid.svg)
 [![npm](https://img.shields.io/npm/dm/functional-data-grid.svg)](https://www.npmjs.com/package/functional-data-grid)
 [![Build Status](https://travis-ci.org/energydrink9/functional-data-grid.svg?branch=master)](https://travis-ci.org/energydrink9/functional-data-grid)
-[![codecov](https://codecov.io/gh/energydrink9/functional-data-grid/branch/master/graph/badge.svg)](https://codecov.io/gh/energydrink9/functional-data-grid)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/energydrink9/functional-data-grid.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/energydrink9/functional-data-grid/context:javascript)
-[![Greenkeeper badge](https://badges.greenkeeper.io/energydrink9/functional-data-grid.svg)](https://greenkeeper.io/) 
+[![codecov](https://codecov.io/gh/energydrink9/functional-data-grid/branch/master/graph/badge.svg)](https://codecov.io/gh/energydrink9/functional-data-grid) 
 
 This is a library made with React and React-Virtualized for creating rich data grids with filtering, sorting, grouping and aggregates computation.
 It supports virtualization, and thanks to this it can handle very large amounts of data. It features also locked columns, custom renderers, multi-column headers, columns resize, hide / show columns and variable rows height.
